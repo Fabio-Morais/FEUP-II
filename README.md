@@ -1,6 +1,6 @@
 # FEUP-II
 
-* [x] Criar DB
+- [x] Criar DB
 * [x] Comunicar Mes com DB
 * [ ] DB Lista ordens
 * [ ] DB maquinas

@@ -18,14 +18,28 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+	<repositories>
+		<repository>
+			<id>oss-sonatype</id>
+			<name>oss-sonatype</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
+
 		<!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.milo</groupId>
+			<artifactId>sdk-client</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		
 	</dependencies>
 
 </project>

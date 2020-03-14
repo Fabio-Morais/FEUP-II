@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import xml.Xml;
+
 public class Server extends Thread {
 	private final int port = 54321;
 	private DatagramSocket socket;
@@ -24,7 +26,7 @@ public class Server extends Thread {
 	public void run() {
 		running = true;
 
-		while (running) {
+		while (true) {
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
 			
 
@@ -36,22 +38,15 @@ public class Server extends Thread {
 
 			String sentence = new String(packet.getData());
 			String realMessage = sentence.substring(0, packet.getLength());
-			System.out.println("RECEIVED: " + realMessage);
 			
-			InetAddress address = packet.getAddress();
+			Xml xml = new Xml();
+			xml.read(realMessage);
 			
-			String received = new String(packet.getData(), 0, packet.getLength());
-
-			if (realMessage.equals("end")) {
-				running = false;
-				continue;
-			}
 			try {
 				socket.send(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		socket.close();
 	}
 }

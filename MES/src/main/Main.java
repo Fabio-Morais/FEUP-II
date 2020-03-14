@@ -11,11 +11,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		Xml xml = new Xml();
-		xml.read();
-		xml.existenciaPeca();
-		/*Server server = new Server();
+		//xml.existenciaPeca();
+		Server server = new Server();
 		server.run();
-		*/
+		
 		/*Client client = new Client();
 		Scanner scan = new Scanner(System.in);
 

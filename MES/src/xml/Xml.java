@@ -1,92 +1,144 @@
 package xml;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 
 public class Xml {
-	
-	
-	public void read() {
+	protected Element eElement;
+
+	public Xml() {
+		super();
+		this.eElement = null;
+	}
+
+	/**Lê o xml
+	 * @param message -  Mensagem a ser lida
+	 * @return true - Se leu um formato XML correto<br> false - caso contrario
+	 * */
+	public boolean read(String message) {
 		try {
-			String xmlString="<ORDERS>\r\n" + 
-					"<Order Number=\"002\">\r\n" + 
-					"<Transform From=\"P3\" To=\"P5\" Quantity=\"7\" MaxDelay=\"300\"/>\r\n" + 
-					"</Order>\r\n" + 
-					"<Order Number=\"003\">\r\n" + 
-					"<Transform From=\"P7\" To=\"P9\" Quantity=\"10\" MaxDelay=\"300\"/>\r\n" + 
-					"</Order>\r\n" + 
-					"</ORDERS>\r\n";
-			File fXmlFile = new File("command2.xml");
+			String xmlString = message;
+
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			//Document doc = dBuilder.parse(fXmlFile);
 			Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
-			
-			// optional, but recommended
-			// read this -
-			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
-
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
 			NodeList nList = doc.getElementsByTagName("Order");
 
-			System.out.println("----------------------------");
-
+			/* Isto serve para as orden */
 			for (int temp = 0; temp < nList.getLength(); temp++) {
-
 				Node nNode = nList.item(temp);
-
-				System.out.println("\nElement :" + nNode.getNodeName());
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
-					Element eElement = (Element) nNode;
-					//ORDER
-					System.out.println("number: " + eElement.getAttribute("Number"));
-					//TRANSFORM
-					NamedNodeMap node= eElement.getElementsByTagName("Transform").item(0).getAttributes();// vai buscar os atributos de TRANSFORM
-					
-					System.out.println("From : " + node.getNamedItem("From").getNodeValue());
-					System.out.println("To : " + node.getNamedItem("To").getNodeValue());
-					System.out.println("Quantity : " + node.getNamedItem("Quantity").getNodeValue());
-					System.out.println("MaxDelay : " + node.getNamedItem("MaxDelay").getNodeValue());
+					this.eElement = (Element) nNode;
+					System.out.println(eElement.getAttribute("Number"));
+					// numero da ordem
+					if (eElement.getElementsByTagName("Transform").getLength() > 0) {
+						new XmlTransform(eElement);
 
-
+					} else if (eElement.getElementsByTagName("Unload").getLength() > 0) {
+						new XmlUnload(eElement);
+					}
+				}
+			}
+			/* Isto serve para os requests */
+			nList = doc.getElementsByTagName("Request_Stores");
+			if (nList.getLength() > 0) {
+				Node nNode = nList.item(0);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					new XmlRequestStore();
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 
 	}
 
 	/**
-	 * Cria XML relativamente à existencia de peças no armazem
+	 * Para efeitos de debug
+	 * 
+	 * @param fileName - Nome do ficheiro a ler
 	 */
-	public void existenciaPeca() {
-		String xml = "<Current_Stores>\r\n";
-		String px = "P0";
-		int quant= 0;
-		
-		/*Precisa de ir à DB ver as peças que tem*/
-		for(int i=0; i<9; i++) {
-			px=px.substring(0, 1)+""+(i+1);
-			xml += "<WorkPiece type=”" + px + "” quantity=”"+(quant++)*2+"”/>\r\n";
+	public void debugRead(String fileName) throws ParserConfigurationException, SAXException, IOException {
+		File fXmlFile = new File(fileName);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+
+		// optional, but recommended
+		// read this -
+		// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Order");
+		System.out.println("----------------------------");
+
+		/* Isto serve para as orden */
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+
+			System.out.println("Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+				// numero da ordem
+				System.out.println("number: " + eElement.getAttribute("Number"));
+				if (eElement.getElementsByTagName("Transform").getLength() > 0) {
+					System.out.println("Tipo-TRANSFORM:");
+					// ORDER
+					// TRANSFORM
+					NamedNodeMap node = eElement.getElementsByTagName("Transform").item(0).getAttributes();// vai
+																											// buscar
+																											// os
+																											// atributos
+																											// de
+																											// TRANSFORM
+
+					System.out.println("From : " + node.getNamedItem("From").getNodeValue());
+					System.out.println("To : " + node.getNamedItem("To").getNodeValue());
+					System.out.println("Quantity : " + node.getNamedItem("Quantity").getNodeValue());
+					System.out.println("MaxDelay : " + node.getNamedItem("MaxDelay").getNodeValue());
+					System.out.println();
+
+				} else if (eElement.getElementsByTagName("Unload").getLength() > 0) {
+					System.out.println("Tipo-Unload:");
+
+					NamedNodeMap node = eElement.getElementsByTagName("Unload").item(0).getAttributes();// vai
+																										// buscar
+					System.out.println("Type: " + node.getNamedItem("Type").getNodeValue());
+					System.out.println("Destination: " + node.getNamedItem("Destination").getNodeValue());
+					System.out.println("Quantity : " + node.getNamedItem("Quantity").getNodeValue());
+					System.out.println();
+				}
+			}
 		}
-		xml += "</Current_Stores>";
-		System.out.println(xml);
+		/* Isto serve para os requests */
+		nList = doc.getElementsByTagName("Request_Stores");
+		Node nNode = nList.item(0);
+		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+			System.out.println("request");
+		}
 	}
 
-
+	
 
 }

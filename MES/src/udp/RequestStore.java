@@ -21,10 +21,8 @@ public class RequestStore {
 			xml += "<WorkPiece type=\"" + px + "\" quantity=\"" + (quant++) * 2 + "\"/>\r\n";
 		}
 		xml += "</Current_Stores>";
-		System.out.println(xml);
 		
 		ClientUdp clientUdp = new ClientUdp(address);
 		clientUdp.sendEcho(xml);
-		clientUdp.close();
 	}
 }

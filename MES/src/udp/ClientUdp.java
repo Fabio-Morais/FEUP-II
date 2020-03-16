@@ -12,7 +12,6 @@ public class ClientUdp extends Thread {
 
 	private DatagramSocket socket;
 	private InetAddress address;
-	private byte[] buf;
 
 	public ClientUdp(String address) {
 		try {
@@ -29,7 +28,7 @@ public class ClientUdp extends Thread {
 	}
 
 	public void sendEcho(String msg) {
-		buf = msg.getBytes();
+		byte[] buf = msg.getBytes();
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
 
 		try {
@@ -37,21 +36,8 @@ public class ClientUdp extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		/*packet = new DatagramPacket(buf, buf.length);
-
-		try {
-			socket.receive(packet);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("vai enviar");
-
-		String received = new String(packet.getData(), 0, packet.getLength());
-		return received;*/
-	}
-
-	public void close() {
 		socket.close();
 	}
+
+
 }

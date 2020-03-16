@@ -6,15 +6,14 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-import xml.Xml;
+public class ServerUdp extends Thread {
+	private static ServerUdp instance=null;
 
-public class Server extends Thread {
 	private final int port = 54321;
 	private DatagramSocket socket;
-	private boolean running;
 	private byte[] buf = new byte[1020];
 
-	public Server() {
+	private ServerUdp() {
 		super("udpThread");
 		try {
 			socket = new DatagramSocket(port);
@@ -24,7 +23,6 @@ public class Server extends Thread {
 	}
 
 	public void run() {
-		running = true;
 
 		while (true) {
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -39,8 +37,15 @@ public class Server extends Thread {
 			String sentence = new String(packet.getData());
 			String realMessage = sentence.substring(0, packet.getLength());
 			
-			Xml xml = new Xml();
-			xml.read(realMessage);
+			Message xml;
+		
+			try {
+				xml = new Message(InetAddress.getLocalHost().getHostAddress());
+				xml.read(realMessage);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 			try {
 				socket.send(packet);
@@ -48,5 +53,11 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static ServerUdp getInstance() {
+		if(instance == null)
+			instance = new ServerUdp();
+		return instance;
 	}
 }

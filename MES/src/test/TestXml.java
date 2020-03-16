@@ -11,7 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import xml.Xml;
+import udp.Message;
 
 class TestXml {
 
@@ -52,7 +52,13 @@ class TestXml {
 	        		"request\r\n";
 		 
 	        System.setOut(new PrintStream(outContent));
-	        Xml xml = new Xml();
+	        Message xml=null;
+			try {
+				xml = new Message("127.0.0.1");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				xml.debugRead("test.xml");
 			} catch (ParserConfigurationException | SAXException | IOException e) {

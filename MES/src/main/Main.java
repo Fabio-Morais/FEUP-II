@@ -1,26 +1,18 @@
 package main;
 
 
-import java.util.Scanner;
 
-import udp.Client;
-import udp.Server;
-import xml.Xml;
+import udp.ClientUdp;
+import udp.ServerUdp;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Xml xml = new Xml();
-		//xml.existenciaPeca();
-		Server server = new Server();
+		ServerUdp server = ServerUdp.getInstance();
 		server.run();
 		
-		/*Client client = new Client();
-		Scanner scan = new Scanner(System.in);
-
-			client.sendEcho(scan.nextLine());
-			
-			client.close();	*/
+		ClientUdp clientUdp = new ClientUdp("127.0.0.1");
+		clientUdp.sendEcho("ola");
 	
 	}
 

@@ -1,4 +1,4 @@
-package xml;
+package udp;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,52 +15,46 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class Xml {
-	protected Element eElement;
+public class Message {
+	private String address;
 
-	public Xml() {
+	public Message(String address) throws Exception {
 		super();
-		this.eElement = null;
+		if(address ==null || address.isEmpty())
+			throw new Exception();
+		
+		this.address=address;
 	}
 
 	/**Lê o xml
 	 * @param message -  Mensagem a ser lida
 	 * @return true - Se leu um formato XML correto<br> false - caso contrario
 	 * */
-	public boolean read(String message) {
+	protected boolean read(String message) {
+		String xmlString = message;
+
 		try {
-			String xmlString = message;
 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
 			doc.getDocumentElement().normalize();
-
+			/*ORDENS*/
 			NodeList nList = doc.getElementsByTagName("Order");
-
-			/* Isto serve para as orden */
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-				Node nNode = nList.item(temp);
-
+			Ordem ordem = new Ordem(nList);
+			if(nList.getLength() > 0) {
+				Node nNode = nList.item(0);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-					this.eElement = (Element) nNode;
-					System.out.println(eElement.getAttribute("Number"));
-					// numero da ordem
-					if (eElement.getElementsByTagName("Transform").getLength() > 0) {
-						new XmlTransform(eElement);
-
-					} else if (eElement.getElementsByTagName("Unload").getLength() > 0) {
-						new XmlUnload(eElement);
-					}
+					ordem.criaOrdem();
 				}
 			}
-			/* Isto serve para os requests */
+			
+			/*REQUEST*/
 			nList = doc.getElementsByTagName("Request_Stores");
 			if (nList.getLength() > 0) {
 				Node nNode = nList.item(0);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					new XmlRequestStore();
+					new RequestStore(address);
 				}
 			}
 		} catch (Exception e) {

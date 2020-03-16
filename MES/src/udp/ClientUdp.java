@@ -7,14 +7,14 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class Client extends Thread {
-	private final int port = 12312;
+public class ClientUdp extends Thread {
+	private final int port = 54321;
 
 	private DatagramSocket socket;
 	private InetAddress address;
 	private byte[] buf;
 
-	public Client() {
+	public ClientUdp(String address) {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
@@ -22,13 +22,13 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		try {
-			address = InetAddress.getByName("localhost");
+			this.address = InetAddress.getByName(address);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String sendEcho(String msg) {
+	public void sendEcho(String msg) {
 		buf = msg.getBytes();
 		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
 
@@ -38,15 +38,17 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 
-		packet = new DatagramPacket(buf, buf.length);
+		/*packet = new DatagramPacket(buf, buf.length);
 
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("vai enviar");
+
 		String received = new String(packet.getData(), 0, packet.getLength());
-		return received;
+		return received;*/
 	}
 
 	public void close() {

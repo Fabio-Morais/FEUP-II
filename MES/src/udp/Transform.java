@@ -1,16 +1,16 @@
-package xml;
+package udp;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-public class XmlTransform {
+public class Transform {
 	private NamedNodeMap node;
 	private String from;
 	private String to;
 	private String quantity;
 	private String maxDelay;
 	
-	public XmlTransform(Element eElement) {
+	public Transform(Element eElement) {
 		this.node = eElement.getElementsByTagName("Transform").item(0).getAttributes();
 		this.from=node.getNamedItem("From").getNodeValue();
 		this.to=node.getNamedItem("To").getNodeValue();

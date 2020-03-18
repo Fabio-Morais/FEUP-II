@@ -1,9 +1,11 @@
 CREATE SCHEMA IF NOT EXISTS fabrica;
 SET search_path to fabrica;
 
-CREATE TABLE IF NOT EXISTS Fabrica(
+CREATE TABLE IF NOT EXISTS Maquina(
 	id SERIAL PRIMARY KEY,
-	nPecasFabrica int
+	tipoMaquina VARCHAR(10),
+    tipoPecaOperada VARCHAR(10),
+    tempo int
 );
 
 CREATE TABLE IF NOT EXISTS ZonaDescarga(
@@ -34,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Ordem(
     atrasoMaximo int
     );
 
-CREATE TABLE IF NOT EXISTS Maquina(
+CREATE TABLE IF NOT EXISTS Descarga(
     numeroOrdem VARCHAR(10) REFERENCES Ordem(numeroOrdem) PRIMARY KEY,    
     pecaDescarga VARCHAR(10) ,
     destino VARCHAR(10),

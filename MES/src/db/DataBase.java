@@ -15,12 +15,22 @@ public class DataBase {
 	private String password;
 	private Connection c;
 
+	//TABELAS DATA BASE
+	private ZonaDescarga zonaDescarga;
+	private Maquina maquina;
+	private Producao producao;
+	private Descarga descarga;
+	
 	private DataBase() {
 		this.url = "jdbc:postgresql://db.fe.up.pt:5432/up201504257?currentSchema=fabrica";
 		this.user = "up201504257";
 		this.password = "hFj8JWsg9";
 		this.c = null;
 		DriverManager.setLoginTimeout(3);
+		this.zonaDescarga = new ZonaDescarga();
+		this.maquina = new Maquina();
+		this.producao = new Producao();
+		this.descarga = new Descarga();
 
 	}
 	public static DataBase getInstance() {
@@ -101,10 +111,10 @@ public class DataBase {
 
 		connect();
 		try {
-			System.out.println("entrei");
 			Statement stmt = getC().createStatement();
-			stmt.executeUpdate(sql);
+			stmt.executeUpdate("SET search_path to fabrica;"+sql);
 		} catch (Exception e) {
+			e.printStackTrace();
 			disconnect();
 			return false;
 		}
@@ -125,7 +135,7 @@ public class DataBase {
 
 		try {
 			stmt = getC().createStatement();
-			rs = stmt.executeQuery(sql);
+			rs = stmt.executeQuery("SET search_path to fabrica;"+sql);
 			
 		} catch (Exception e) {
 			disconnect();
@@ -161,4 +171,9 @@ public class DataBase {
 		this.c = conexao;
 	}
 
+	public void insereMaquina(Maquina maquina) {
+		maquina.insere(this, maquina);
+	}
+	
+	
 }

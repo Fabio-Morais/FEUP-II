@@ -2,6 +2,9 @@ package main;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import db.DataBase;
 import db.Descarga;
 import db.Maquina;
@@ -18,7 +21,12 @@ public class Main {
 		
 		//testaDB();
 		
-		testaOpc();
+		//testaOpc();
+		
+		
+		
+		
+		
 	}
 	public static void testaOpc() {
 		OpcClient opc= new OpcClient();

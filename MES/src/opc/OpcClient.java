@@ -14,11 +14,12 @@ import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
 public class OpcClient {
 
-	private static OpcUaClient client;
-	private static int id_node = 4;
-	private static String aux = "|var|CODESYS Control Win V3 x64.Application.SFS.";
+	private OpcUaClient client;
+	private int id_node = 4;
+	private String aux = "|var|CODESYS Control Win V3 x64.Application.SFS.";
 	private String publicHostName;
 
+	
 	public OpcClient() {
 		super();
 		try {
@@ -70,6 +71,9 @@ public class OpcClient {
 		System.out.println("O valor da variável é: " + value.getValue().getValue());
 		return true;
 	}
+	
+	
+	
 
 	/**Função para inserir valores booleanos
 	 * @return true se inseriu corretamente, false caso contrario

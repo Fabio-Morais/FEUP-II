@@ -16,20 +16,18 @@ CREATE TABLE IF NOT EXISTS ZonaDescarga(
 );
 
 
-CREATE TABLE IF NOT EXISTS Ordem(
-	numeroOrdem VARCHAR(10) PRIMARY KEY,
-	estadoOrdem int,
-    pecasProduzidas int,
-    pecasProducao int,
-    pecasPendentes int,
+
+
+    CREATE TABLE IF NOT EXISTS Producao(
+    numeroOrdem VARCHAR(10) PRIMARY KEY,
+	estadoOrdem int default 0 ,
+    pecasProduzidas int default 0 ,
+    pecasProducao int default 0 ,
+    pecasPendentes int default 0 ,
 	horaEntradaOrdem TIMESTAMP,
 	horaInicioExecucao TIMESTAMP,
 	horaFimExecucao TIMESTAMP,
-    folgaExecucao int
-    );
-
-    CREATE TABLE IF NOT EXISTS Producao(
-    numeroOrdem VARCHAR(10) REFERENCES Ordem(numeroOrdem) PRIMARY KEY,    
+    folgaExecucao int default 0 ,   
 	pecaOrigem VARCHAR(10) ,
     pecaFinal VARCHAR(10),
     quantidadeProduzir int,
@@ -37,7 +35,15 @@ CREATE TABLE IF NOT EXISTS Ordem(
     );
 
 CREATE TABLE IF NOT EXISTS Descarga(
-    numeroOrdem VARCHAR(10) REFERENCES Ordem(numeroOrdem) PRIMARY KEY,    
+    numeroOrdem VARCHAR(10) PRIMARY KEY,
+	estadoOrdem int default 0,
+    pecasProduzidas int default 0,
+    pecasProducao int default 0,
+    pecasPendentes int default 0,
+	horaEntradaOrdem TIMESTAMP,
+	horaInicioExecucao TIMESTAMP,
+	horaFimExecucao TIMESTAMP,
+    folgaExecucao int default 0,   
     pecaDescarga VARCHAR(10) ,
     destino VARCHAR(10),
     quantidadePecasDescarregar int

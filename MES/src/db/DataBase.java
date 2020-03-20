@@ -144,17 +144,7 @@ public class DataBase {
 		return rs;
 	}
 	
-	/**
-	 * Funçao usada para saber Data e hora atual 
-	 * 
-	 * @return DataHora String com data e hora
-	 */
-	public String localDate() {
-		java.util.Date date = new java.util.Date();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-		return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(timestamp);
-		
-	}
+	
 	/**
 	 * Retorna a conexão com a base de dados
 	 * @return Conexão Conexão com base de dados
@@ -175,5 +165,32 @@ public class DataBase {
 		maquina.insere(this, maquina);
 	}
 	
+	public void insereZonaDescarga(ZonaDescarga zonaDescarga) {
+		zonaDescarga.insere(this, zonaDescarga);
+	}
+	
+	public void insereProducao(Producao producao) {
+		producao.insere(this, producao);
+	}
+	
+	public void executaOrdemProducao(String numeroOrdem) {
+		producao.executaOrdem(this, numeroOrdem);
+	}
+	
+	public void terminaOrdemProducao(String numeroOrdem) {
+		producao.terminaOrdem(this, numeroOrdem);
+	}
+	
+	public void insereDescarga(Descarga descarga) {
+		descarga.insere(this, descarga);
+	}
+	
+	public void executaOrdemDescarga(String numeroOrdem) {
+		descarga.executaOrdem(this, numeroOrdem);
+	}
+	
+	public void terminaOrdemDescarga(String numeroOrdem) {
+		descarga.terminaOrdem(this, numeroOrdem);
+	}
 	
 }

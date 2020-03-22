@@ -7,6 +7,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import udp.estatistica.Estatistica;
+import udp.ordem.Ordem;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -39,6 +43,7 @@ public class Message {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
 			doc.getDocumentElement().normalize();
+			
 			/*ORDENS*/
 			NodeList nList = doc.getElementsByTagName("Order");
 			Ordem ordem = new Ordem(nList);
@@ -55,6 +60,15 @@ public class Message {
 				Node nNode = nList.item(0);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					new RequestStore(address);
+				}
+			}
+			
+			/*ESTATISTICA*/
+			nList = doc.getElementsByTagName("Request_Stats");
+			if (nList.getLength() > 0) {
+				Node nNode = nList.item(0);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					new Estatistica();
 				}
 			}
 		} catch (Exception e) {

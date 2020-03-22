@@ -2,6 +2,9 @@ package main;
 
 
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +16,14 @@ import db.ZonaDescarga;
 import opc.OpcClient;
 import udp.ClientUdp;
 import udp.ServerUdp;
+import udp.estatistica.Estatistica;
+import udp.estatistica.PecasDescarregadas;
 
+import org.apache.commons.io.FileUtils ;
 public class Main {
 
 	public static void main(String[] args) {
-		//testaUdp();
+		testaUdp();
 		
 		//testaDB();
 		
@@ -25,12 +31,15 @@ public class Main {
 		
 		
 		
-		
+	}
+	public static void exportaHtml() throws IOException {
+		Estatistica estatistica = new Estatistica();
+		estatistica.exportaFicheiros();
 		
 	}
 	public static void testaOpc() {
-		OpcClient opc= new OpcClient();
-		opc.makeConnection();
+		OpcClient opc= OpcClient.getInstance();
+		opc.connect();
 		System.out.println("começa a ler:");
 		opc.setValue("teste", (short) 2); // INT = SHORT em java
 		opc.getValue("teste");
@@ -40,8 +49,8 @@ public class Main {
 		ServerUdp server = ServerUdp.getInstance();
 		server.run();
 		
-		ClientUdp clientUdp = new ClientUdp("127.0.0.1");
-		clientUdp.sendEcho("ola");
+		/*ClientUdp clientUdp = new ClientUdp("127.0.0.1");
+		clientUdp.sendEcho("ola");*/
 	}
 	
 	public static void testaDB() {

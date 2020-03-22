@@ -3,7 +3,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 
 public class DataBase {
 	private static DataBase instance=null;
@@ -20,6 +19,7 @@ public class DataBase {
 	private Maquina maquina;
 	private Producao producao;
 	private Descarga descarga;
+	private Ordem ordem;
 	
 	private DataBase() {
 		this.url = "jdbc:postgresql://db.fe.up.pt:5432/up201504257?currentSchema=fabrica";
@@ -31,6 +31,7 @@ public class DataBase {
 		this.maquina = new Maquina();
 		this.producao = new Producao();
 		this.descarga = new Descarga();
+		this.ordem = new Ordem();
 
 	}
 	public static DataBase getInstance() {
@@ -130,15 +131,14 @@ public class DataBase {
 	 * */
 	public ResultSet executeQueryResult(String sql) {
 		connect();
-		Statement stmt = null;
 		ResultSet rs = null;
 
 		try {
-			stmt = getC().createStatement();
-			rs = stmt.executeQuery("SET search_path to fabrica;"+sql);
-			
+			Statement stmt = getC().createStatement();
+			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
 			disconnect();
+			e.printStackTrace();
 		}
 		disconnect();
 		return rs;
@@ -161,12 +161,20 @@ public class DataBase {
 		this.c = conexao;
 	}
 
-	public void insereMaquina(Maquina maquina) {
-		maquina.insere(this, maquina);
+	public boolean insereMaquina(Maquina maquina) {
+		return maquina.insere(this, maquina);
 	}
 	
-	public void insereZonaDescarga(ZonaDescarga zonaDescarga) {
-		zonaDescarga.insere(this, zonaDescarga);
+	public ResultSet selectMaquina() {
+		return maquina.select(this);
+	}
+	
+	public boolean insereZonaDescarga(ZonaDescarga zonaDescarga) {
+		return zonaDescarga.insere(this, zonaDescarga);
+	}
+	
+	public ResultSet selectZonaDescarga() {
+		return zonaDescarga.select(this);
 	}
 	
 	public void insereProducao(Producao producao) {
@@ -192,5 +200,10 @@ public class DataBase {
 	public void terminaOrdemDescarga(String numeroOrdem) {
 		descarga.terminaOrdem(this, numeroOrdem);
 	}
+	
+	public ResultSet selectOrdem() {
+		return ordem.select(this);
+	}
+	
 	
 }

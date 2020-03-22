@@ -12,15 +12,18 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 
+import db.DataBase;
+
 public class OpcClient {
+	private static OpcClient instance=null;
 
 	private OpcUaClient client;
-	private int id_node = 4;
+	private int idNode = 4;
 	private String aux = "|var|CODESYS Control Win V3 x64.Application.SFS.";
 	private String publicHostName;
 
 	
-	public OpcClient() {
+	private OpcClient() {
 		super();
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
@@ -29,13 +32,18 @@ public class OpcClient {
 		}
 	}
 
+	public static OpcClient getInstance() {
+		if(instance == null)
+			instance = new OpcClient();
+		return instance;
+	}
 	/**
 	 * Função para ler o valor de uma variavel em especifico de uma célula em
 	 * especifico
 	 * 
 	 * @return true se fez conexão corretamente, false caso contrario
 	 */
-	public boolean makeConnection() {
+	public boolean connect() {
 
 		EndpointDescription[] endpoints;
 		try {
@@ -59,7 +67,7 @@ public class OpcClient {
 	 */
 	public boolean getValue(String nomeVariavel) {
 		String id = aux + nomeVariavel;
-		NodeId nodeIdString = new NodeId(id_node, id);
+		NodeId nodeIdString = new NodeId(idNode, id);
 		DataValue value = null;
 		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 		try {
@@ -81,7 +89,7 @@ public class OpcClient {
 	public <E> boolean setValue(String nomeVariavel, E set ) {
 		String id = aux + nomeVariavel;
 
-		NodeId nodeIdString = new NodeId(id_node, id);
+		NodeId nodeIdString = new NodeId(idNode, id);
 
 		Variant v = new Variant(set);
 		DataValue dv = new DataValue(v);

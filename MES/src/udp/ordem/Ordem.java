@@ -1,4 +1,4 @@
-package udp;
+package udp.ordem;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,7 +12,7 @@ public class Ordem {
 		this.nList = nList;
 	}
 
-	protected void criaOrdem() {
+	public void criaOrdem() {
 		/* Isto serve para as orden */
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 			Node nNode = nList.item(temp);

@@ -95,12 +95,11 @@ public class ListaOrdens {
 			return 0;
 		int folga=0;
 		if(estado==1) {
+			String dataLimite = Ordem.addDate(entradaData, Integer.valueOf(folgaMaxima));
+			return Ordem.calculaDiferenca(dataLimite, Ordem.converteData(Ordem.localDate()));
 			
 		}else if(estado==2) {
-			System.out.println("folga: "+Integer.valueOf(folgaMaxima));
 			String dataLimite = Ordem.addDate(entradaData, Integer.valueOf(folgaMaxima));
-			System.out.println("Entrada: "+entradaData);
-			System.out.println(dataLimite);
 			return Ordem.calculaDiferenca(dataLimite, fimData);
 		}
 		return folga;

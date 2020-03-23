@@ -13,7 +13,7 @@ public class Ordem {
 	public Ordem() {
 	}
 	/**
-	 * Funçao usada para saber Data e hora atual 
+	 * Funçao usada para saber Data e hora atual em formato (MM/dd/yyyy HH:mm:ss)
 	 * 
 	 * @return DataHora String com data e hora
 	 */
@@ -24,9 +24,36 @@ public class Ordem {
 		
 	}
 	/**
+	 * Funçao para converter do formato (MM/dd/yyyy HH:mm:ss) para (dd/MM/yyyy HH:mm:ss)
+	 * firstDateString - Data em formato de String (MM/dd/yyyy HH:mm:ss)
+	 * @return Data em string
+	 */
+	public static String converteData(String firstDateString) {
+		final String OLD_FORMAT = dateFormat;
+		final String NEW_FORMAT = "dd/MM/yyyy HH:mm:ss";
+
+		// August 12, 2010
+		String oldDateString = firstDateString;
+		String newDateString;
+
+		SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT);
+		Date d=null;
+		try {
+			d = sdf.parse(oldDateString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sdf.applyPattern(NEW_FORMAT);
+		newDateString = sdf.format(d);
+
+	    return newDateString;
+	}
+	
+	/**
 	 * Funçao usada para saber a diferença entre 2 datas
-	 * @param firstDateString - Data em formato de String (dd/MM/yy HH:mm:ss)
-	 * @param secondDateString - Data em formato de String (dd/MM/yy HH:mm:ss)
+	 * @param firstDateString - Data em formato de String (dd/MM/yyyy HH:mm:ss)
+	 * @param secondDateString - Data em formato de String (dd/MM/yyyy HH:mm:ss)
 	 * @return retorna a diferença em segundos
 	 */
 	public static int calculaDiferenca(String firstDateString, String secondDateString) {

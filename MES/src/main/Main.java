@@ -2,19 +2,9 @@ package main;
 
 
 
-import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+
 
 import db.DataBase;
 import db.Descarga;
@@ -42,6 +32,8 @@ public class Main {
 		//testaDB();
 		
 		//testaOpc();
+		//testaDB();
+
 		ListaOrdens estatisticasMaquina = new ListaOrdens();
 		try {
 			estatisticasMaquina.exportaFicheiro();
@@ -49,7 +41,6 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
 	}
 	
@@ -78,9 +69,9 @@ public class Main {
 	
 	public static void testaDB() {
 		DataBase db = DataBase.getInstance();
-		//db.insereProducao(new Producao("423", "P2", "P3", 56, 50));
-		//db.executaOrdemProducao("423");		
-		db.terminaOrdemProducao("423");
+		db.insereProducao(new Producao("542", "P2", "P3", 56, 50));
+		db.executaOrdemProducao("542");		
+		//db.terminaOrdemProducao("423");
 		
 		/*db.insereDescarga(new Descarga("132", "P2", "CM2", 10));
 		db.executaOrdemDescarga("132");

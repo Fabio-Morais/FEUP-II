@@ -34,4 +34,5 @@ public class Estatistica {
 		return new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss").format(timestamp);
 		
 	}
+	
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.apache.commons.io.FileUtils;
 
 import db.DataBase;
+import db.Ordem;
 
 public class EstatisticasMaquina {
 	private DataBase db;
@@ -23,28 +24,9 @@ public class EstatisticasMaquina {
 		String title = "Estatistica Maquinas";
 		StringBuilder body = new StringBuilder();
 
-
-		body.append("<div class=\"container-fluid \" >\r\n" + 
-				"<table  class=\"table table-dark table-hover\">\r\n" + 
-				"  <tr>\r\n" + 
-				"    <th class=\"text-center\">Tipo de Maquina</th>\r\n" + 
-				"    <th class=\"text-center\">Tipo de pe&ccedil;a operada</th>\r\n" + 
-				"    <th class=\"text-center\">Tempo</th>\r\n" + 
-				"  </tr>\r\n");
-		
-		ResultSet rs= db.selectMaquina();
-		try {
-			while(rs.next()) {
-				body.append("<tr>\r\n");
-				body.append("<td class=\"text-center\">"+rs.getString("tipomaquina")+"</td>\r\n");
-				body.append("<td class=\"text-center\">"+rs.getString("tipopecaoperada")+"</td>\r\n");
-				body.append("<td class=\"text-center\">"+rs.getString("tempo")+"</td>\r\n");
-				body.append("</tr>\r\n");
-
-			}
-		} catch (SQLException e) {
-		}
-		body.append("</table></div>");
+		tempoTotalOperacao(body);
+		numeroPecasOperadas(body);
+		pecasPorTipo(body);
 		
 		htmlString = htmlString.replace("$title", title);
 		htmlString = htmlString.replace("#sec", title);
@@ -52,5 +34,76 @@ public class EstatisticasMaquina {
 		String fileName= "estatisticaMaquina("+ Estatistica.localDate()+").html";
 		File newHtmlFile = new File(fileName);
 		FileUtils.writeStringToFile(newHtmlFile, htmlString, x);
+	}
+	
+	private void numeroPecasOperadas(StringBuilder body) {
+		body.append("<div class=\"container-fluid \" >\r\n" + 
+				"<h2>Numero de pe&ccedil;as operadas</h2>\r\n"+
+				"<table  class=\"table table-dark table-hover\">\r\n" + 
+				"  <tr>\r\n" + 
+				"    <th class=\"text-center\">Tipo de Maquina</th>\r\n" + 
+				"    <th class=\"text-center\">Total de pe&ccedil;a operadas</th>\r\n" + 
+				"  </tr>\r\n");
+		
+		ResultSet rs= db.selectMaquinaTotalPecas();
+		try {
+			while(rs.next()) {
+				body.append("<tr>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("tipomaquina")+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("count")+"</td>\r\n");
+				body.append("</tr>\r\n");
+
+			}
+		} catch (SQLException e) {
+		}
+		body.append("</table></div>");
+	}
+	
+	private void tempoTotalOperacao(StringBuilder body) {
+		body.append("<div class=\"container-fluid \" >\r\n" + 
+				"<h2>Tempo total de opera&ccedil;ao</h2>\r\n"+
+				"<table  class=\"table table-dark table-hover\">\r\n" + 
+				"  <tr>\r\n" + 
+				"    <th class=\"text-center\">Tipo de Maquina</th>\r\n" + 
+				"    <th class=\"text-center\">Tempo total de opera&ccedil;ao</th>\r\n" + 
+				"  </tr>\r\n");
+		
+		ResultSet rs= db.selectMaquinaTempoTotal();
+		try {
+			while(rs.next()) {
+				body.append("<tr>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("tipomaquina")+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("sum")+"</td>\r\n");
+				body.append("</tr>\r\n");
+
+			}
+		} catch (SQLException e) {
+		}
+		body.append("</table></div>");
+	}
+
+	private void pecasPorTipo(StringBuilder body) {
+		body.append("<div class=\"container-fluid \" >\r\n" + 
+				"<h2>Numero de pe&ccedil;as operadas por tipo</h2>\r\n"+
+				"<table  class=\"table table-dark table-hover\">\r\n" + 
+				"  <tr>\r\n" + 
+				"    <th class=\"text-center\">Tipo de Maquina</th>\r\n" + 
+				"    <th class=\"text-center\">Tipo de pe&ccedil;a</th>\r\n" + 
+				"    <th class=\"text-center\">Total pe&ccedil;as operadas</th>\r\n" + 
+				"  </tr>\r\n");
+		
+		ResultSet rs= db.selectMaquinaPecasPorTipo();
+		try {
+			while(rs.next()) {
+				body.append("<tr>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("tipomaquina")+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("tipopecaoperada")+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+rs.getString("count")+"</td>\r\n");
+				body.append("</tr>\r\n");
+
+			}
+		} catch (SQLException e) {
+		}
+		body.append("</table></div>");
 	}
 }

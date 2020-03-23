@@ -168,6 +168,18 @@ public class DataBase {
 	public ResultSet selectMaquina() {
 		return maquina.select(this);
 	}
+
+	public ResultSet selectMaquinaTempoTotal() {
+		return maquina.selectTempoTotal(this);
+	}
+
+	public ResultSet selectMaquinaTotalPecas() {
+		return maquina.selectTotalPecas(this);
+	}
+
+	public ResultSet selectMaquinaPecasPorTipo() {
+		return maquina.selectPecasPorTipo(this);
+	}
 	
 	public boolean insereZonaDescarga(ZonaDescarga zonaDescarga) {
 		return zonaDescarga.insere(this, zonaDescarga);
@@ -177,28 +189,36 @@ public class DataBase {
 		return zonaDescarga.select(this);
 	}
 	
-	public void insereProducao(Producao producao) {
-		producao.insere(this, producao);
+	public ResultSet selectZonaDescargaTotal() {
+		return zonaDescarga.selectPecasDescarregadasTotal(this);
 	}
 	
-	public void executaOrdemProducao(String numeroOrdem) {
-		producao.executaOrdem(this, numeroOrdem);
+	public ResultSet selectZonaDescargaPorPeca() {
+		return zonaDescarga.selectPecasDescarregadasPorTipo(this);
 	}
 	
-	public void terminaOrdemProducao(String numeroOrdem) {
-		producao.terminaOrdem(this, numeroOrdem);
+	public boolean insereProducao(Producao producao) {
+		return producao.insere(this, producao);
 	}
 	
-	public void insereDescarga(Descarga descarga) {
-		descarga.insere(this, descarga);
+	public boolean executaOrdemProducao(String numeroOrdem) {
+		return producao.executaOrdem(this, numeroOrdem);
 	}
 	
-	public void executaOrdemDescarga(String numeroOrdem) {
-		descarga.executaOrdem(this, numeroOrdem);
+	public boolean terminaOrdemProducao(String numeroOrdem) {
+		return producao.terminaOrdem(this, numeroOrdem);
 	}
 	
-	public void terminaOrdemDescarga(String numeroOrdem) {
-		descarga.terminaOrdem(this, numeroOrdem);
+	public boolean insereDescarga(Descarga descarga) {
+		return descarga.insere(this, descarga);
+	}
+	
+	public boolean executaOrdemDescarga(String numeroOrdem) {
+		return descarga.executaOrdem(this, numeroOrdem);
+	}
+	
+	public boolean terminaOrdemDescarga(String numeroOrdem) {
+		return descarga.terminaOrdem(this, numeroOrdem);
 	}
 	
 	public ResultSet selectOrdem() {

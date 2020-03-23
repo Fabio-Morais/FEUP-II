@@ -24,5 +24,21 @@ public class Maquina {
 		String query= "SELECT tipomaquina,tipopecaoperada,tempo FROM fabrica.maquina";
 		return db.executeQueryResult(query);
 	}
+	
+	protected ResultSet selectTempoTotal(DataBase db) {
+		String query= "SELECT tipomaquina,sum(tempo) FROM fabrica.maquina GROUP BY tipomaquina ORDER BY tipomaquina";
+		return db.executeQueryResult(query);
+	}
+	
+	protected ResultSet selectTotalPecas(DataBase db) {
+		String query= "SELECT tipomaquina,count(tipopecaoperada) FROM fabrica.maquina GROUP BY tipomaquina ORDER BY tipomaquina";
+		return db.executeQueryResult(query);
+	}
+	
+	protected ResultSet selectPecasPorTipo(DataBase db) {
+		String query= "SELECT tipomaquina,tipopecaoperada,count(tipopecaoperada) FROM fabrica.maquina GROUP BY tipomaquina, tipopecaoperada ORDER BY tipomaquina ASC, count DESC";
+		return db.executeQueryResult(query);
+	}
+
 
 }

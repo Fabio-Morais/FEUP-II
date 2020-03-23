@@ -24,5 +24,15 @@ public class ZonaDescarga {
 		String query = "SELECT tipodescarga, tipopecadescarregada FROM fabrica.ZonaDescarga";
 		return db.executeQueryResult(query);
 	}
+	
+	protected ResultSet selectPecasDescarregadasTotal(DataBase db) {
+		String query = "SELECT tipodescarga, count(*) FROM fabrica.zonaDescarga GROUP BY tipodescarga ORDER BY tipodescarga";
+		return db.executeQueryResult(query);
+	}
+	
+	protected ResultSet selectPecasDescarregadasPorTipo(DataBase db) {
+		String query = "SELECT tipodescarga, tipopecadescarregada, count(*) FROM fabrica.zonaDescarga GROUP BY tipodescarga,tipopecadescarregada ORDER BY tipodescarga ASC, count DESC";
+		return db.executeQueryResult(query);
+	}
 
 }

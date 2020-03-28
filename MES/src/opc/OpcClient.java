@@ -19,7 +19,7 @@ public class OpcClient {
 
 	private OpcUaClient client;
 	private int idNode = 4;
-	private String aux = "|var|CODESYS Control Win V3 x64.Application.SFS.";
+	private String sfc = "|var|CODESYS Control Win V3 x64.Application.";
 	private String publicHostName;
 
 	
@@ -30,6 +30,7 @@ public class OpcClient {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		connect();
 	}
 
 	public static OpcClient getInstance() {
@@ -61,33 +62,59 @@ public class OpcClient {
 	}
 
 	/**
-	 * Função para ler o valor de uma variavel em especifico
+	 * Função para ler o valor de uma variavel em especifico (|var|CODESYS Control Win V3 x64.Application.)
 	 * @param celulaName -> contém o nome da variavel
-	 * @return true se nao houve erro, false se houve algum erro
+	 * @return short[1] caso retorne uma valor, ou um short[x] caso retorne um array
 	 */
-	public boolean getValue(String nomeVariavel) {
-		String id = aux + nomeVariavel;
+	public short[] getValue(String nomeVariavel) {
+		short[] valueShort = new short[1];;
+		
+		String id=sfc + nomeVariavel ;
 		NodeId nodeIdString = new NodeId(idNode, id);
 		DataValue value = null;
+
+		/*ler para array*/
+		if(nomeVariavel.equals("SFS.Stock")) {
+			return readToArray(nomeVariavel);
+		}
+		
 		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 		try {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
-		System.out.println("O valor da variável é: " + value.getValue().getValue());
-		return true;
+		valueShort[0] = (short) value.getValue().getValue();
+		return valueShort;
+		
+	}
+	
+	private short[] readToArray(String nomeVariavel) {
+		short[] valueShort = new short[9];
+
+		for(int i=0; i<9; i++) {
+			String id = sfc + nomeVariavel+"["+(i+1)+"]";
+			NodeId nodeIdString = new NodeId(idNode, id);
+			client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+			try {
+				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue().getValue();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		return valueShort;
 	}
 	
 	
-	
 
-	/**Função para inserir valores booleanos
+	/**Função para inserir valores booleanos (|var|CODESYS Control Win V3 x64.Application.)
 	 * @return true se inseriu corretamente, false caso contrario
 	 */
 	public <E> boolean setValue(String nomeVariavel, E set ) {
-		String id = aux + nomeVariavel;
+		String id = sfc + nomeVariavel;
 
 		NodeId nodeIdString = new NodeId(idNode, id);
 

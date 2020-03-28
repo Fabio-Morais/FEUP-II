@@ -34,13 +34,9 @@ public class Main {
 		//testaOpc();
 		//testaDB();
 
-		ListaOrdens estatisticasMaquina = new ListaOrdens();
-		try {
-			estatisticasMaquina.exportaFicheiro();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		OpcClient opcClient = OpcClient.getInstance();
+		ServerUdp server = ServerUdp.getInstance();
+		server.start();
 		
 	}
 	

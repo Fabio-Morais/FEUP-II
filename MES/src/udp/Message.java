@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import opc.OpcClient;
 import udp.estatistica.Estatistica;
 import udp.ordem.Ordem;
 
@@ -71,6 +72,18 @@ public class Message {
 					new Estatistica();
 				}
 			}
+			
+			/*Peças na fabrica*/
+			nList = doc.getElementsByTagName("Request_Pieces");
+			if (nList.getLength() > 0) {
+				Node nNode = nList.item(0);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					OpcClient opc = OpcClient.getInstance();
+					short pecasSistema = opc.getValue("SFS.PecasSistema")[0];
+					System.out.println(pecasSistema);
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

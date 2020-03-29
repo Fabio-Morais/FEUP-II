@@ -12,6 +12,7 @@ import db.Maquina;
 import db.Ordem;
 import db.Producao;
 import db.ZonaDescarga;
+import fabrica.Fabrica;
 import opc.OpcClient;
 import udp.ClientUdp;
 import udp.ServerUdp;
@@ -33,11 +34,11 @@ public class Main {
 		
 		//testaOpc();
 		//testaDB();
-
-		OpcClient opcClient = OpcClient.getInstance();
-		ServerUdp server = ServerUdp.getInstance();
-		server.start();
+		Fabrica fabrica = new Fabrica();
+		fabrica.sendPath();//envia o caminho
 		
+		
+
 	}
 	
 	
@@ -51,8 +52,7 @@ public class Main {
 		OpcClient opc= OpcClient.getInstance();
 		opc.connect();
 		System.out.println("começa a ler:");
-		opc.setValue("teste", (short) 2); // INT = SHORT em java
-		opc.getValue("teste");
+
 	}
 	
 	public static void testaUdp() {

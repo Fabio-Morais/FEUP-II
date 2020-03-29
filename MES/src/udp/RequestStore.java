@@ -13,7 +13,7 @@ public class RequestStore {
 	 */
 	protected void sendXml() {
 		OpcClient opcClient = OpcClient.getInstance();
-		short[] values = opcClient.getValue("SFS.Stock");
+		short[] values = opcClient.getValue("SFS","Stock");
 		if(values.length != 9)
 			return;
 		

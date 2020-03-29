@@ -62,19 +62,20 @@ public class OpcClient {
 	}
 
 	/**
-	 * Função para ler o valor de uma variavel em especifico (|var|CODESYS Control Win V3 x64.Application.)
-	 * @param celulaName -> contém o nome da variavel
+	 * Função para ler o valor de uma variavel em especifico ARRAY OU INTEIRO (|var|CODESYS Control Win V3 x64.Application.)
+	 * @param localizacao - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
 	 * @return short[1] caso retorne uma valor, ou um short[x] caso retorne um array
 	 */
-	public short[] getValue(String nomeVariavel) {
-		short[] valueShort = new short[1];;
+	public short[] getValue(String localizacao, String nomeVariavel) {
+		short[] valueShort = new short[1];
 		
-		String id=sfc + nomeVariavel ;
+		String id=sfc +localizacao+"."+ nomeVariavel ;
 		NodeId nodeIdString = new NodeId(idNode, id);
 		DataValue value = null;
 
 		/*ler para array*/
-		if(nomeVariavel.equals("SFS.Stock")) {
+		if(nomeVariavel.equals("Stock")) {
 			return readToArray(nomeVariavel);
 		}
 		
@@ -83,10 +84,36 @@ public class OpcClient {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
 			e.printStackTrace();
+
 			return null;
 		}
+
 		valueShort[0] = (short) value.getValue().getValue();
 		return valueShort;
+		
+	}
+	
+	/**
+	 * Função para ler o valor de uma variavel em especifico BOOLEANA (|var|CODESYS Control Win V3 x64.Application.)
+	 * @param localizacao - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
+	 * @return short[1] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public boolean getValueBool(String localizacao, String nomeVariavel) {
+		
+		
+		String id=sfc +localizacao+"."+ nomeVariavel ;
+		NodeId nodeIdString = new NodeId(idNode, id);
+		DataValue value = null;
+
+		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+		try {
+			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return (boolean) value.getValue().getValue();
 		
 	}
 	
@@ -111,21 +138,19 @@ public class OpcClient {
 	
 
 	/**Função para inserir valores booleanos (|var|CODESYS Control Win V3 x64.Application.)
+	 * @param localizacao - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - Nome da variavel a alterar
+	 * @param set - valor da variavel a alterar (pode ser qualquer tipo)
 	 * @return true se inseriu corretamente, false caso contrario
 	 */
-	public <E> boolean setValue(String nomeVariavel, E set ) {
-		String id = sfc + nomeVariavel;
-
+	public <E> boolean setValue(String localizacao, String nomeVariavel, E set ) {
+		String id = sfc+localizacao+"." + nomeVariavel;
 		NodeId nodeIdString = new NodeId(idNode, id);
-
 		Variant v = new Variant(set);
 		DataValue dv = new DataValue(v);
-
 		try {
-			client.writeValue(nodeIdString, dv);
-			System.out.println("Variavel alterada para: "
-					+ ((DataValue) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get()).getValue()
-							.getValue());
+			client.writeValue(nodeIdString, dv).get();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

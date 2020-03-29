@@ -79,7 +79,7 @@ public class Message {
 				Node nNode = nList.item(0);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					OpcClient opc = OpcClient.getInstance();
-					short pecasSistema = opc.getValue("SFS.PecasSistema")[0];
+					short pecasSistema = opc.getValue("SFS","PecasSistema")[0];
 					System.out.println(pecasSistema);
 				}
 			}

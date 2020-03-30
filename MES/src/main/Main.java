@@ -13,6 +13,7 @@ import db.Ordem;
 import db.Producao;
 import db.ZonaDescarga;
 import fabrica.Fabrica;
+import fabrica.Ordens;
 import opc.OpcClient;
 import udp.ClientUdp;
 import udp.ServerUdp;
@@ -23,6 +24,9 @@ import udp.estatistica.PecasDescarregadas;
 
 import org.apache.commons.io.FileUtils ;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.Random;
 
 
 public class Main {
@@ -34,11 +38,13 @@ public class Main {
 		
 		//testaOpc();
 		//testaDB();
-		Fabrica fabrica = new Fabrica();
-		fabrica.sendPath();//envia o caminho
+		/*Fabrica fabrica = Fabrica.getInstance();
+		fabrica.imprimeHeap();
+	System.out.println("----------------------------");
+		ServerUdp udp = ServerUdp.getInstance();
+		udp.start();*/
 		
-		
-
+		OpcClient opc = OpcClient.getInstance();
 	}
 	
 	
@@ -65,13 +71,29 @@ public class Main {
 	
 	public static void testaDB() {
 		DataBase db = DataBase.getInstance();
-		db.insereProducao(new Producao("542", "P2", "P3", 56, 50));
-		db.executaOrdemProducao("542");		
+		
+		db.insereProducao(new Producao("4231", "P2", "P3", 20, 100));
+		for(int i=0; i<5; i++ ) {
+			int r = new Random().nextInt(1000);
+			int tempo = new Random().nextInt(500 + 1)  + 300;
+			//db.insereProducao(new Producao(""+r, "P2", "P3", (i+5)*2, tempo));
+			//db.insereDescarga(new Descarga(""+r, "P2", "P3", tempo));
+		}
+		//db.executaOrdemProducao("542");		
 		//db.terminaOrdemProducao("423");
 		
-		/*db.insereDescarga(new Descarga("132", "P2", "CM2", 10));
-		db.executaOrdemDescarga("132");
-		db.terminaOrdemDescarga("132");*/
+		for(int i=0; i<5; i++ ) {
+			int tempo = new Random().nextInt(8 + 1)  + 1;
+			//db.insereZonaDescarga(new ZonaDescarga("MA", "P"+tempo));
+			//db.insereZonaDescarga(new ZonaDescarga("MB", "P"+tempo));
+
+		}
+		
+		for(int i=0; i<5; i++ ) {
+			int tempo = new Random().nextInt(8 + 1)  + 1;
+			//db.insereMaquina(new Maquina("MB", "P"+ tempo, (tempo*2)+i*2));
+
+		}
 	}
 
 }

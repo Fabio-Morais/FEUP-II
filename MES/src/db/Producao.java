@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 
 public class Producao {
 
@@ -57,21 +58,21 @@ public class Producao {
 		this.folgaExecucao = folgaExecucao;
 	}
 	protected boolean insere(DataBase db, Producao producao) {
-		String query= "INSERT INTO Producao (numeroOrdem, horaEntradaOrdem, pecaOrigem, pecaFinal, quantidadeProduzir, atrasoMaximo) VALUES ('"+producao.numeroOrdem+"', '"+producao.horaEntradaOrdem
-				+"', '"+producao.pecaOrigem+"', '"+producao.pecaFinal+"',"+producao.quantidadeProduzir+", "+producao.atrasoMaximo+")";
+		String query= "INSERT INTO Producao (numeroOrdem, pecaOrigem, pecaFinal, quantidadeProduzir, atrasoMaximo) VALUES ('"+producao.numeroOrdem+"', "
+				+"'"+producao.pecaOrigem+"', '"+producao.pecaFinal+"',"+producao.quantidadeProduzir+", "+producao.atrasoMaximo+")";
 		return db.executeQuery(query);
 		
 	}
 
-	protected boolean executaOrdem(DataBase db, String numeroOrdem) {
-		String query= "UPDATE Producao SET estadoOrdem= "+ 1 + ", horaInicioExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
-		return db.executeQuery(query);
-		
+	
+	protected ResultSet selectOrdensPendentes (DataBase db) {
+		String query= "SELECT * FROM fabrica.ordem \r\n" + 
+				"INNER JOIN fabrica.producao\r\n" + 
+				"ON ordem.numeroOrdem = producao.numeroOrdem  WHERE estadoordem = '0' ";
+		return db.executeQueryResult(query);
+	}
+	public String getNumeroOrdem() {
+		return numeroOrdem;
 	}
 	
-	protected boolean terminaOrdem(DataBase db, String numeroOrdem) {
-		String query= "UPDATE Producao SET estadoOrdem= "+ 2 + ", horaFimExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
-		return db.executeQuery(query);
-		
-	}
 }

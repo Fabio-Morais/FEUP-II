@@ -10,7 +10,16 @@ import java.util.concurrent.TimeUnit;
 
 public class Ordem {
 	private final static String dateFormat="MM/dd/yyyy HH:mm:ss";
+	
+	private String numeroOrdem;
+	private String horaEntradaOrdem;
 	public Ordem() {
+		
+	}
+	
+ 	public Ordem(String numeroOrdem) {
+		this.horaEntradaOrdem = Ordem.localDate();
+		this.numeroOrdem = numeroOrdem;
 	}
 	/**
 	 * Funçao usada para saber Data e hora atual em formato (MM/dd/yyyy HH:mm:ss)
@@ -114,18 +123,29 @@ public class Ordem {
 		
 	}
 	
+	public boolean insert (DataBase db, Ordem ordem) {
+		String query = "INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem) VALUES ('"+ordem.numeroOrdem+"', '"+ordem.horaEntradaOrdem+"' )";
+		return db.executeQuery(query);
+	}
 	
+	protected boolean executaOrdem(DataBase db, String numeroOrdem) {
+		String query= "UPDATE Ordem SET estadoOrdem= "+ 1 + ", horaInicioExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
+		return db.executeQuery(query);
+		
+	}
 	
-	public ResultSet select(DataBase db) {
-		String query= "SELECT  x.numeroordem, x.estadoordem, x.pecasproduzidas, x.pecasproducao, x.pecaspendentes,TO_CHAR(x.horaentradaordem :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horaentradaordem, \r\n" + 
-				"TO_CHAR(x.horainicioexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horainicioexecucao, \r\n" + 
-				"TO_CHAR(x.horafimexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horafimexecucao, x.folgaexecucao, producao.atrasomaximo \r\n" + 
-				"FROM (SELECT numeroordem, estadoordem, pecasproduzidas, pecasproducao, pecaspendentes,horaentradaordem, horainicioexecucao, \r\n" + 
-				"horafimexecucao, folgaexecucao FROM fabrica.Producao\r\n" + 
-				"UNION ALL \r\n" + 
-				"select numeroordem, estadoordem, pecasproduzidas, pecasproducao, pecaspendentes,horaentradaordem, horainicioexecucao, horafimexecucao, folgaexecucao \r\n" + 
-				"from fabrica.descarga) as x\r\n" + 
-				"FULL OUTER JOIN fabrica.producao ON x.numeroordem = producao.numeroordem";
+	protected boolean terminaOrdem(DataBase db, String numeroOrdem) {
+		String query= "UPDATE Ordem SET estadoOrdem= "+ 2 + ", horaFimExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
+		return db.executeQuery(query);
+	}
+		
+	
+ 	public ResultSet select(DataBase db) {
+		String query= "SELECT  Ordem.numeroordem, estadoordem, pecasproduzidas, pecasproducao, pecaspendentes,TO_CHAR(horaentradaordem :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horaentradaordem,				TO_CHAR(horainicioexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horainicioexecucao, TO_CHAR(horafimexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horafimexecucao, producao.atrasomaximo\r\n" + 
+				"     FROM fabrica.Ordem\r\n" + 
+				"FULL OUTER JOIN fabrica.producao on ordem.numeroordem = producao.numeroordem";
 		return db.executeQueryResult(query);	
 		}
+ 	
+
 }

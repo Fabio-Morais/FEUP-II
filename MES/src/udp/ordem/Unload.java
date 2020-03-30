@@ -6,6 +6,8 @@ import org.w3c.dom.NamedNodeMap;
 import db.DataBase;
 import db.Descarga;
 import db.Producao;
+import fabrica.Fabrica;
+import fabrica.Ordens;
 
 public class Unload {
 	private NamedNodeMap node;
@@ -14,6 +16,7 @@ public class Unload {
 	private String destination;
 	private String quantity;
 	private DataBase db;
+	private Fabrica fabrica = Fabrica.getInstance();
 
 	public Unload(Element eElement) {
 		this.db = DataBase.getInstance();
@@ -28,7 +31,10 @@ public class Unload {
 	}
 	
 	public void insereDb() {
-		db.insereDescarga(new Descarga(numeroOrdem, type, destination, Integer.valueOf(quantity)));
+		/*so adiciona na heap caso adicione na DB com exito*/
+		if(db.insereDescarga(new Descarga(numeroOrdem, type, destination, Integer.valueOf(quantity))))
+			fabrica.addToHeap(new Ordens(numeroOrdem, -1));
+
 	}
 	
 	public void debug() {

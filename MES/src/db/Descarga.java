@@ -1,5 +1,7 @@
 package db;
 
+import java.sql.ResultSet;
+
 public class Descarga {
 	private String numeroOrdem;
 	private int estadoOrdem; //0-> pendente, 1->execuçao, 3-> terminada
@@ -53,21 +55,22 @@ public class Descarga {
 		this.folgaExecucao = folgaExecucao;
 	}
 	protected boolean insere(DataBase db, Descarga descarga) {
-		String query= "INSERT INTO Descarga (numeroOrdem, horaEntradaOrdem,pecaDescarga, destino, quantidadePecasDescarregar) VALUES ('"+descarga.numeroOrdem+"', '"+descarga.horaEntradaOrdem
-				+"', '"+descarga.pecaDescarga+"', '"+descarga.destino+"',"+descarga.quantidadePecasDescarregar+")";
+		String query= "INSERT INTO Descarga (numeroOrdem, pecaDescarga, destino, quantidadePecasDescarregar) VALUES ('"+descarga.numeroOrdem+"', '"
+				+descarga.pecaDescarga+"', '"+descarga.destino+"',"+descarga.quantidadePecasDescarregar+")";
 		return db.executeQuery(query);
 		
 	}
 
-	protected boolean executaOrdem(DataBase db, String numeroOrdem) {
-		String query= "UPDATE Descarga SET estadoOrdem= "+ 1 + ", horaInicioExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
-		return db.executeQuery(query);
-		
+	
+	protected ResultSet selectOrdensPendentes(DataBase db) {
+		String query= "SELECT * FROM fabrica.ordem \r\n" + 
+				"INNER JOIN fabrica.descarga\r\n" + 
+				"ON ordem.numeroOrdem = descarga.numeroOrdem  WHERE estadoordem = '0' ";
+		return db.executeQueryResult(query);
+	}
+	public String getNumeroOrdem() {
+		return numeroOrdem;
 	}
 	
-	protected boolean terminaOrdem(DataBase db, String numeroOrdem) {
-		String query= "UPDATE Descarga SET estadoOrdem= "+ 2 + ", horaFimExecucao= '"+ Ordem.localDate()+ "' WHERE numeroOrdem = '"+ numeroOrdem+"'";
-		return db.executeQuery(query);
-		
-	}
+	
 }

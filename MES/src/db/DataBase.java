@@ -162,7 +162,7 @@ public class DataBase {
 	}
 
 	public boolean insereMaquina(Maquina maquina) {
-		return maquina.insere(this, maquina);
+		return this.maquina.insere(this, maquina);
 	}
 	
 	public ResultSet selectMaquina() {
@@ -182,7 +182,7 @@ public class DataBase {
 	}
 	
 	public boolean insereZonaDescarga(ZonaDescarga zonaDescarga) {
-		return zonaDescarga.insere(this, zonaDescarga);
+		return this.zonaDescarga.insere(this, zonaDescarga);
 	}
 	
 	public ResultSet selectZonaDescarga() {
@@ -198,27 +198,28 @@ public class DataBase {
 	}
 	
 	public boolean insereProducao(Producao producao) {
-		return producao.insere(this, producao);
+		return ordem.insert(this,new Ordem(producao.getNumeroOrdem())) && this.producao.insere(this, producao);
 	}
 	
 	public boolean executaOrdemProducao(String numeroOrdem) {
-		return producao.executaOrdem(this, numeroOrdem);
+		return ordem.executaOrdem(this, numeroOrdem);
 	}
 	
 	public boolean terminaOrdemProducao(String numeroOrdem) {
-		return producao.terminaOrdem(this, numeroOrdem);
+		return ordem.terminaOrdem(this, numeroOrdem);
 	}
 	
 	public boolean insereDescarga(Descarga descarga) {
-		return descarga.insere(this, descarga);
+		return ordem.insert(this,new Ordem(descarga.getNumeroOrdem())) && this.descarga.insere(this, descarga);
+	}	
+	
+	public ResultSet selectProducao() {
+		return producao.selectOrdensPendentes(this);
 	}
 	
-	public boolean executaOrdemDescarga(String numeroOrdem) {
-		return descarga.executaOrdem(this, numeroOrdem);
-	}
 	
-	public boolean terminaOrdemDescarga(String numeroOrdem) {
-		return descarga.terminaOrdem(this, numeroOrdem);
+	public ResultSet selectDescarga() {
+		return descarga.selectOrdensPendentes(this);
 	}
 	
 	public ResultSet selectOrdem() {

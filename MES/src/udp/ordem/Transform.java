@@ -5,6 +5,8 @@ import org.w3c.dom.NamedNodeMap;
 
 import db.DataBase;
 import db.Producao;
+import fabrica.Fabrica;
+import fabrica.Ordens;
 
 public class Transform {
 	private NamedNodeMap node;
@@ -14,6 +16,7 @@ public class Transform {
 	private String quantidadeProduzir;
 	private String atrasoMaximo;
 	private DataBase db;
+	private Fabrica fabrica = Fabrica.getInstance();
 	
 	public Transform(Element eElement) {
 		this.node = eElement.getElementsByTagName("Transform").item(0).getAttributes();
@@ -27,7 +30,9 @@ public class Transform {
 		insereDb();
 	}
 	public void insereDb() {
-		db.insereProducao(new Producao(numeroOrdem, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo)));
+		/*so adiciona na heap caso adicione na DB com exito*/
+		if(db.insereProducao(new Producao(numeroOrdem, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo))))
+			fabrica.addToHeap(new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo)));
 	}
 	
 	public void debug() {

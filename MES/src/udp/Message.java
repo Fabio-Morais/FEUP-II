@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import fabrica.Fabrica;
 import opc.OpcClient;
 import udp.estatistica.Estatistica;
 import udp.ordem.Ordem;
@@ -23,6 +24,7 @@ import java.io.StringReader;
 public class Message {
 	private String address;
 
+	private Fabrica fabrica = Fabrica.getInstance();
 	public Message(String address) throws Exception {
 		super();
 		if(address ==null || address.isEmpty())
@@ -88,6 +90,10 @@ public class Message {
 			e.printStackTrace();
 			return false;
 		}
+		System.out.println("-------------------");
+		fabrica.imprimeHeap();
+		System.out.println("-------------------");
+
 		return true;
 
 	}

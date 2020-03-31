@@ -1,26 +1,25 @@
 package opc;
 
+import java.io.File;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
-
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
-import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
+import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
@@ -32,33 +31,33 @@ import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateReq
 import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 
-import db.DataBase;
+import fabrica.Fabrica;
+
+import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
 public class OpcClient {
 	private static OpcClient instance = null;
-
+	private Fabrica fabrica;
 	private OpcUaClient client;
 	private int idNode = 4;
 	private String sfc = "|var|CODESYS Control Win V3 x64.Application.";
 	private String publicHostName;
 
 	private final AtomicLong clientHandles = new AtomicLong(1L);
-	private static int counter = 0;
 
 	private OpcClient() {
 		super();
+		this.fabrica = Fabrica.getInstance();
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		connect();
-        CompletableFuture<OpcUaClient> future = new CompletableFuture<>();
 
 		try {
-			this.createSubscription(future);
+			this.createSubscription();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,10 +79,13 @@ public class OpcClient {
 		EndpointDescription[] endpoints;
 		try {
 			endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + publicHostName + ":4840").get();
-			OpcUaClientConfigBuilder cfg = new OpcUaClientConfigBuilder();
-			cfg.setEndpoint(endpoints[0]);
-			client = new OpcUaClient(cfg.build());
-			client.connect();
+			OpcUaClientConfig config = OpcUaClientConfig.builder()
+					.setApplicationName(LocalizedText.english("MinimalClient")).setApplicationUri("theURI")
+					.setCertificate(null).setKeyPair(null).setEndpoint(endpoints[0])
+					.setMaxResponseMessageSize(uint(50000)).setIdentityProvider(new AnonymousProvider())
+					.setRequestTimeout(uint(5000)).build();
+			client = new OpcUaClient(config);
+			client.connect().get();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -92,60 +94,75 @@ public class OpcClient {
 
 	}
 
-	public void createSubscription(CompletableFuture<OpcUaClient> future) throws Exception {
+	/** Cria subscrição para as variaveis escritas num ficheiro .txt */
+	private void createSubscription() throws Exception {
 
-		UaSubscription sub = null;
-
-		sub = client.getSubscriptionManager().createSubscription(10.0).get();
-
-		UInteger clientHandle = UInteger.valueOf(clientHandles.getAndIncrement());
-		MonitoringParameters parameters = new MonitoringParameters(clientHandle, 10.0, null, UInteger.valueOf(10),
-				true);
+		UaSubscription sub = client.getSubscriptionManager().createSubscription(10.0).get();
 
 		BiConsumer<UaMonitoredItem, Integer> onItemCreated = (item, id) -> item
 				.setValueConsumer(this::onSubscriptionValue);
 
-		List<UaMonitoredItem> items = null;
+		List<UaMonitoredItem> items = sub
+				.createMonitoredItems(TimestampsToReturn.Both, createMonitoredItemCreateRequests(), onItemCreated)
+				.get();
 
-		items = sub.createMonitoredItems(TimestampsToReturn.Both, createMonitoredItemCreateRequests(parameters),
-				onItemCreated).get();
-
-		for (UaMonitoredItem item : items) {
+		/*for (UaMonitoredItem item : items) {
 			if (item.getStatusCode().isGood()) {
 				System.out.println("Item created for NodeId: " + item.getReadValueId().getNodeId());
 			} else {
 				System.out.println("Failed to create item for NodeId: " + item.getReadValueId().getNodeId()
 						+ item.getStatusCode());
 			}
-		}
-		while(true) {
-			
-		}
+		}*/
 
 	}
 
+	/** Sempre que uma variavel muda de valor esta função corre */
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
-		System.out.println("Subscription value recieved:");
-		System.out.println("Item: " + item);
-		System.out.println("Value: " + value.getValue().getValue());
-		counter++;
-		System.out.println("Counter is: " + counter);
+		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
+		boolean valor = (boolean) value.getValue().getValue();
+		//System.out.println("->" + aux.substring(44, aux.length()) + " - " + value.getValue().getValue());
+		String node = aux.substring(44, aux.length());
+		int estado = (valor == true) ? 0 : 1; // se estiver free -> 0, se estiver ocupado -> 1
+		int[] coords = calculaCoords(node);
+		if(coords.length == 2) {
+			fabrica.getPlant().changeMap(coords[0], coords[1], estado);
+			//System.out.println(coords[0] + "-"+ coords[1] + " = "+ estado);
+
+		}
 	}
 
-	public List<MonitoredItemCreateRequest> createMonitoredItemCreateRequests(MonitoringParameters parameters)
-			throws IOException {
-		List<String> ids = Files.readAllLines(Paths.get("NodeIDs.txt"));
+	/** Vai buscar os Nodes ID no ficheiro de texto */
+	private List<MonitoredItemCreateRequest> createMonitoredItemCreateRequests() throws IOException {
+		File yourFile = new File("NodeIDs.txt");
+		yourFile.createNewFile(); // if file already exists will do nothing
+
+		List<String> ids = Files.readAllLines(Paths.get("Nodes/NodeIDs.txt"));
 		List<ReadValueId> rvIDs = new ArrayList<>();
 
 		for (String line : ids) {
-			rvIDs.add(
-					new ReadValueId(new NodeId(idNode, line), AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
+			rvIDs.add(new ReadValueId(new NodeId(idNode, "|var|CODESYS Control Win V3 x64.Application." + line),
+					AttributeId.Value.uid(), null, QualifiedName.NULL_VALUE));
 		}
 		List<MonitoredItemCreateRequest> MICR = new ArrayList<>();
 		for (ReadValueId ID : rvIDs) {
+			UInteger clientHandle = uint(clientHandles.getAndIncrement());
+			MonitoringParameters parameters = new MonitoringParameters(clientHandle, 10.0, null, uint(10), true);
 			MICR.add(new MonitoredItemCreateRequest(ID, MonitoringMode.Reporting, parameters));
 		}
 		return MICR;
+	}
+
+	private int[] calculaCoords(String string) {
+		String aux = string.substring(8, string.length() - ".free".length());
+		int[] x = new int[2];
+		try{
+			x[0] = Integer.valueOf(aux.substring(1, 2));
+			x[1] = Integer.valueOf(aux.substring(3, 4))-1;//corrige o valor, pois o Y começa em 1
+		} catch(Exception e ) {
+			return new int [0];
+		}
+		return x;
 	}
 
 	/**

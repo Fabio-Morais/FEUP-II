@@ -13,11 +13,13 @@ public class Fabrica {
 	private final int sizeOfPath=31;
 	private PriorityQueue<Ordens> heapOrdemPendente;
 	private DataBase db;
+	private Plant plant;
 	
 	private Fabrica() {
-		this.db = DataBase.getInstance();
-		criaHeap();
-		sincronizaOrdens();
+		//this.db = DataBase.getInstance();
+		this.plant = new Plant();
+		//criaHeap();
+		//sincronizaOrdens();
 	}
 	public static Fabrica getInstance() {
 		if(instance == null)
@@ -118,6 +120,9 @@ public class Fabrica {
 		for(int i=0; i<size; i++) {
 			heapOrdemPendente.add(new Ordens(aux.peek().getNumeroOrdem(), aux.poll().getPrioridade()));
 		}
+	}
+	public Plant getPlant() {
+		return plant;
 	}
 	
 }

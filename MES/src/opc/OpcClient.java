@@ -127,8 +127,6 @@ public class OpcClient {
 		int[] coords = calculaCoords(node);
 		if(coords.length == 2) {
 			fabrica.getPlant().changeMap(coords[0], coords[1], estado);
-			//System.out.println(coords[0] + "-"+ coords[1] + " = "+ estado);
-
 		}
 	}
 

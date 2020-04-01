@@ -1,5 +1,6 @@
 package udp.estatistica;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ public class ListaOrdens {
 		db= DataBase.getInstance();
 
 	}
-	public void exportaFicheiro() throws IOException {
+	public void exportaFicheiro(boolean abrirFicheiro) throws IOException {
 		String x=null;
 		File htmlTemplateFile = new File("htmlTemplate/template.html");
 		String htmlString = FileUtils.readFileToString(htmlTemplateFile,x);
@@ -30,9 +31,21 @@ public class ListaOrdens {
 		htmlString = htmlString.replace("$title", title);
 		htmlString = htmlString.replace("#sec", title);
 		htmlString = htmlString.replace("$body", body);
-		String fileName= "ordens("+ Estatistica.localDate()+").html";
+		String fileName= "estatisticas/ordens("+ Estatistica.localDate()+").html";
 		File newHtmlFile = new File(fileName);
 		FileUtils.writeStringToFile(newHtmlFile, htmlString, x);
+		//first check if Desktop is supported by Platform or not
+        if(!Desktop.isDesktopSupported()){
+            System.out.println("Desktop is not supported");
+            return;
+        }
+        
+        if(abrirFicheiro) {
+	        Desktop desktop = Desktop.getDesktop();
+	        if(newHtmlFile.exists()) desktop.open(newHtmlFile);
+        }
+        
+       
 	}
 	private void ordens(StringBuilder body) {
 		body.append("<div class=\"container-fluid \" >\r\n" + 

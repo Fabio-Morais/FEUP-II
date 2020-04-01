@@ -6,18 +6,20 @@ import java.text.SimpleDateFormat;
 public class Estatistica {	
 
 	public Estatistica() {
-		exportaFicheiros();
 	}
 
-	public void exportaFicheiros() {
+	/** exporta em .html as estatisticas
+	 * @param abrirFicheiro - true se quiser abrir ficheiro, false caso contrario
+	 * */
+	public void exportaFicheiros(boolean abrirFicheiro) {
 		PecasDescarregadas pecasDescarregadas = new PecasDescarregadas();
 		EstatisticasMaquina estatisticasMaquina = new EstatisticasMaquina();
 		ListaOrdens listaOrdens = new ListaOrdens();
 		
 		try {
-			listaOrdens.exportaFicheiro();
-			estatisticasMaquina.exportaFicheiro();
-			pecasDescarregadas.exportaFicheiro();
+			listaOrdens.exportaFicheiro(abrirFicheiro);
+			estatisticasMaquina.exportaFicheiro(abrirFicheiro);
+			pecasDescarregadas.exportaFicheiro(abrirFicheiro);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

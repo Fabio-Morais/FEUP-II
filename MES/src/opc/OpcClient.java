@@ -154,8 +154,22 @@ public class OpcClient {
 	private int[] calculaCoords(String string) {
 		String aux = string.substring(8, string.length() - ".free".length());
 		int[] x = new int[2];
+		int correcaoX = 0;
+		/*para o caso do C7T1a OU C7T1b ...etc*/
+		if(aux.substring(aux.length()-1, aux.length()).equals("b")) {
+			correcaoX=1;
+		}
+		if(aux.equals("AT1") || aux.equals("AT2")) {
+			try{
+				x[0] = 0;
+				x[1] = aux.substring(aux.length()-1, aux.length()).equals("1") ? 0: 6;//corrige o valor, pois o Y começa em 1
+			} catch(Exception e ) {
+				return new int [0];
+			}
+			return x;
+		}
 		try{
-			x[0] = Integer.valueOf(aux.substring(1, 2));
+			x[0] = Integer.valueOf(aux.substring(1, 2))+correcaoX;
 			x[1] = Integer.valueOf(aux.substring(3, 4))-1;//corrige o valor, pois o Y começa em 1
 		} catch(Exception e ) {
 			return new int [0];
@@ -187,10 +201,8 @@ public class OpcClient {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			return new short[0];
 		}
-
 		valueShort[0] = (short) value.getValue().getValue();
 		return valueShort;
 

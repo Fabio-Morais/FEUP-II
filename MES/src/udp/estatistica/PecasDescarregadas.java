@@ -1,5 +1,6 @@
 package udp.estatistica;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ public class PecasDescarregadas {
 	
 	}
 	
-	public void exportaFicheiro() throws IOException {
+	public void exportaFicheiro(boolean abrirFicheiro) throws IOException {
 		String x=null;
 		File htmlTemplateFile = new File("htmlTemplate/template.html");
 		String htmlString = FileUtils.readFileToString(htmlTemplateFile,x);
@@ -31,10 +32,15 @@ public class PecasDescarregadas {
 		htmlString = htmlString.replace("$title", title);
 		htmlString = htmlString.replace("#sec", title);
 		htmlString = htmlString.replace("$body", body);
-		String fileName= "pecasDescarregadas("+ Estatistica.localDate()+").html";
+		String fileName= "estatisticas/pecasDescarregadas("+ Estatistica.localDate()+").html";
 		System.out.println(fileName);
 		File newHtmlFile = new File(fileName);
 		FileUtils.writeStringToFile(newHtmlFile, htmlString, x);
+		
+		 if(abrirFicheiro) {
+		        Desktop desktop = Desktop.getDesktop();
+		        if(newHtmlFile.exists()) desktop.open(newHtmlFile);
+	        }
 	}
 	
 	private void numeroPecasDescarregadasTotal(StringBuilder body) {

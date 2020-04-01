@@ -41,6 +41,10 @@ public class Plant {
 		}
 	}
 	
+	public int[][] getMap() {
+		return map;
+	}
+
 	public void printMap() {
 		for(int i=0; i<map.length; i++) {
 			for(int j=0; j<map[i].length; j++) {

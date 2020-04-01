@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.EventQueue;
 import java.io.IOException;
 
 import db.DataBase;
@@ -10,6 +11,7 @@ import db.Producao;
 import db.ZonaDescarga;
 import fabrica.Fabrica;
 import fabrica.Ordens;
+import gui.Gui;
 import opc.OpcClient;
 import udp.ClientUdp;
 import udp.ServerUdp;
@@ -38,7 +40,9 @@ public class Main {
 		 * System.out.println("----------------------------"); ServerUdp udp =
 		 * ServerUdp.getInstance(); udp.start();
 		 */
-
+		Gui gui = new Gui();
+		gui.abreGui();
+		
 		Fabrica fabrica = Fabrica.getInstance();
 		fabrica.getPlant().printMap();
 
@@ -49,7 +53,7 @@ public class Main {
 
 
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(6000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -59,10 +63,9 @@ public class Main {
 			System.out.println("------------------");
 		}
 	}
-
 	public static void exportaHtml() throws IOException {
 		Estatistica estatistica = new Estatistica();
-		estatistica.exportaFicheiros();
+		estatistica.exportaFicheiros(false);
 
 	}
 

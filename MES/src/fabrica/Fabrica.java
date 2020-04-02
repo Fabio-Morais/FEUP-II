@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import db.DataBase;
+import db.Ordem;
 import opc.OpcClient;
 
 public class Fabrica {
@@ -14,17 +15,18 @@ public class Fabrica {
 	private DataBase db;
 	private Plant plant;
 	private ControlaPlc controlaPlc;
-	
+	private AtualizaOrdensEspera atualizaOrdensEspera;
 
 
 	
 	private Fabrica() {
-		//this.db = DataBase.getInstance();
+		this.db = DataBase.getInstance();
 		this.plant = new Plant();
 		this.controlaPlc = new ControlaPlc();
-		//criaHeap();
-		//sincronizaOrdens();
+		criaHeap();
+		sincronizaOrdens();
 	}
+	
 	public static Fabrica getInstance() {
 		if(instance == null)
 			instance = new Fabrica();
@@ -34,7 +36,11 @@ public class Fabrica {
 		heapOrdemPendente.add(ordens);
 	}
 	
-	
+	public void atualizaHeap() {
+		this.atualizaOrdensEspera = new AtualizaOrdensEspera();
+		atualizaOrdensEspera.start();
+		
+	}
 
 	/**Cria a heap e o comparator para essa heap*/
 	private void criaHeap() {
@@ -57,43 +63,50 @@ public class Fabrica {
 		ResultSet desc = db.selectDescarga();
 		try {
 			while(desc.next()) {
-				heapOrdemPendente.add(new Ordens(desc.getString("numeroOrdem"), -1));//ordem imediata
+				heapOrdemPendente.add(new Ordens(desc.getString("numeroOrdem"), -1, Ordem.converteData2(desc.getString("horaentradaordem")),0));//ordem imediata
 			}
 			while(prod.next()) {
-				heapOrdemPendente.add(new Ordens(prod.getString("numeroOrdem"), Integer.valueOf(prod.getString("atrasoMaximo"))));
+				heapOrdemPendente.add(new Ordens(prod.getString("numeroOrdem"), Integer.valueOf(prod.getString("atrasoMaximo")), 
+						Ordem.converteData2(prod.getString("horaentradaordem")),Integer.valueOf(prod.getString("atrasomaximo")) ));
+				/*int atraso = Integer.valueOf(prod.getString("atrasomaximo"));
+				String date= Ordem.converteData2(prod.getString("horaentradaordem"));
+				heapOrdemPendente.add(new Ordens(prod.getString("numeroOrdem"), Ordem.calculaTempoRestante(date, atraso), 
+						date,atraso ));*/
 			}
 		} catch (NumberFormatException | SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+		heapOrdemPendente.add(new Ordens("111111111", 100, Ordem.localDate(), 120));
+		heapOrdemPendente.add(new Ordens("32123", 50, Ordem.localDate(), 50));
+
         
 	}
 	
+	
+	/**Retorna uma nova heap, que é uma copia da original*/
+	public PriorityQueue<Ordens> getCopyHeapOrdemPendente() {
+		PriorityQueue<Ordens> copy = new PriorityQueue<>(heapOrdemPendente);
+		return copy;
+	}
+	
+	/**Retorna a heap original*/
+	public PriorityQueue<Ordens> getHeapOrdemPendente() {
+		return heapOrdemPendente;
+	}
+	
+	public void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
+		this.heapOrdemPendente = heapOrdemPendente;
+	}
 	public void imprimeHeap() {
-		Comparator<Ordens> result = new Comparator<Ordens>() {
-		      
-			@Override
-			public int compare(Ordens arg0, Ordens arg1) {
-				Integer x = arg0.getPrioridade();
-				Integer y = arg1.getPrioridade();
-	            return x.compareTo(y);
-			}
-	    };
+		
+		PriorityQueue<Ordens> aux = getCopyHeapOrdemPendente();
+		
+		int size= aux.size();
+		
+		for(int i=0; i<size; i++) {
+			System.out.println("numero Ordem: "+ aux.peek().getNumeroOrdem() +"  Prioridade: "+aux.poll().getPrioridade());
+		}
 
-	    PriorityQueue<Ordens> aux = new PriorityQueue<>(result);
-		
-		int size= heapOrdemPendente.size();
-		
-		
-		for(int i=0; i<size; i++) {
-			aux.add(new Ordens(heapOrdemPendente.peek().getNumeroOrdem(), heapOrdemPendente.peek().getPrioridade()));
-			System.out.println("numero Ordem: "+ heapOrdemPendente.peek().getNumeroOrdem() +"  Prioridade: "+heapOrdemPendente.poll().getPrioridade());
-		}
-		/*coloca na heap de novo*/
-		for(int i=0; i<size; i++) {
-			heapOrdemPendente.add(new Ordens(aux.peek().getNumeroOrdem(), aux.poll().getPrioridade()));
-		}
 	}
 	public Plant getPlant() {
 		return plant;

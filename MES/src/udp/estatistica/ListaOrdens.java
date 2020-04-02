@@ -74,7 +74,8 @@ public class ListaOrdens {
 				body.append("<td class=\"text-center\">"+rs.getString("horaentradaordem")+"</td>\r\n");
 				body.append("<td class=\"text-center\">"+converteNull(rs.getString("horainicioexecucao"))+"</td>\r\n");
 				body.append("<td class=\"text-center\">"+converteNull(rs.getString("horafimexecucao"))+"</td>\r\n");
-				body.append("<td class=\"text-center\">"+calculaFolga(rs.getInt("estadoordem"), rs.getString("atrasomaximo"), rs.getString("horaentradaordem"),rs.getString("horafimexecucao") )+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+calculaFolga(rs.getInt("estadoordem"), rs.getString("atrasomaximo"), 
+						rs.getString("horaentradaordem"),rs.getString("horafimexecucao") )+"</td>\r\n");
 				body.append("</tr>\r\n");
 
 			}
@@ -102,18 +103,19 @@ public class ListaOrdens {
 		else 
 			return x;
 	}
-	
+	/**
+	 * entradaData (dd/MM/yy HH:mm:ss)
+	 * */
 	private int calculaFolga(int estado, String folgaMaxima, String entradaData, String fimData) {
 		if(folgaMaxima == null)
 			return 0;
 		int folga=0;
 		if(estado==1) {
-			String dataLimite = Ordem.addDate(entradaData, Integer.valueOf(folgaMaxima));
-			return Ordem.calculaDiferenca(dataLimite, Ordem.converteData(Ordem.localDate()));
+			return (int) Ordem.calculaTempoRestante(Ordem.converteData3(entradaData), Integer.valueOf(folgaMaxima));
 			
 		}else if(estado==2) {
-			String dataLimite = Ordem.addDate(entradaData, Integer.valueOf(folgaMaxima));
-			return Ordem.calculaDiferenca(dataLimite, fimData);
+			String dataLimite = Ordem.addDate(Ordem.converteData3(entradaData), Integer.valueOf(folgaMaxima));
+			return Ordem.calculaDiferenca(Ordem.converteData(dataLimite), fimData);
 		}
 		return folga;
 	}

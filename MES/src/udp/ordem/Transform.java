@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
 import db.DataBase;
+import db.Ordem;
 import db.Producao;
 import fabrica.Fabrica;
 import fabrica.Ordens;
@@ -32,7 +33,7 @@ public class Transform {
 	public void insereDb() {
 		/*so adiciona na heap caso adicione na DB com exito*/
 		if(db.insereProducao(new Producao(numeroOrdem, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo))))
-			fabrica.addToHeap(new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo)));
+			fabrica.addToHeap(new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo)));
 	}
 	
 	public void debug() {

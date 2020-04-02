@@ -55,11 +55,7 @@ public class OpcClient {
 		}
 		connect();
 
-		try {
-			this.createSubscription();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	public static OpcClient getInstance() {
@@ -89,6 +85,11 @@ public class OpcClient {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+		try {
+			this.createSubscription();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return true;
 
@@ -194,7 +195,7 @@ public class OpcClient {
 
 		/* ler para array */
 		if (nomeVariavel.equals("Stock")) {
-			return readToArray(nomeVariavel);
+			return readToArray(id);
 		}
 		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 		try {
@@ -233,16 +234,14 @@ public class OpcClient {
 
 	}
 
-	private short[] readToArray(String nomeVariavel) {
+	private short[] readToArray(String id) {
 		short[] valueShort = new short[9];
-
 		for (int i = 0; i < 9; i++) {
-			String id = sfc + nomeVariavel + "[" + (i + 1) + "]";
-			NodeId nodeIdString = new NodeId(idNode, id);
+			String idArray = id + "[" + (i + 1) + "]";
+			NodeId nodeIdString = new NodeId(idNode, idArray);
 			client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 			try {
-				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
-						.getValue();
+				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue().getValue();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new short[0];

@@ -29,21 +29,33 @@ import java.util.Random;
 public class Main {
 
 	public static void main(String[] args) {
-		// testaUdp();
 
-		// testaDB();
+		/*EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Gui window = new Gui();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
-		// testaOpc();
-		// testaDB();
-		/*
-		 * Fabrica fabrica = Fabrica.getInstance(); fabrica.imprimeHeap();
-		 * System.out.println("----------------------------"); ServerUdp udp =
-		 * ServerUdp.getInstance(); udp.start();
-		 */
-		Gui gui = new Gui();
-		gui.abreGui();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Fabrica fabrica = Fabrica.getInstance();
+		fabrica.atualizaHeap();*/
+		
+		OpcClient opc = OpcClient.getInstance();
+		System.out.println(opc.connect());
+		
+
+	/*
 		fabrica.getPlant().printMap();
 
 		OpcClient opc = OpcClient.getInstance();
@@ -61,7 +73,7 @@ public class Main {
 			System.out.println("------------------");
 			fabrica.getPlant().printMap();
 			System.out.println("------------------");
-		}
+		}*/
 	}
 	public static void exportaHtml() throws IOException {
 		Estatistica estatistica = new Estatistica();

@@ -15,11 +15,14 @@ import javax.swing.SpinnerDateModel;
 
 import java.awt.FlowLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.PriorityQueue;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,9 +31,12 @@ import javax.swing.Timer;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 
+import fabrica.Fabrica;
+import fabrica.Ordens;
 import opc.OpcClient;
 import udp.estatistica.Estatistica;
 
@@ -44,12 +50,17 @@ public class Gui {
 	private JTable table;
 	private JTable table_1;
 	private JTable table_2;
+	private DefaultTableModel modelStock;
+	private DefaultTableModel modelOrdemProcessamento;
+	private DefaultTableModel modelOrdemEspera;
 	private JButton btnNewButton;
 	private JButton btnVerRelatrios;
 	private Estatistica estatistica;
 	private Timer counterTimer;
+	private Timer counterTimer2;
 	private JLabel label_1;
-	private OpcClient opcClient = OpcClient.getInstance();
+	private OpcClient opcClient;
+	private Fabrica fabrica;
 	/**
 	 * Launch the application.
 	 */
@@ -59,20 +70,10 @@ public class Gui {
 	 */
  	public Gui() {
 		this.estatistica = new Estatistica();
+		this.opcClient = OpcClient.getInstance(); 
+		this.fabrica = Fabrica.getInstance();
 		initialize();
 		timerPecas();
-	}
-	public void abreGui() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Gui window = new Gui();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	/**
@@ -80,16 +81,25 @@ public class Gui {
 	 */
 	private void initialize() {
 		frame = new JFrame("MES");
-		frame.getContentPane().setBackground(SystemColor.desktop);
-		frame.setBounds(100, 100, 874, 506);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+
+		frame.getContentPane().setBackground(SystemColor.desktop);
+		frame.setBounds(100, 100, 1020,620);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+		frame.setSize((int)((int)dimension.getWidth()*0.75) , (int)((int)dimension.getHeight() *0.75));
+		frame.setLocation(x, y);
 		JPanel panel = new JPanel();
 		panel.setAlignmentX(0.0f);
 		panel.setBackground(Color.GRAY);
 		
 		initializeFrame(panel);
 		initializeButtons();
+		
+		backgroundTimer();
+		counterTimer2.start();
 		
 		
 	}
@@ -137,20 +147,17 @@ public class Gui {
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addGap(48)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
-							.addGap(8))
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-					.addGap(62)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel_1.createParallelGroup(Alignment.TRAILING)
-							.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(scrollPane_1, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-							.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
-						.addComponent(label, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
+					.addGap(70)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+						.addComponent(scrollPane_1, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+						.addComponent(label, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
 					.addGap(68))
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap(336, Short.MAX_VALUE)
+					.addContainerGap(482, Short.MAX_VALUE)
 					.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
@@ -159,84 +166,30 @@ public class Gui {
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(37)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-					.addGap(40)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
+							.addGap(140)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
+							.addGap(0, 0, Short.MAX_VALUE))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(37)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+								.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+							.addGap(40)
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
 					.addGap(52))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(140)
-					.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-					.addGap(133))
 		);
 		
-		table_2 = new JTable();
-		scrollPane_2.setViewportView(table_2);
-		table_2.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"P1", "2"},
-				{"P2", "3"},
-				{"P3", "2"},
-				{"P4", "1"},
-				{"P5", "5"},
-				{"P6", "12"},
-				{"P7", "32"},
-				{"P8", "4"},
-				{"P9", "7"},
-			},
-			new String[] {
-				"Tipo pe\u00E7a", "Quantidade"
-			}
-		));
-		
-		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"123"},
-				{"32"},
-				{"2"},
-				{"4"},
-				{"55"},
-				{"32"},
-				{"12"},
-				{"32"},
-				{null},
-			},
-			new String[] {
-				"numero ordem"
-			}
-		));
-		scrollPane_1.setViewportView(table_1);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"123", "50", "carga"},
-				{"12", "2", "descarga"},
-				{"43", "12", "carga"},
-				{"23432", "32", "descarga"},
-				{"43", "534", "carga"},
-				{"434", "1232", "carga"},
-				{"1213", "123", null},
-				{null, "123", null},
-			},
-			new String[] {
-				"numero ordem", "Tempo restante", "Tipo Ordem"
-			}
-		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(85);
-		table.getColumnModel().getColumn(1).setPreferredWidth(88);
-		scrollPane.setViewportView(table);
+	
 		
 		label_1 = new JLabel("2");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -262,6 +215,10 @@ public class Gui {
 		
 		
 		JPanel panel_3 = new JPanel();
+		
+		JButton btnConectarDb = new JButton("Conectar DB");
+		
+		JButton btnConectarOpc = new JButton("Conectar OPC");
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -271,7 +228,9 @@ public class Gui {
 							.addGap(39)
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_panel.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)))
@@ -284,12 +243,27 @@ public class Gui {
 					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 					.addGap(33)
 					.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
+					.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addGap(39)
 					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		panel_3.setLayout(new GridLayout(4, 0, 0, 0));
 		
+		nomes(panel_3);
+		
+		
+		panel.setLayout(gl_panel);
+		frame.getContentPane().setLayout(groupLayout);
+		
+		tableStockJScrollPane(scrollPane_2);
+		tableOrdemProcessamento(scrollPane);
+		tableOrdemEspera(scrollPane_1);
+	}
+	private void nomes(JPanel panel_3) {
 		JLabel lblNewLabel_2 = new JLabel("F\u00E1bio Morais");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setFont(new Font("TI-Nspire", Font.BOLD, 14));
@@ -309,8 +283,6 @@ public class Gui {
 		lblJooSantos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblJooSantos.setFont(new Font("TI-Nspire", Font.BOLD, 14));
 		panel_3.add(lblJooSantos);
-		panel.setLayout(gl_panel);
-		frame.getContentPane().setLayout(groupLayout);
 	}
 	
 	private void initializeButtons() {
@@ -349,31 +321,191 @@ public class Gui {
 		
 		if(JOptionPane.showOptionDialog(null, panel, "Gerar Relatorio", JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE, null, options1, options1[1])== JOptionPane.YES_OPTION) {
-			backgroundTimer(((int)spinner.getValue()) * 1000);
+			backgroundTimerExportar(((int)spinner.getValue()) * 1000);
 			counterTimer.start();
 		}
 
 	}
 	
+	private void tableStockJScrollPane (JScrollPane scrollPane_2) {
+		modelStock = new DefaultTableModel(new Object[][]  {
+			{"P1", "2"},
+			{"P2", "3"},
+			{"P3", "2"},
+			{"P4", "1"},
+			{"P5", "5"},
+			{"P6", "12"},
+			{"P7", "32"},
+			{"P8", "4"},
+			{"P9", "7"},
+		}, new String[] { "Tipo pe\u00E7a", "Quantidade" }) {
+
+			private static final long serialVersionUID = 1880689174093893276L;
+			boolean[] columnEditables = new boolean[] { false, false };
+			@SuppressWarnings("rawtypes")
+			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class };
+
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@Override
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
+		
+		table_2 = new JTable();
+		tableStyle(table_2, modelStock);
+		scrollPane_2.setViewportView(table_2);
+
+	}
 	
-	private void backgroundTimer(int time) {
+	private void tableOrdemProcessamento(JScrollPane scrollPane) {
+		
+		modelOrdemProcessamento = new DefaultTableModel(new Object[][]  {
+			{"123", "50", "carga"},
+			{"12", "2", "descarga"},
+			{"43", "12", "carga"},
+			{"23432", "32", "descarga"},
+			{"43", "534", "carga"},
+			{"434", "1232", "carga"},
+			{"1213", "123", null},
+			{null, "123", null}}, new String[] {  "numero ordem", "Tempo restante", "Tipo Ordem" }) {
+
+			private static final long serialVersionUID = 1880689174093893276L;
+			boolean[] columnEditables = new boolean[] { false, false };
+			@SuppressWarnings("rawtypes")
+			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class };
+
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@Override
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
+		
+		table = new JTable();
+		tableStyle(table, modelOrdemProcessamento);
+		scrollPane.setViewportView(table);
+	}
+	
+	private void tableOrdemEspera(JScrollPane scrollPane_1) {
+
+		modelOrdemEspera = new DefaultTableModel(new Object[][]  {
+		}, new String[] {  "Numero Ordem","tipo de ordem", "tempo restante" }) {
+
+			private static final long serialVersionUID = 1880689174093893276L;
+			boolean[] columnEditables = new boolean[] { false, false, false };
+			@SuppressWarnings("rawtypes")
+			Class[] columnTypes = new Class[] { String.class, String.class , String.class  };
+
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			@Override
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		};
+
+		table_1 = new JTable();
+		tableStyle(table_1, modelOrdemEspera);
+
+		scrollPane_1.setViewportView(table_1);
+	
+	}
+	
+	private void tableStyle(JTable table, DefaultTableModel model) {
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		table.setDefaultRenderer(String.class, centerRenderer);
+		
+		table.setModel(model);
+
+
+		table.setSelectionForeground(Color.BLACK);
+		table.getTableHeader().setReorderingAllowed(false);
+		table.setAutoCreateRowSorter(true);// para ordenar
+		table.getTableHeader().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	}
+	
+	private void backgroundTimerExportar(int time) {
 		if(counterTimer != null) {
 			counterTimer.stop();
 			counterTimer = null;
 		}
 		counterTimer = new Timer(time, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("entrou");
 				estatistica.exportaFicheiros(false);
 
 			}
 
 		});
 
-		
-
 	}
 	
+	private void backgroundTimer() {
+		
+		counterTimer2 = new Timer(2000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//stock();
+				ordensPendente();
+				ordensExecucao();
+				
+
+			}
+
+		});
+
+	}
+	private void ordensExecucao() {
+		
+	}
+	
+	private void ordensPendente() {
+		PriorityQueue<Ordens> aux = fabrica.getCopyHeapOrdemPendente();
+		int size = aux.size();
+		for(int i=0; i<size; i++) {
+			Ordens ord = aux.poll();
+			if(i<modelOrdemEspera.getRowCount()) {
+				modelOrdemEspera.setValueAt(ord.getNumeroOrdem(), i, 0);
+				modelOrdemEspera.setValueAt((ord.getPrioridade() == -1 ? "Descarga" : "Carga"), i, 1);
+				modelOrdemEspera.setValueAt(""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()), i, 2);
+			}else {				
+				modelOrdemEspera.addRow(new Object[] {ord.getNumeroOrdem(), (ord.getPrioridade()== -1 ? "Descarga" : "Carga"), 
+						""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()) });
+			}
+			
+
+			
+			
+		}
+		for(int i=size; i<modelOrdemEspera.getRowCount(); i++) {
+			modelOrdemEspera.removeRow(i);
+		}
+		/*
+		 * FALTA REMOVER AS QUE JA NAO EXISTEM
+		 * */
+	}
+	private void stock() {
+		short[] stock = opcClient.getValue("SFS","Stock");
+		for(int i=0; i<stock.length; i++) {
+			modelStock.setValueAt("P"+(i+1), i, 0);
+			modelStock.setValueAt(""+stock[i], i, 1);
+
+		}
+	}
 	private void timerPecas() {
 		Timer time = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -382,9 +514,8 @@ public class Gui {
 
 		});
 		
-		time.start();
+		//time.start();
 
 	}
-
 }
 

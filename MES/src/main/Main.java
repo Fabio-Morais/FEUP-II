@@ -11,6 +11,7 @@ import db.Producao;
 import db.ZonaDescarga;
 import fabrica.Fabrica;
 import fabrica.Ordens;
+import fabrica.Receitas;
 import gui.Gui;
 import opc.OpcClient;
 import udp.ClientUdp;
@@ -30,7 +31,16 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		/*EventQueue.invokeLater(new Runnable() {
+		/*ServerUdp udp = ServerUdp.getInstance();
+		udp.start();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Gui window = new Gui();
@@ -51,8 +61,8 @@ public class Main {
 		Fabrica fabrica = Fabrica.getInstance();
 		fabrica.atualizaHeap();*/
 		
-		OpcClient opc = OpcClient.getInstance();
-		System.out.println(opc.connect());
+		Receitas receitas = new Receitas();
+		System.out.println(receitas.rotaMaquinas("p3", "p9", 0));
 		
 
 	/*

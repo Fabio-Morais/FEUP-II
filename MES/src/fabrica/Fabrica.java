@@ -58,13 +58,15 @@ public class Fabrica {
 	}
 	
 	public void sincronizaOrdens() {
-
 		ResultSet prod = db.selectProducao();
+
 		ResultSet desc = db.selectDescarga();
+
 		try {
 			while(desc.next()) {
 				heapOrdemPendente.add(new Ordens(desc.getString("numeroOrdem"), -1, Ordem.converteData2(desc.getString("horaentradaordem")),0));//ordem imediata
 			}
+
 			while(prod.next()) {
 				heapOrdemPendente.add(new Ordens(prod.getString("numeroOrdem"), Integer.valueOf(prod.getString("atrasoMaximo")), 
 						Ordem.converteData2(prod.getString("horaentradaordem")),Integer.valueOf(prod.getString("atrasomaximo")) ));
@@ -73,7 +75,7 @@ public class Fabrica {
 				heapOrdemPendente.add(new Ordens(prod.getString("numeroOrdem"), Ordem.calculaTempoRestante(date, atraso), 
 						date,atraso ));*/
 			}
-		} catch (NumberFormatException | SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		heapOrdemPendente.add(new Ordens("111111111", 100, Ordem.localDate(), 120));

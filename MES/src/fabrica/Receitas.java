@@ -65,6 +65,14 @@ public class Receitas {
 						if (edge.getSource().getName().equals(path.get(i).getId())
 								&& edge.getDestination().getName().equals(path.get(i + 1).getId())) {
 							rota.add(edge.getId());
+							if(edge.getSource().getName().equals("P4") && edge.getDestination().getName().equals("P8")) {
+								rota.add(""+10);
+
+							}else{
+								rota.add(""+edge.getWeight());
+
+							}
+							
 						}
 					}
 				}

@@ -1,17 +1,18 @@
 package fabrica;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.PriorityQueue;
 
 import db.DataBase;
 import db.Ordem;
-import opc.OpcClient;
 
 public class Fabrica {
 	private static Fabrica instance=null;
 	private PriorityQueue<Ordens> heapOrdemPendente;
+	private HashMap<String, Ordens> heapOrdemExecucao;
 	private DataBase db;
 	private Plant plant;
 	private ControlaPlc controlaPlc;
@@ -20,11 +21,12 @@ public class Fabrica {
 
 	
 	private Fabrica() {
-		this.db = DataBase.getInstance();
-		this.plant = new Plant();
-		this.controlaPlc = new ControlaPlc();
-		criaHeap();
-		sincronizaOrdens();
+		//this.db = DataBase.getInstance();
+		//this.plant = new Plant();
+		//this.controlaPlc = new ControlaPlc();
+		//criaHeap();
+		this.heapOrdemExecucao = new HashMap<>();
+		//sincronizaOrdens();
 	}
 	
 	public static Fabrica getInstance() {
@@ -57,6 +59,12 @@ public class Fabrica {
 	    this.heapOrdemPendente = new PriorityQueue<>(result);
 	}
 	
+
+	private void executaOrdem(Ordens ordem) {
+		heapOrdemExecucao.put(ordem.getNumeroOrdem(), ordem);
+		db.executaOrdemProducao(ordem.getNumeroOrdem());
+	}
+
 	public void sincronizaOrdens() {
 		ResultSet prod = db.selectProducao();
 
@@ -78,6 +86,7 @@ public class Fabrica {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		heapOrdemPendente.add(new Ordens("111111111", 100, Ordem.localDate(), 120));
 		heapOrdemPendente.add(new Ordens("32123", 50, Ordem.localDate(), 50));
 

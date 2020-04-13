@@ -73,7 +73,6 @@ public class Gui {
 		this.opcClient = OpcClient.getInstance(); 
 		this.fabrica = Fabrica.getInstance();
 		initialize();
-		timerPecas();
 	}
 
 	/**
@@ -459,10 +458,10 @@ public class Gui {
 		
 		counterTimer2 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//stock();
+				stock();
 				ordensPendente();
 				ordensExecucao();
-				
+				pecasFabrica();
 
 			}
 
@@ -506,16 +505,10 @@ public class Gui {
 
 		}
 	}
-	private void timerPecas() {
-		Timer time = new Timer(1000, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				label_1.setText(""+opcClient.getValue("SFS","PecasSistema")[0]);
-			}
-
-		});
-		
-		//time.start();
+	private void pecasFabrica() {
+		label_1.setText(""+opcClient.getValue("SFS","PecasSistema")[0]);
 
 	}
+	
 }
 

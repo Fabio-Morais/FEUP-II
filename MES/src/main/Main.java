@@ -24,6 +24,8 @@ import udp.estatistica.PecasDescarregadas;
 import org.apache.commons.io.FileUtils;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -33,6 +35,8 @@ public class Main {
 
 		/*ServerUdp udp = ServerUdp.getInstance();
 		udp.start();
+		OpcClient opc = OpcClient.getInstance();
+
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -59,11 +63,17 @@ public class Main {
 		}
 		
 		Fabrica fabrica = Fabrica.getInstance();
-		fabrica.atualizaHeap();*/
+		fabrica.atualizaHeap();
 		
 		Receitas receitas = new Receitas();
-		System.out.println(receitas.rotaMaquinas("p3", "p9", 0));
-		
+		System.out.println(receitas.rotaMaquinas("p3", "p9", 0));*/
+		OpcClient opc = OpcClient.getInstance();
+
+		Fabrica fabrica = Fabrica.getInstance();
+
+
+
+
 
 	/*
 		fabrica.getPlant().printMap();

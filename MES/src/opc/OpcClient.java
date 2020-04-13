@@ -53,7 +53,7 @@ public class OpcClient {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		connect();
+		System.out.println(connect());
 
 		
 	}
@@ -121,6 +121,7 @@ public class OpcClient {
 	/** Sempre que uma variavel muda de valor esta função corre */
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
+		System.out.println(value.getValue().getValue());
 		boolean valor = (boolean) value.getValue().getValue();
 		//System.out.println("->" + aux.substring(44, aux.length()) + " - " + value.getValue().getValue());
 		String node = aux.substring(44, aux.length());
@@ -205,6 +206,7 @@ public class OpcClient {
 			return new short[0];
 		}
 		valueShort[0] = (short) value.getValue().getValue();
+		System.out.println(nomeVariavel+ " - "+ valueShort[0]);
 		return valueShort;
 
 	}

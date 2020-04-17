@@ -11,7 +11,12 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 import javax.swing.GroupLayout;
@@ -35,6 +40,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import db.DataBase;
+import db.Ordem;
 import fabrica.Fabrica;
 import fabrica.Ordens;
 import opc.OpcClient;
@@ -55,6 +61,7 @@ public class Gui {
 	private Timer counterTimer;
 	private Timer counterTimer2;
 	private Timer counterTimer3;
+	private Timer counterTimer4;
 	private JLabel label_1;
 	private OpcClient opcClient;
 	private Fabrica fabrica;
@@ -62,6 +69,7 @@ public class Gui {
 	private JLabel opcIcon;
 	private JButton btnConectarDb;
 	private JButton btnConectarOpc;
+	private JLabel hora;
 	
 	
 	private DataBase db = DataBase.getInstance();
@@ -99,6 +107,9 @@ public class Gui {
 		panel_2 = new JPanel();
 		panel_2.setAlignmentX(0.0f);
 		panel_2.setBackground(Color.GRAY);
+		URL iconURL = getClass().getResource("/img/logo.png");
+		ImageIcon img = new ImageIcon(iconURL);
+		frame.setIconImage(img.getImage());
 		
 		initializeFrame(panel_2);
 		initializeButtons();
@@ -107,11 +118,22 @@ public class Gui {
 		counterTimer2.start();
 		backgroundTimerConexoes();
 		counterTimer3.start();
+		backgroundTimerHora();
+		counterTimer4.start();
 		
 		
 	}
 	private void initializeFrame(JPanel panel) {
 		JPanel panel_1 = new JPanel();
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				table.clearSelection();
+				table_2.clearSelection();
+				table_1.clearSelection();
+
+			}
+		});
 		panel_1.setAlignmentX(0.0f);
 		panel_1.setBackground(new Color(204, 204, 204));
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
@@ -162,37 +184,34 @@ public class Gui {
 		lblInf.setForeground(colorText);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
+			gl_panel_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(50)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-					.addGap(99)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)
-						.addComponent(label, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
-					.addGap(37))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(151)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-						.addComponent(scrollPane, Alignment.LEADING))
-					.addGap(155))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
-							.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
-							.addGap(111))
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(97)
-							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())))
+							.addContainerGap()
+							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
+									.addGap(74))
+								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
+							.addGap(50)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+										.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+									.addGap(99)
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+										.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)
+										.addComponent(label, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))))
+					.addGap(37))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -200,9 +219,9 @@ public class Gui {
 					.addContainerGap()
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(23)
+							.addGap(21)
 							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
-							.addGap(26)
+							.addGap(28)
 							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
 							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
@@ -212,12 +231,12 @@ public class Gui {
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
+							.addComponent(scrollPane_2, 0, 171, Short.MAX_VALUE))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
-					.addPreferredGap(ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
@@ -288,16 +307,33 @@ public class Gui {
 		
 		opcIcon = new JLabel("");
 		opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+		
+		hora = new JLabel("17/04/2020 15:37:20");
+		DefaultDesign.styleLabelData(hora);
+		String aux = Ordem.converteData(Ordem.localDate());
+		String[] split = aux.split(" ");
+		if(split.length==2) {
+			hora.setText(split[0]+"  -  " + split[1]);
+		}
+		hora.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_panel_2 = new GroupLayout(panel);
 		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
+			gl_panel_2.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel_2.createSequentialGroup()
+							.addGap(11)
+							.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
+								.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panel_2.createSequentialGroup()
+									.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+										.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+										.addComponent(hora, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))
+									.addGap(33))))
+						.addGroup(gl_panel_2.createSequentialGroup()
 							.addGap(39)
 							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_panel_2.createSequentialGroup()
 									.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
@@ -305,28 +341,27 @@ public class Gui {
 								.addGroup(gl_panel_2.createSequentialGroup()
 									.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-									.addComponent(opcIcon, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(opcIcon, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)))))
 					.addContainerGap())
 		);
 		gl_panel_2.setVerticalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(40)
+					.addContainerGap()
+					.addComponent(hora)
+					.addGap(30)
 					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
 					.addGap(33)
 					.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(opcIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnConectarOpc, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+						.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
 					.addGap(14)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(dbIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnConectarDb, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-					.addGap(39)
+						.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
+					.addGap(38)
 					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
 					.addGap(11))
 		);
@@ -461,19 +496,14 @@ public class Gui {
 	private void tableOrdemProcessamento(JScrollPane scrollPane) {
 		
 		modelOrdemProcessamento = new DefaultTableModel(new Object[][]  {
-			{"123", "50", "carga"},
-			{"12", "2", "descarga"},
-			{"43", "12", "carga"},
-			{"23432", "32", "descarga"},
-			{"43", "534", "carga"},
-			{"434", "1232", "carga"},
-			{"1213", "123", null},
-			{null, "123", null}}, new String[] {  "numero ordem", "Tempo restante", "Tipo Ordem" }) {
+			{"123", "50", "carga", "3", "1", "0"},
+			{"12", "2", "descarga", "4", "2", "4"}
+			}, new String[] {  "numero ordem", "Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção", "Peças pendentes" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
-			boolean[] columnEditables = new boolean[] { false, false };
+			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
 			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class };
+			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class,  String.class ,  String.class ,  String.class  };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -574,8 +604,41 @@ public class Gui {
 		});
 		
 	}
-	private void ordensExecucao() {
+	private void backgroundTimerHora() {
+		counterTimer4 = new Timer(1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String aux = Ordem.converteData(Ordem.localDate());
+				String[] split = aux.split(" ");
+				if(split.length==2) {
+					hora.setText(split[0]+"  -  " + split[1]);
+				}
+			}
+
+		});
 		
+	}
+	private void ordensExecucao() {
+		HashMap<String, Ordens> aux = fabrica.getCopyHeapOrdemExecucao();
+		int size = aux.size();
+		int i=0;
+		for (Map.Entry<String, Ordens> entry : aux.entrySet()) {
+		
+		    Ordens ord = entry.getValue();		    
+		    if(i<modelOrdemProcessamento.getRowCount()) {
+		    	modelOrdemProcessamento.setValueAt(ord.getNumeroOrdem(), i, 0);
+		    	modelOrdemProcessamento.setValueAt((ord.getPrioridade() == -1 ? "Descarga" : "Carga"), i, 1);
+		    	modelOrdemProcessamento.setValueAt(""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()), i, 2);
+			}else {				
+				modelOrdemProcessamento.addRow(new Object[] {ord.getNumeroOrdem(), (ord.getPrioridade()== -1 ? "Descarga" : "Carga"), 
+						""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()) });
+			}
+		    i++;
+		 
+		}
+
+		for(int j=size; j<modelOrdemProcessamento.getRowCount(); j++) {
+			modelOrdemProcessamento.removeRow(j);
+		}		
 	}
 	
 	private void ordensPendente() {

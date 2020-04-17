@@ -3,7 +3,6 @@ package fabrica;
 import java.sql.ResultSet;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.PriorityQueue;
 
 import db.DataBase;
@@ -105,7 +104,17 @@ public class Fabrica {
 		return heapOrdemPendente;
 	}
 	
-	public void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
+	/**Retorna uma nova heap, que é uma copia da original*/
+	public HashMap<String, Ordens> getCopyHeapOrdemExecucao(){
+		HashMap<String, Ordens> copy = new HashMap<>(heapOrdemExecucao);
+		return copy;
+	}
+
+	/**Retorna a heap original*/
+	public HashMap<String, Ordens> getHeapOrdemExecucao(){
+		return heapOrdemExecucao;
+	}
+ 	public void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
 		this.heapOrdemPendente = heapOrdemPendente;
 	}
 	public void imprimeHeap() {

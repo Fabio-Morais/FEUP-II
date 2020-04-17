@@ -42,4 +42,10 @@ public class DefaultDesign {
 		Color colorText = Color.decode("#030349");
 		label.setForeground(colorText);
 	}
+
+	public static void styleLabelData(JLabel label) {
+		label.setFont(new Font("Calibri", Font.BOLD, 16));
+		Color colorText = Color.decode("#364f6b");
+		label.setForeground(colorText);
+	}
 }

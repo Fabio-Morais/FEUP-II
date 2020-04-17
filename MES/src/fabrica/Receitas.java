@@ -33,25 +33,26 @@ public class Receitas {
 
 		destino=destino.toUpperCase();
 		origem = origem.toUpperCase();
-		addLane("A", 1, 2, 15);
-		addLane("A", 2, 3, 15);
-		addLane("A", 2, 6, 15);
-		addLane("A", 6, 9, 15);
+		/*maquina ferramenta*/
+		addLane("A 1", 1, 2, 15);
+		addLane("A 1", 2, 3, 15);
+		addLane("A 2", 2, 6, 15);
+		addLane("A 3", 6, 9, 15);
 
-		addLane("B", 1, 3, 20);
-		addLane("B", 3, 4, 15);
-		addLane("B", 3, 7, 20);
-		addLane("B", 7, 9, 20);
+		addLane("B 1", 1, 3, 20);
+		addLane("B 1", 3, 4, 15);
+		addLane("B 2", 3, 7, 20);
+		addLane("B 3", 7, 9, 20);
 		
 		if((origem.equals("P1") || origem.equals("P3")) && destino.equals("P9"))
-			addLane("C", 4, 8, 10+x);//vai ter de esperar o tempo que ela termine, mais o resto
+			addLane("C 2", 4, 8, 10+x);//vai ter de esperar o tempo que ela termine, mais o resto
 		else
-			addLane("C", 4, 8, 10);//vai ter de esperar o tempo que ela termine, mais o resto
+			addLane("C 2", 4, 8, 10);//vai ter de esperar o tempo que ela termine, mais o resto
 
 			
-		addLane("C", 1, 4, 10);
-		addLane("C", 4, 5, 30);
-		addLane("C", 8, 9, 10);
+		addLane("C 1", 1, 4, 10);
+		addLane("C 1", 4, 5, 30);
+		addLane("C 3", 8, 9, 10);
 
 		// Lets check from location Loc_1 to Loc_10
 		Graph graph = new Graph(nodes, edges);
@@ -64,7 +65,7 @@ public class Receitas {
 					if (i != path.size() - 1) {
 						if (edge.getSource().getName().equals(path.get(i).getId())
 								&& edge.getDestination().getName().equals(path.get(i + 1).getId())) {
-							rota.add(edge.getId());
+							rota.add(""+edge.getId().charAt(0));//coloca maquina
 							if(edge.getSource().getName().equals("P4") && edge.getDestination().getName().equals("P8")) {
 								rota.add(""+10);
 
@@ -72,6 +73,8 @@ public class Receitas {
 								rota.add(""+edge.getWeight());
 
 							}
+							rota.add(""+edge.getId().charAt(2));//coloca ferramenta
+
 							
 						}
 					}

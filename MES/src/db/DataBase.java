@@ -26,7 +26,7 @@ public class DataBase {
 		this.user = "up201504257";
 		this.password = "hFj8JWsg9";
 		this.c = null;
-		DriverManager.setLoginTimeout(3);
+		DriverManager.setLoginTimeout(2);
 		this.zonaDescarga = new ZonaDescarga();
 		this.maquina = new Maquina();
 		this.producao = new Producao();

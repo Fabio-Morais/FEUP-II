@@ -2,32 +2,14 @@ package main;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.util.Random;
 
 import db.DataBase;
-import db.Descarga;
-import db.Maquina;
-import db.Ordem;
 import db.Producao;
-import db.ZonaDescarga;
-import fabrica.Fabrica;
-import fabrica.Ordens;
-import fabrica.Receitas;
 import gui.Gui;
 import opc.OpcClient;
-import udp.ClientUdp;
 import udp.ServerUdp;
 import udp.estatistica.Estatistica;
-import udp.estatistica.EstatisticasMaquina;
-import udp.estatistica.ListaOrdens;
-import udp.estatistica.PecasDescarregadas;
-
-import org.apache.commons.io.FileUtils;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.PriorityQueue;
-import java.util.Random;
 
 public class Main {
 
@@ -44,16 +26,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Gui window = new Gui();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		
 
 		try {
 			Thread.sleep(1000);
@@ -67,14 +40,16 @@ public class Main {
 		
 		Receitas receitas = new Receitas();
 		System.out.println(receitas.rotaMaquinas("p3", "p9", 0));*/
-		OpcClient opc = OpcClient.getInstance();
-
-		Fabrica fabrica = Fabrica.getInstance();
-
-
-
-
-
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Gui window = new Gui();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	/*
 		fabrica.getPlant().printMap();
 

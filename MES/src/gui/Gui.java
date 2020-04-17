@@ -1,48 +1,44 @@
 package gui;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
-import java.awt.GridBagLayout;
 import java.awt.Color;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SpinnerDateModel;
-
-import java.awt.FlowLayout;
-import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.PriorityQueue;
-import java.awt.event.ActionEvent;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.DateFormatter;
 
+import db.DataBase;
 import fabrica.Fabrica;
 import fabrica.Ordens;
 import opc.OpcClient;
 import udp.estatistica.Estatistica;
-
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.Font;
 
 public class Gui {
 
@@ -58,9 +54,19 @@ public class Gui {
 	private Estatistica estatistica;
 	private Timer counterTimer;
 	private Timer counterTimer2;
+	private Timer counterTimer3;
 	private JLabel label_1;
 	private OpcClient opcClient;
 	private Fabrica fabrica;
+	private JLabel dbIcon;
+	private JLabel opcIcon;
+	private JButton btnConectarDb;
+	private JButton btnConectarOpc;
+	
+	
+	private DataBase db = DataBase.getInstance();
+	private OpcClient opc = OpcClient.getInstance();
+	private JPanel panel_2;
 	/**
 	 * Launch the application.
 	 */
@@ -90,15 +96,17 @@ public class Gui {
 		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
 		frame.setSize((int)((int)dimension.getWidth()*0.75) , (int)((int)dimension.getHeight() *0.75));
 		frame.setLocation(x, y);
-		JPanel panel = new JPanel();
-		panel.setAlignmentX(0.0f);
-		panel.setBackground(Color.GRAY);
+		panel_2 = new JPanel();
+		panel_2.setAlignmentX(0.0f);
+		panel_2.setBackground(Color.GRAY);
 		
-		initializeFrame(panel);
+		initializeFrame(panel_2);
 		initializeButtons();
 		
 		backgroundTimer();
 		counterTimer2.start();
+		backgroundTimerConexoes();
+		counterTimer3.start();
 		
 		
 	}
@@ -110,152 +118,224 @@ public class Gui {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE))
+					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 758, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(panel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
-				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
+				.addComponent(panel_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
 		);
-		
-		JLabel lblP = new JLabel("Pe\u00E7as na f\u00E1brica");
-		lblP.setBackground(SystemColor.window);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(SystemColor.window);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
 		JLabel lblNewLabel = new JLabel("Ordens em execu\u00E7\u00E3o");
+		DefaultDesign.styleLabel(lblNewLabel);
+
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel label = new JLabel("Ordens em espera");
+		DefaultDesign.styleLabel(label);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		
 		JLabel lblNewLabel_1 = new JLabel("Stock");
+		DefaultDesign.styleLabel(lblNewLabel_1);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
+		
+		JSeparator separator = new JSeparator();
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		panel_4.setBackground(new Color(204, 204, 204));
+		
+		JLabel logo = new JLabel("");
+		logo.setIcon(new ImageIcon(Gui.class.getResource("/img/logo3.png")));
+		
+		JLabel lblInf = new JLabel("Inf\u00F3rmatica Industrial 19/20");
+		lblInf.setFont(new Font("HP Simplified", Font.BOLD, 24));
+		Color colorText = Color.decode("#364f6b");
+		lblInf.setForeground(colorText);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.TRAILING)
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(48)
+					.addGap(50)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
-					.addGap(70)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-						.addComponent(scrollPane_1, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-						.addComponent(label, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
-					.addGap(68))
+						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+					.addGap(99)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)
+						.addComponent(label, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+					.addGap(37))
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap(482, Short.MAX_VALUE)
-					.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-					.addGap(100))
+					.addGap(151)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+						.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+						.addComponent(scrollPane, Alignment.LEADING))
+					.addGap(155))
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
+							.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
+							.addGap(111))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(97)
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
-							.addGap(140)
+					.addContainerGap()
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(23)
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+							.addGap(26)
+							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_panel_1.createSequentialGroup()
 							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE)
-							.addGap(0, 0, Short.MAX_VALUE))
+							.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(37)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-								.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-							.addGap(40)
-							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
+					.addPreferredGap(ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-					.addGap(52))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+					.addGap(32))
 		);
+		
+		JLabel lblP = new JLabel("Pe\u00E7as na f\u00E1brica");
+		DefaultDesign.styleLabel(lblP);
 		
 	
 		
 		label_1 = new JLabel("2");
+		label_1.setFont(new Font("Consolas", Font.BOLD, 16));
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(0, 0, Short.MAX_VALUE)
-					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-					.addGap(10))
+		label_1.setForeground(Color.BLACK);
+		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
+		gl_panel_4.setHorizontalGroup(
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+					.addGap(2))
 		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addComponent(label_1, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+		gl_panel_4.setVerticalGroup(
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addGap(2)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
-		panel_2.setLayout(gl_panel_2);
+		panel_4.setLayout(gl_panel_4);
 		panel_1.setLayout(gl_panel_1);
 		
 		btnNewButton = new JButton("Gerar relat\u00F3rios");
-		
+		btnNewButton.setMargin(new Insets(2, 30, 2, 14));
+		btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
+		btnNewButton.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		DefaultDesign.buttons(btnNewButton);
 		
 		btnVerRelatrios = new JButton("Ver relat\u00F3rios");
-		
+		btnVerRelatrios.setMargin(new Insets(2, 30, 2, 14));
+		btnVerRelatrios.setHorizontalAlignment(SwingConstants.LEFT);
+		btnVerRelatrios.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		DefaultDesign.buttons(btnVerRelatrios);
+
 		
 		JPanel panel_3 = new JPanel();
 		
-		JButton btnConectarDb = new JButton("Conectar DB");
+		btnConectarDb = new JButton("Conectar DB");
+		btnConectarDb.setMargin(new Insets(2, 30, 2, 14));
+		btnConectarDb.setHorizontalAlignment(SwingConstants.LEFT);
+		btnConectarDb.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		DefaultDesign.buttons(btnConectarDb);
+
+		btnConectarOpc = new JButton("Conectar OPC");
+		btnConectarOpc.setMargin(new Insets(2, 30, 2, 14));
+		btnConectarOpc.setHorizontalAlignment(SwingConstants.LEFT);
+		btnConectarOpc.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		DefaultDesign.buttons(btnConectarOpc);
+
+		dbIcon = new JLabel("");
+		System.out.println(Gui.class.getResource("/img/on.png"));
+		dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
 		
-		JButton btnConectarOpc = new JButton("Conectar OPC");
-		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
+		opcIcon = new JLabel("");
+		opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+		GroupLayout gl_panel_2 = new GroupLayout(panel);
+		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel_2.createSequentialGroup()
 							.addGap(39)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
 								.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
 								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel.createSequentialGroup()
+								.addGroup(gl_panel_2.createSequentialGroup()
+									.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+									.addComponent(dbIcon))
+								.addGroup(gl_panel_2.createSequentialGroup()
+									.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+									.addComponent(opcIcon, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))))
+						.addGroup(gl_panel_2.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(11, Short.MAX_VALUE))
+					.addContainerGap())
 		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
 					.addGap(40)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
 					.addGap(33)
-					.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
-					.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(opcIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnConectarOpc, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+					.addGap(14)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(dbIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnConectarDb, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
 					.addGap(39)
 					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+					.addGap(11))
 		);
 		panel_3.setLayout(new GridLayout(4, 0, 0, 0));
 		
 		nomes(panel_3);
 		
 		
-		panel.setLayout(gl_panel);
+		panel.setLayout(gl_panel_2);
 		frame.getContentPane().setLayout(groupLayout);
 		
 		tableStockJScrollPane(scrollPane_2);
@@ -295,6 +375,22 @@ public class Gui {
 		btnVerRelatrios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				estatistica.exportaFicheiros(true);
+			}
+		});
+		
+		btnConectarDb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(db.checkConnection()) {
+					dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+				}else {
+					dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+				}
+			}
+		});
+		
+		btnConectarOpc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				opc.connect();
 			}
 		});
 	}
@@ -468,6 +564,16 @@ public class Gui {
 		});
 
 	}
+	private void backgroundTimerConexoes() {
+		counterTimer3 = new Timer(2000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verificaConexoes();
+
+			}
+
+		});
+		
+	}
 	private void ordensExecucao() {
 		
 	}
@@ -509,6 +615,18 @@ public class Gui {
 		label_1.setText(""+opcClient.getValue("SFS","PecasSistema")[0]);
 
 	}
-	
+	private void verificaConexoes() {
+		if(db.checkConnection()) {
+			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+		}else {
+			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+		}
+		System.out.println(opc.getValue("SFS", "PecasSistema").length);
+		if(opc.getValue("SFS", "PecasSistema").length>0) {
+			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+		}else {
+			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+		}
+	}
 }
 

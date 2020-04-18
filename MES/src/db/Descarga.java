@@ -65,7 +65,7 @@ public class Descarga {
 	protected ResultSet selectOrdensPendentes(DataBase db) {
 		String query= "SELECT * FROM fabrica.ordem \r\n" + 
 				"INNER JOIN fabrica.descarga\r\n" + 
-				"ON ordem.numeroOrdem = descarga.numeroOrdem  WHERE estadoordem = '0' ";
+				"ON ordem.numeroOrdem = descarga.numeroOrdem  WHERE estadoordem = '0' OR  estadoordem = '1'";
 		return db.executeQueryResult(query);
 	}
 	public String getNumeroOrdem() {

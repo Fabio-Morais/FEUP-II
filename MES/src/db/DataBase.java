@@ -212,12 +212,12 @@ public class DataBase {
 	public boolean insereDescarga(Descarga descarga) {
 		return ordem.insert(this,new Ordem(descarga.getNumeroOrdem())) && this.descarga.insere(this, descarga);
 	}	
-	
+	/**Retorna as ordens pendentes e em execuçao*/
 	public ResultSet selectProducao() {
 		return producao.selectOrdensPendentes(this);
 	}
 	
-	
+	/**Retorna as ordens pendentes e em execuçao*/
 	public ResultSet selectDescarga() {
 		return descarga.selectOrdensPendentes(this);
 	}

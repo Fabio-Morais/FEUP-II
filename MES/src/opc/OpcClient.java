@@ -50,10 +50,10 @@ public class OpcClient {
 		this.fabrica = Fabrica.getInstance();
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
+			connect();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		System.out.println(connect());
 
 		
 	}

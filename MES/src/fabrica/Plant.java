@@ -33,6 +33,7 @@ public class Plant {
 		return true;
 		
 	}
+	/**Coloca tudo a 1*/
 	public void initializeMap() {
 		for(int i=0; i<map.length; i++) {
 			for(int j=0; j<map[i].length; j++) {

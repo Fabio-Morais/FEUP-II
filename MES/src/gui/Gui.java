@@ -70,11 +70,13 @@ public class Gui {
 	private JButton btnConectarDb;
 	private JButton btnConectarOpc;
 	private JLabel hora;
-	
-	
+
+	private boolean opcRunning;
+	private boolean dbRunning;
 	private DataBase db = DataBase.getInstance();
 	private OpcClient opc = OpcClient.getInstance();
 	private JPanel panel_2;
+
 	/**
 	 * Launch the application.
 	 */
@@ -82,9 +84,8 @@ public class Gui {
 	/**
 	 * Create the application.
 	 */
- 	public Gui() {
+	public Gui() {
 		this.estatistica = new Estatistica();
-		this.opcClient = OpcClient.getInstance(); 
 		this.fabrica = Fabrica.getInstance();
 		initialize();
 	}
@@ -94,15 +95,14 @@ public class Gui {
 	 */
 	private void initialize() {
 		frame = new JFrame("MES");
-		
 
 		frame.getContentPane().setBackground(SystemColor.desktop);
-		frame.setBounds(100, 100, 1020,620);
+		frame.setBounds(100, 100, 1020, 620);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
 		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-		frame.setSize((int)((int)dimension.getWidth()*0.75) , (int)((int)dimension.getHeight() *0.75));
+		frame.setSize((int) ((int) dimension.getWidth() * 0.75), (int) ((int) dimension.getHeight() * 0.75));
 		frame.setLocation(x, y);
 		panel_2 = new JPanel();
 		panel_2.setAlignmentX(0.0f);
@@ -110,19 +110,21 @@ public class Gui {
 		URL iconURL = getClass().getResource("/img/logo.png");
 		ImageIcon img = new ImageIcon(iconURL);
 		frame.setIconImage(img.getImage());
-		
+
 		initializeFrame(panel_2);
 		initializeButtons();
-		
+
 		backgroundTimer();
-		counterTimer2.start();
 		backgroundTimerConexoes();
-		counterTimer3.start();
 		backgroundTimerHora();
+		counterTimer3.start();
 		counterTimer4.start();
-		
-		
+		counterTimer2.start();
+		opcRunning = false;
+		dbRunning = false;
+
 	}
+
 	private void initializeFrame(JPanel panel) {
 		JPanel panel_1 = new JPanel();
 		panel_1.addMouseListener(new MouseAdapter() {
@@ -137,158 +139,140 @@ public class Gui {
 		panel_1.setAlignmentX(0.0f);
 		panel_1.setBackground(new Color(204, 204, 204));
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 758, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 758, Short.MAX_VALUE)));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 				.addComponent(panel_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-		);
-		
+				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE));
+
 		JScrollPane scrollPane = new JScrollPane();
-		
+
 		JLabel lblNewLabel = new JLabel("Ordens em execu\u00E7\u00E3o");
 		DefaultDesign.styleLabel(lblNewLabel);
 
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		JLabel label = new JLabel("Ordens em espera");
 		DefaultDesign.styleLabel(label);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane();
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Stock");
 		DefaultDesign.styleLabel(lblNewLabel_1);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		JScrollPane scrollPane_2 = new JScrollPane();
-		
+
 		JSeparator separator = new JSeparator();
-		
+
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		panel_4.setBackground(new Color(204, 204, 204));
-		
+
 		JLabel logo = new JLabel("");
 		logo.setIcon(new ImageIcon(Gui.class.getResource("/img/logo3.png")));
-		
+
 		JLabel lblInf = new JLabel("Inf\u00F3rmatica Industrial 19/20");
 		lblInf.setFont(new Font("HP Simplified", Font.BOLD, 24));
 		Color colorText = Color.decode("#364f6b");
 		lblInf.setForeground(colorText);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel_1.createSequentialGroup()
-									.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
-									.addGap(74))
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
-							.addGap(50)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
-								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
-								.addGroup(gl_panel_1.createSequentialGroup()
-									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-										.addComponent(lblNewLabel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-									.addGap(99)
-									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)
-										.addComponent(label, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))))
-					.addGap(37))
-		);
-		gl_panel_1.setVerticalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(21)
-							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
-							.addGap(28)
-							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+		gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_1
+				.createSequentialGroup()
+				.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_1.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
 						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(gl_panel_1.createSequentialGroup()
+										.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(74))
+								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup().addGap(50).addGroup(gl_panel_1
+								.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671,
+										Short.MAX_VALUE)
+								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671,
+										Short.MAX_VALUE)
+								.addGroup(gl_panel_1.createSequentialGroup()
+										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+												.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235,
+														Short.MAX_VALUE)
+												.addComponent(lblNewLabel_1, Alignment.TRAILING,
+														GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+										.addGap(99)
+										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+												.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE).addComponent(label,
+														GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))))
+				.addGap(37)));
+		gl_panel_1.setVerticalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_1
+				.createSequentialGroup().addContainerGap()
+				.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup().addGap(21)
+								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+								.addGap(28).addComponent(separator, GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
+				.addPreferredGap(ComponentPlacement.RELATED)
+				.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane_2, 0, 171, Short.MAX_VALUE))
+								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(scrollPane_2, 0, 171, Short.MAX_VALUE))
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
-					.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-					.addGap(32))
-		);
-		
+								.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
+				.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+				.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(ComponentPlacement.RELATED)
+				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE).addGap(32)));
+
 		JLabel lblP = new JLabel("Pe\u00E7as na f\u00E1brica");
 		DefaultDesign.styleLabel(lblP);
-		
-	
-		
+
 		label_1 = new JLabel("2");
 		label_1.setFont(new Font("Consolas", Font.BOLD, 16));
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setForeground(Color.BLACK);
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4.setHorizontalGroup(
-			gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_4.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
-					.addGap(2))
-		);
-		gl_panel_4.setVerticalGroup(
-			gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_4.createSequentialGroup()
-					.addGap(2)
-					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-		);
+		gl_panel_4.setHorizontalGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE).addGap(2)));
+		gl_panel_4.setVerticalGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup().addGap(2)
+						.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+								.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+						.addContainerGap()));
 		panel_4.setLayout(gl_panel_4);
 		panel_1.setLayout(gl_panel_1);
-		
+
 		btnNewButton = new JButton("Gerar relat\u00F3rios");
 		btnNewButton.setMargin(new Insets(2, 30, 2, 14));
 		btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
 		btnNewButton.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		DefaultDesign.buttons(btnNewButton);
-		
+
 		btnVerRelatrios = new JButton("Ver relat\u00F3rios");
 		btnVerRelatrios.setMargin(new Insets(2, 30, 2, 14));
 		btnVerRelatrios.setHorizontalAlignment(SwingConstants.LEFT);
 		btnVerRelatrios.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		DefaultDesign.buttons(btnVerRelatrios);
 
-		
 		JPanel panel_3 = new JPanel();
-		
+
 		btnConectarDb = new JButton("Conectar DB");
 		btnConectarDb.setMargin(new Insets(2, 30, 2, 14));
 		btnConectarDb.setHorizontalAlignment(SwingConstants.LEFT);
@@ -304,107 +288,100 @@ public class Gui {
 		dbIcon = new JLabel("");
 		System.out.println(Gui.class.getResource("/img/on.png"));
 		dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
-		
+
 		opcIcon = new JLabel("");
 		opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
-		
+
 		hora = new JLabel("17/04/2020 15:37:20");
 		DefaultDesign.styleLabelData(hora);
 		String aux = Ordem.converteData(Ordem.localDate());
 		String[] split = aux.split(" ");
-		if(split.length==2) {
-			hora.setText(split[0]+"  -  " + split[1]);
+		if (split.length == 2) {
+			hora.setText(split[0] + "  -  " + split[1]);
 		}
 		hora.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_panel_2 = new GroupLayout(panel);
-		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addGap(11)
-							.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
+		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_2
+				.createSequentialGroup()
+				.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_2.createSequentialGroup()
+						.addGap(11)
+						.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
 								.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_panel_2.createSequentialGroup()
-									.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-										.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-										.addComponent(hora, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE))
-									.addGap(33))))
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addGap(39)
-							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+												.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 162,
+														GroupLayout.PREFERRED_SIZE)
+												.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 162,
+														GroupLayout.PREFERRED_SIZE)
+												.addComponent(hora, GroupLayout.PREFERRED_SIZE, 162,
+														GroupLayout.PREFERRED_SIZE))
+										.addGap(33))))
+						.addGroup(gl_panel_2.createSequentialGroup().addGap(39).addGroup(gl_panel_2
+								.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel_2.createSequentialGroup()
-									.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-									.addComponent(dbIcon))
+										.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 162,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+										.addComponent(dbIcon))
 								.addGroup(gl_panel_2.createSequentialGroup()
-									.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-									.addComponent(opcIcon, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)))))
-					.addContainerGap())
-		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(hora)
-					.addGap(30)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-					.addGap(33)
-					.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
+										.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 162,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE).addComponent(
+												opcIcon, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)))))
+				.addContainerGap()));
+		gl_panel_2.setVerticalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_2
+				.createSequentialGroup().addContainerGap().addComponent(hora).addGap(30)
+				.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE).addGap(33)
+				.addComponent(btnVerRelatrios, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+				.addPreferredGap(ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+				.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(opcIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(btnConectarOpc, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-					.addGap(14)
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
+				.addGap(14)
+				.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(dbIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addComponent(btnConectarDb, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
-					.addGap(38)
-					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
-					.addGap(11))
-		);
+				.addGap(38).addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
+				.addGap(11)));
 		panel_3.setLayout(new GridLayout(4, 0, 0, 0));
-		
+
 		nomes(panel_3);
-		
-		
+
 		panel.setLayout(gl_panel_2);
 		frame.getContentPane().setLayout(groupLayout);
-		
+
 		tableStockJScrollPane(scrollPane_2);
 		tableOrdemProcessamento(scrollPane);
 		tableOrdemEspera(scrollPane_1);
 	}
+
 	private void nomes(JPanel panel_3) {
 		JLabel lblNewLabel_2 = new JLabel("F\u00E1bio Morais");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setFont(new Font("TI-Nspire", Font.BOLD, 14));
 		panel_3.add(lblNewLabel_2);
-		
+
 		JLabel lblDiogoSilva = new JLabel("Diogo Silva");
 		lblDiogoSilva.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDiogoSilva.setFont(new Font("TI-Nspire", Font.BOLD, 14));
 		panel_3.add(lblDiogoSilva);
-		
+
 		JLabel lblMarcoRocha = new JLabel("Marco Rocha");
 		lblMarcoRocha.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMarcoRocha.setFont(new Font("TI-Nspire", Font.BOLD, 14));
 		panel_3.add(lblMarcoRocha);
-		
+
 		JLabel lblJooSantos = new JLabel("Jo\u00E3o Santos");
 		lblJooSantos.setHorizontalAlignment(SwingConstants.CENTER);
 		lblJooSantos.setFont(new Font("TI-Nspire", Font.BOLD, 14));
 		panel_3.add(lblJooSantos);
 	}
-	
+
 	private void initializeButtons() {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				criaPopUp();
-					
-				
+
 			}
 		});
 		btnVerRelatrios.addActionListener(new ActionListener() {
@@ -412,68 +389,58 @@ public class Gui {
 				estatistica.exportaFicheiros(true);
 			}
 		});
-		
+
 		btnConectarDb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(db.checkConnection()) {
+				if (db.checkConnection()) {
 					dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
-				}else {
+				} else {
 					dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
 				}
 			}
 		});
-		
+
 		btnConectarOpc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				opc.connect();
 			}
 		});
 	}
+
 	private void criaPopUp() {
 		Object[] options1 = { "Ok", "Sair" };
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(1, 1, 10, 10));
 
-
-		
 		JLabel lblNome2 = new JLabel("Intervalo de tempo a gerar (em s)");
 		panel.add(lblNome2);
 		SpinnerDateModel model = new SpinnerDateModel();
 		model.setCalendarField(Calendar.MINUTE);
 
-
-		JSpinner spinner= new JSpinner();
+		JSpinner spinner = new JSpinner();
 
 		spinner.setValue(10);
 
+		panel.add(spinner);
 
-        panel.add(spinner);
-		
-		if(JOptionPane.showOptionDialog(null, panel, "Gerar Relatorio", JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE, null, options1, options1[1])== JOptionPane.YES_OPTION) {
-			backgroundTimerExportar(((int)spinner.getValue()) * 1000);
+		if (JOptionPane.showOptionDialog(null, panel, "Gerar Relatorio", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, options1, options1[1]) == JOptionPane.YES_OPTION) {
+			backgroundTimerExportar(((int) spinner.getValue()) * 1000);
 			counterTimer.start();
 		}
 
 	}
-	
-	private void tableStockJScrollPane (JScrollPane scrollPane_2) {
-		modelStock = new DefaultTableModel(new Object[][]  {
-			{"P1", "2"},
-			{"P2", "3"},
-			{"P3", "2"},
-			{"P4", "1"},
-			{"P5", "5"},
-			{"P6", "12"},
-			{"P7", "32"},
-			{"P8", "4"},
-			{"P9", "7"},
-		}, new String[] { "Tipo pe\u00E7a", "Quantidade" }) {
+
+	private void tableStockJScrollPane(JScrollPane scrollPane_2) {
+		modelStock = new DefaultTableModel(
+				new Object[][] { { "P1", "2" }, { "P2", "3" }, { "P3", "2" }, { "P4", "1" }, { "P5", "5" },
+						{ "P6", "12" }, { "P7", "32" }, { "P8", "4" }, { "P9", "7" }, },
+				new String[] { "Tipo pe\u00E7a", "Quantidade" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
 			boolean[] columnEditables = new boolean[] { false, false };
 			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class };
+			Class[] columnTypes = new Class[] { String.class, String.class, String.class };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -486,24 +453,25 @@ public class Gui {
 				return columnEditables[column];
 			}
 		};
-		
+
 		table_2 = new JTable();
 		tableStyle(table_2, modelStock);
 		scrollPane_2.setViewportView(table_2);
 
 	}
-	
+
 	private void tableOrdemProcessamento(JScrollPane scrollPane) {
-		
-		modelOrdemProcessamento = new DefaultTableModel(new Object[][]  {
-			{"123", "50", "carga", "3", "1", "0"},
-			{"12", "2", "descarga", "4", "2", "4"}
-			}, new String[] {  "numero ordem", "Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção", "Peças pendentes" }) {
+
+		modelOrdemProcessamento = new DefaultTableModel(
+				new Object[][] { },
+				new String[] { "numero ordem", "Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção",
+						"Peças pendentes" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
 			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
 			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] { String.class,  String.class,  String.class,  String.class ,  String.class ,  String.class  };
+			Class[] columnTypes = new Class[] { String.class, String.class, String.class, String.class, String.class,
+					String.class };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -516,21 +484,21 @@ public class Gui {
 				return columnEditables[column];
 			}
 		};
-		
+
 		table = new JTable();
 		tableStyle(table, modelOrdemProcessamento);
 		scrollPane.setViewportView(table);
 	}
-	
+
 	private void tableOrdemEspera(JScrollPane scrollPane_1) {
 
-		modelOrdemEspera = new DefaultTableModel(new Object[][]  {
-		}, new String[] {  "Numero Ordem","tipo de ordem", "tempo restante" }) {
+		modelOrdemEspera = new DefaultTableModel(new Object[][] {},
+				new String[] { "Numero Ordem", "tipo de ordem", "tempo restante" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
 			boolean[] columnEditables = new boolean[] { false, false, false };
 			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] { String.class, String.class , String.class  };
+			Class[] columnTypes = new Class[] { String.class, String.class, String.class };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -548,25 +516,24 @@ public class Gui {
 		tableStyle(table_1, modelOrdemEspera);
 
 		scrollPane_1.setViewportView(table_1);
-	
+
 	}
-	
+
 	private void tableStyle(JTable table, DefaultTableModel model) {
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 		table.setDefaultRenderer(String.class, centerRenderer);
-		
-		table.setModel(model);
 
+		table.setModel(model);
 
 		table.setSelectionForeground(Color.BLACK);
 		table.getTableHeader().setReorderingAllowed(false);
 		table.setAutoCreateRowSorter(true);// para ordenar
 		table.getTableHeader().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
-	
+
 	private void backgroundTimerExportar(int time) {
-		if(counterTimer != null) {
+		if (counterTimer != null) {
 			counterTimer.stop();
 			counterTimer = null;
 		}
@@ -579,117 +546,137 @@ public class Gui {
 		});
 
 	}
-	
+
 	private void backgroundTimer() {
-		
+
 		counterTimer2 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				stock();
+				if (opcRunning) {
+					stock();
+					pecasFabrica();
+				}
 				ordensPendente();
 				ordensExecucao();
-				pecasFabrica();
 
 			}
 
 		});
 
 	}
+
 	private void backgroundTimerConexoes() {
 		counterTimer3 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				verificaConexoes();
-
+				//verificaConexoes();
 			}
 
 		});
-		
+
 	}
+
 	private void backgroundTimerHora() {
 		counterTimer4 = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String aux = Ordem.converteData(Ordem.localDate());
 				String[] split = aux.split(" ");
-				if(split.length==2) {
-					hora.setText(split[0]+"  -  " + split[1]);
+				if (split.length == 2) {
+					hora.setText(split[0] + "  -  " + split[1]);
 				}
+
 			}
 
 		});
-		
+
 	}
+
 	private void ordensExecucao() {
 		HashMap<String, Ordens> aux = fabrica.getCopyHeapOrdemExecucao();
 		int size = aux.size();
-		int i=0;
+		int i = 0;
 		for (Map.Entry<String, Ordens> entry : aux.entrySet()) {
-		
-		    Ordens ord = entry.getValue();		    
-		    if(i<modelOrdemProcessamento.getRowCount()) {
-		    	modelOrdemProcessamento.setValueAt(ord.getNumeroOrdem(), i, 0);
-		    	modelOrdemProcessamento.setValueAt((ord.getPrioridade() == -1 ? "Descarga" : "Carga"), i, 1);
-		    	modelOrdemProcessamento.setValueAt(""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()), i, 2);
-			}else {				
-				modelOrdemProcessamento.addRow(new Object[] {ord.getNumeroOrdem(), (ord.getPrioridade()== -1 ? "Descarga" : "Carga"), 
-						""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()) });
+
+			Ordens ord = entry.getValue();
+			if (i < modelOrdemProcessamento.getRowCount()) {
+				modelOrdemProcessamento.setValueAt(ord.getNumeroOrdem(), i, 0);
+				modelOrdemProcessamento.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 1);
+				modelOrdemProcessamento.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), i, 2);
+				modelOrdemProcessamento.setValueAt(ord.getPecasProduzidas(), i, 3);
+				modelOrdemProcessamento.setValueAt(ord.getPecasEmProducao(), i, 4);
+				modelOrdemProcessamento.setValueAt(ord.getPecasPendentes(), i, 5);
+				
+
+			} else {
+				modelOrdemProcessamento
+						.addRow(new Object[] { ord.getNumeroOrdem(), 
+								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),
+								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
+								ord.getPecasProduzidas(),
+								ord.getPecasEmProducao(),
+								ord.getPecasPendentes() });
 			}
-		    i++;
-		 
+			i++;
+
 		}
 
-		for(int j=size; j<modelOrdemProcessamento.getRowCount(); j++) {
+		for (int j = size; j < modelOrdemProcessamento.getRowCount(); j++) {
 			modelOrdemProcessamento.removeRow(j);
-		}		
+		}
 	}
-	
+
 	private void ordensPendente() {
 		PriorityQueue<Ordens> aux = fabrica.getCopyHeapOrdemPendente();
 		int size = aux.size();
-		for(int i=0; i<size; i++) {
+		for (int i = 0; i < size; i++) {
 			Ordens ord = aux.poll();
-			if(i<modelOrdemEspera.getRowCount()) {
+			if (i < modelOrdemEspera.getRowCount()) {
 				modelOrdemEspera.setValueAt(ord.getNumeroOrdem(), i, 0);
-				modelOrdemEspera.setValueAt((ord.getPrioridade() == -1 ? "Descarga" : "Carga"), i, 1);
-				modelOrdemEspera.setValueAt(""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()), i, 2);
-			}else {				
-				modelOrdemEspera.addRow(new Object[] {ord.getNumeroOrdem(), (ord.getPrioridade()== -1 ? "Descarga" : "Carga"), 
-						""+ (ord.getPrioridade()== -1 ? 0 : ord.getPrioridade()) });
+				modelOrdemEspera.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), i, 1);
+				modelOrdemEspera.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 2);
+			} else {
+				modelOrdemEspera
+						.addRow(new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
+								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()) });
 			}
-			
 
-			
-			
 		}
-		for(int i=size; i<modelOrdemEspera.getRowCount(); i++) {
+		for (int i = size; i < modelOrdemEspera.getRowCount(); i++) {
 			modelOrdemEspera.removeRow(i);
 		}
 		/*
 		 * FALTA REMOVER AS QUE JA NAO EXISTEM
-		 * */
+		 */
 	}
+
 	private void stock() {
-		short[] stock = opcClient.getValue("SFS","Stock");
-		for(int i=0; i<stock.length; i++) {
-			modelStock.setValueAt("P"+(i+1), i, 0);
-			modelStock.setValueAt(""+stock[i], i, 1);
+		short[] stock = opcClient.getValue("SFS", "Stock");
+		for (int i = 0; i < stock.length; i++) {
+			modelStock.setValueAt("P" + (i + 1), i, 0);
+			modelStock.setValueAt("" + stock[i], i, 1);
 
 		}
 	}
+
 	private void pecasFabrica() {
-		label_1.setText(""+opcClient.getValue("SFS","PecasSistema")[0]);
+		label_1.setText("" + opcClient.getValue("SFS", "PecasSistema")[0]);
 
 	}
+
 	private void verificaConexoes() {
-		if(db.checkConnection()) {
+		if (db.checkConnection()) {
 			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
-		}else {
+			dbRunning = true;
+		} else {
 			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+			dbRunning = false;
 		}
-		System.out.println(opc.getValue("SFS", "PecasSistema").length);
-		if(opc.getValue("SFS", "PecasSistema").length>0) {
+		try {
 			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
-		}else {
+			opcRunning = true;
+
+		} catch (Exception e) {
 			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+			opcRunning = false;
 		}
+
 	}
 }
-

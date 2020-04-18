@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Ordem(
 
     CREATE TABLE IF NOT EXISTS Producao(
     numeroOrdem VARCHAR(10) PRIMARY KEY,
-    FOREIGN KEY (numeroOrdem) REFERENCES Ordem(numeroOrdem),
+    FOREIGN KEY (numeroOrdem) REFERENCES Ordem(numeroOrdem) ON DELETE CASCADE,
 	pecaOrigem VARCHAR(10) ,
     pecaFinal VARCHAR(10),
     quantidadeProduzir int,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Ordem(
 
 CREATE TABLE IF NOT EXISTS Descarga(
     numeroOrdem VARCHAR(10) PRIMARY KEY,
-    FOREIGN KEY (numeroOrdem) REFERENCES Ordem(numeroOrdem),	
+    FOREIGN KEY (numeroOrdem) REFERENCES Ordem(numeroOrdem) ON DELETE CASCADE,	
     pecaDescarga VARCHAR(10) ,
     destino VARCHAR(10),
     quantidadePecasDescarregar int

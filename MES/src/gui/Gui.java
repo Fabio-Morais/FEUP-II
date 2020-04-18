@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -34,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -402,7 +404,36 @@ public class Gui {
 
 		btnConectarOpc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				opc.connect();
+				// All code inside SwingWorker runs on a seperate thread
+				SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+					@Override
+					public Boolean doInBackground() {
+						if (opc.connect())
+							return true;
+						else
+							return false;
+					}
+
+					@Override
+					public void done() {
+						try {
+							if (get()) {
+								opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+								opcRunning = true;
+							} else {
+								opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+								opcRunning = false;
+							}
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+					}
+				};
+
+				// Call the SwingWorker from within the Swing thread
+				worker.execute();
 			}
 		});
 	}
@@ -462,10 +493,8 @@ public class Gui {
 
 	private void tableOrdemProcessamento(JScrollPane scrollPane) {
 
-		modelOrdemProcessamento = new DefaultTableModel(
-				new Object[][] { },
-				new String[] { "numero ordem", "Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção",
-						"Peças pendentes" }) {
+		modelOrdemProcessamento = new DefaultTableModel(new Object[][] {}, new String[] { "numero ordem",
+				"Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção", "Peças pendentes" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
 			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
@@ -567,7 +596,7 @@ public class Gui {
 	private void backgroundTimerConexoes() {
 		counterTimer3 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//verificaConexoes();
+				verificaConexoes();
 			}
 
 		});
@@ -603,16 +632,12 @@ public class Gui {
 				modelOrdemProcessamento.setValueAt(ord.getPecasProduzidas(), i, 3);
 				modelOrdemProcessamento.setValueAt(ord.getPecasEmProducao(), i, 4);
 				modelOrdemProcessamento.setValueAt(ord.getPecasPendentes(), i, 5);
-				
 
 			} else {
-				modelOrdemProcessamento
-						.addRow(new Object[] { ord.getNumeroOrdem(), 
-								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),
-								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
-								ord.getPecasProduzidas(),
-								ord.getPecasEmProducao(),
-								ord.getPecasPendentes() });
+				modelOrdemProcessamento.addRow(
+						new Object[] { ord.getNumeroOrdem(), "" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),
+								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), ord.getPecasProduzidas(),
+								ord.getPecasEmProducao(), ord.getPecasPendentes() });
 			}
 			i++;
 
@@ -633,8 +658,8 @@ public class Gui {
 				modelOrdemEspera.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), i, 1);
 				modelOrdemEspera.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 2);
 			} else {
-				modelOrdemEspera
-						.addRow(new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
+				modelOrdemEspera.addRow(
+						new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
 								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()) });
 			}
 
@@ -669,14 +694,37 @@ public class Gui {
 			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
 			dbRunning = false;
 		}
-		try {
-			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
-			opcRunning = true;
 
-		} catch (Exception e) {
-			opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
-			opcRunning = false;
-		}
+		// All code inside SwingWorker runs on a seperate thread
+		SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+			@Override
+			public Boolean doInBackground() {
+				if (opc.connect())
+					return true;
+				else
+					return false;
+			}
+
+			@Override
+			public void done() {
+				try {
+					if (get()) {
+						opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+						opcRunning = true;
+					} else {
+						opcIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+						opcRunning = false;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		// Call the SwingWorker from within the Swing thread
+		worker.execute();
 
 	}
 }

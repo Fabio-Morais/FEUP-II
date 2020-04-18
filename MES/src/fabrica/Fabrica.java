@@ -86,8 +86,20 @@ public class Fabrica {
 		}
 	}
 
+	public void terminaOrdem(String numeroOrdem) {
+		if(db.terminaOrdemProducao(numeroOrdem)) {
+			try {
+				sem.acquire();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			heapOrdemExecucao.remove(numeroOrdem);
+			sem.release();
+
+		}
+	}
 	/** Coloca todas as ordens nas respetivas heaps */
-	public void sincronizaOrdens() {
+ 	public void sincronizaOrdens() {
 		ResultSet prod = db.selectProducao();
 		ResultSet desc = db.selectDescarga();
 

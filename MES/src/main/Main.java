@@ -86,6 +86,8 @@ public class Main {
 				fabrica.addToHeap(ordem3);
 				fabrica.addToHeap(ordem4);
 				fabrica.addToHeap(ordem5);
+			}else if(numeroOrdem.charAt(0)=='e'){
+				 fabrica.terminaOrdem(numeroOrdem.substring(2, numeroOrdem.length()));
 			}else {
 				Ordens ordem = fabrica.getHeapOrdemExecucao().get(numeroOrdem);
 				if (ordem != null) {
@@ -122,6 +124,7 @@ public class Main {
 
 	public static void testaDB() {
 		DataBase db = DataBase.getInstance();
+
 		db.executeQuery("DELETE FROM fabrica.ordem");
 
 		db.insereProducao(new Producao("10", "P2", "P3", 30,500));

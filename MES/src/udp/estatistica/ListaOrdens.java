@@ -75,7 +75,7 @@ public class ListaOrdens {
 				body.append("<td class=\"text-center\">"+converteNull(rs.getString("horainicioexecucao"))+"</td>\r\n");
 				body.append("<td class=\"text-center\">"+converteNull(rs.getString("horafimexecucao"))+"</td>\r\n");
 				body.append("<td class=\"text-center\">"+calculaFolga(rs.getInt("estadoordem"), rs.getString("atrasomaximo"), 
-						rs.getString("horaentradaordem"),rs.getString("horafimexecucao") )+"</td>\r\n");
+						rs.getString("horaentradaordem"),rs.getString("horafimexecucao"), rs.getString("folgaexecucao") )+"</td>\r\n");
 				body.append("</tr>\r\n");
 
 			}
@@ -106,7 +106,7 @@ public class ListaOrdens {
 	/**
 	 * entradaData (dd/MM/yy HH:mm:ss)
 	 * */
-	private int calculaFolga(int estado, String folgaMaxima, String entradaData, String fimData) {
+	private int calculaFolga(int estado, String folgaMaxima, String entradaData, String fimData, String folgaExecucao) {
 		if(folgaMaxima == null)
 			return 0;
 		int folga=0;
@@ -116,6 +116,8 @@ public class ListaOrdens {
 		}else if(estado==2) {
 			String dataLimite = Ordem.addDate(Ordem.converteData3(entradaData), Integer.valueOf(folgaMaxima));
 			return Ordem.calculaDiferenca(Ordem.converteData(dataLimite), fimData);
+		}else if(estado==0) {
+			return Integer.valueOf(folgaExecucao);
 		}
 		return folga;
 	}

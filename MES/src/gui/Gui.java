@@ -64,6 +64,7 @@ public class Gui {
 	private Timer counterTimer2;
 	private Timer counterTimer3;
 	private Timer counterTimer4;
+	private Timer counterTimer5;
 	private JLabel label_1;
 	private OpcClient opcClient;
 	private Fabrica fabrica;
@@ -75,8 +76,8 @@ public class Gui {
 
 	private boolean opcRunning;
 	private boolean dbRunning;
-	private DataBase db ;
-	private OpcClient opc ;
+	private DataBase db;
+	private OpcClient opc;
 	private JPanel panel_2;
 
 	/**
@@ -88,7 +89,7 @@ public class Gui {
 	 */
 	public Gui() {
 		this.db = DataBase.getInstance();
-		
+
 		this.opc = OpcClient.getInstance();
 		this.estatistica = new Estatistica();
 
@@ -124,9 +125,11 @@ public class Gui {
 		backgroundTimer();
 		backgroundTimerConexoes();
 		backgroundTimerHora();
+		backgroundTimerSendDb();
 		counterTimer3.start();
 		counterTimer4.start();
 		counterTimer2.start();
+		counterTimer5.start();
 		opcRunning = false;
 		dbRunning = false;
 
@@ -582,7 +585,7 @@ public class Gui {
 
 	private void backgroundTimer() {
 
-		counterTimer2 = new Timer(2000, new ActionListener() {
+		counterTimer2 = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (opcRunning) {
 					stock();
@@ -600,26 +603,59 @@ public class Gui {
 	private void backgroundTimerConexoes() {
 		counterTimer3 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//verificaConexoes();
+				 //verificaConexoes();
+
+			}
+		});
+	}
+
+	private void backgroundTimerHora() {
+		counterTimer4 = new Timer(1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+						String aux = Ordem.converteData(Ordem.localDate());
+						String[] split = aux.split(" ");
+						if (split.length == 2) {
+							hora.setText(split[0] + "  -  " + split[1]);
+						}
+					
+				
 			}
 
 		});
 
 	}
 
-	private void backgroundTimerHora() {
-		counterTimer4 = new Timer(1000, new ActionListener() {
+	private void backgroundTimerSendDb() {
+		counterTimer5 = new Timer(2500, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String aux = Ordem.converteData(Ordem.localDate());
-				String[] split = aux.split(" ");
-				if (split.length == 2) {
-					hora.setText(split[0] + "  -  " + split[1]);
-				}
+				// All code inside SwingWorker runs on a seperate thread
+				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
+					@Override
+					public synchronized Void doInBackground() {
+						PriorityQueue<Ordens> aux = fabrica.getCopyHeapOrdemPendente();
+						int size = aux.size();
+						for (int i = 0; i < size; i++) {
+
+							if(aux.peek().getPrioridade()>0)
+								db.updateFolgaExecucao(aux.poll());
+							else
+								aux.poll();
+							try {
+								Thread.sleep(20);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						return null;
+					}
+				};
+
+				// Call the SwingWorker from within the Swing thread
+				worker.execute();
 			}
-
 		});
-
 	}
 
 	private void ordensExecucao() {
@@ -731,4 +767,5 @@ public class Gui {
 		worker.execute();
 
 	}
+
 }

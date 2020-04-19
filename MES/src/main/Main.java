@@ -18,7 +18,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		testaDB();
+		//testaDB();
 		System.out.println("Enviou para DB");
 
 		EventQueue.invokeLater(new Runnable() {
@@ -117,6 +117,12 @@ public class Main {
 		db.insereProducao(new Producao("10", "P2", "P3", 30,500));
 		db.insereProducao(new Producao("11", "P1", "P5", 20,400));
 		db.insereProducao(new Producao("12", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("120", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("121", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("122", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("123", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("124", "P5", "P5", 10,800));
+		db.insereProducao(new Producao("125", "P5", "P5", 10,800));
 		db.insereDescarga(new Descarga("13", "P2", "P3", 10));
 		db.insereDescarga(new Descarga("14", "P2", "P5", 30));
 		db.insereDescarga(new Descarga("15", "P2", "P7", 50));

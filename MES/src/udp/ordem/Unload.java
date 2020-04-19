@@ -32,8 +32,11 @@ public class Unload {
 	
 	public void insereDb() {
 		/*so adiciona na heap caso adicione na DB com exito*/
-		if(db.insereDescarga(new Descarga(numeroOrdem, type, destination, Integer.valueOf(quantity))))
-			fabrica.addToHeap(new Ordens(numeroOrdem, -1, Ordem.localDate(), 0, fabrica));
+		if(db.insereDescarga(new Descarga(numeroOrdem, type, destination, Integer.valueOf(quantity)))) {
+			Ordens ordem = new Ordens(numeroOrdem, -1, Ordem.localDate(), 0, fabrica);
+			ordem.setPecasPendentes(Integer.valueOf(quantity));
+			fabrica.addToHeap(ordem);
+		}
 
 	}
 	

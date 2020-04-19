@@ -8,20 +8,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import fabrica.Ordens;
+
 public class Ordem {
 	private final static String dateFormat = "MM/dd/yyyy HH:mm:ss";
 
 	private String numeroOrdem;
 	private String horaEntradaOrdem;
 	private int pecasPendentes;
+	private int folga;
+	
 	public Ordem() {
 
 	}
 
-	public Ordem(String numeroOrdem, int pecasPendentes) {
+	public Ordem(String numeroOrdem, int pecasPendentes, int folga) {
 		this.horaEntradaOrdem = Ordem.localDate(); // (MM/dd/yyyy HH:mm:ss)
 		this.numeroOrdem = numeroOrdem;
-		this.pecasPendentes= pecasPendentes;
+		this.pecasPendentes = pecasPendentes;
+		this.folga=folga;
 	}
 
 	/**
@@ -213,11 +218,10 @@ public class Ordem {
 	}
 
 	public boolean insert(DataBase db, Ordem ordem) {
-		String query = "INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes) VALUES ('" + ordem.numeroOrdem + "', '"
-				+ ordem.horaEntradaOrdem + "',"+ordem.pecasPendentes +")";
+		String query = "INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('" + ordem.numeroOrdem
+				+ "', '" + ordem.horaEntradaOrdem + "'," + ordem.pecasPendentes+","+ordem.folga + ")";
 		return db.executeQuery(query);
 	}
-	
 
 	protected boolean executaOrdem(DataBase db, String numeroOrdem) {
 		String query = "UPDATE Ordem SET estadoOrdem= " + 1 + ", horaInicioExecucao= '" + Ordem.localDate()
@@ -233,25 +237,30 @@ public class Ordem {
 	}
 
 	public ResultSet select(DataBase db) {
-		String query = "SELECT  Ordem.numeroordem, estadoordem, pecasproduzidas, pecasproducao, pecaspendentes,TO_CHAR(horaentradaordem :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horaentradaordem,				TO_CHAR(horainicioexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horainicioexecucao, TO_CHAR(horafimexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horafimexecucao, producao.atrasomaximo\r\n"
+		String query = "SELECT  Ordem.numeroordem, ordem.folgaexecucao, estadoordem, pecasproduzidas, pecasproducao, pecaspendentes,TO_CHAR(horaentradaordem :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horaentradaordem,				TO_CHAR(horainicioexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horainicioexecucao, TO_CHAR(horafimexecucao :: TIMESTAMP, 'dd/MM/yyyy HH24:MI:SS') as horafimexecucao, producao.atrasomaximo\r\n"
 				+ "     FROM fabrica.Ordem\r\n"
 				+ "FULL OUTER JOIN fabrica.producao on ordem.numeroordem = producao.numeroordem";
 		return db.executeQueryResult(query);
 	}
 
 	public boolean updatePecasPendentes(DataBase db, String numeroOrdem, int pecas) {
-		String query = "UPDATE Ordem SET pecaspendentes="+pecas +"WHERE numeroOrdem = '" + numeroOrdem + "'";
+		String query = "UPDATE Ordem SET pecaspendentes=" + pecas + "WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
 
 	public boolean updatePecasProduzidas(DataBase db, String numeroOrdem, int pecas) {
-		String query = "UPDATE Ordem SET pecasproduzidas="+pecas +" WHERE numeroOrdem = '" + numeroOrdem + "'";
+		String query = "UPDATE Ordem SET pecasproduzidas=" + pecas + " WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
 
 	public boolean updatePecasEmProducao(DataBase db, String numeroOrdem, int pecas) {
-		String query = "UPDATE Ordem SET pecasproducao="+pecas +" WHERE numeroOrdem = '" + numeroOrdem + "'";
+		String query = "UPDATE Ordem SET pecasproducao=" + pecas + " WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
 
+	public boolean updateFolgaExecucao(DataBase db, Ordens ordem) {
+		String query = "UPDATE Ordem SET folgaexecucao=" + ordem.getPrioridade() + " WHERE numeroOrdem = '" + ordem.getNumeroOrdem() + "'";
+		return db.executeQuery(query);
+	}
+	
 }

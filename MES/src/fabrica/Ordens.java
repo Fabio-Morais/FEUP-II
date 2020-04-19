@@ -7,8 +7,8 @@ import db.Ordem;
 
 public class Ordens {
 	private String numeroOrdem;
-	private int prioridade; //tempo restante
-	private String dataInicio; //MM/dd/yyyy HH:mm
+	private int prioridade; // tempo restante
+	private String dataInicio; // MM/dd/yyyy HH:mm
 	private int atrasoMaximo;
 	private int pecasProduzidas;
 	private int pecasEmProducao;
@@ -26,8 +26,7 @@ public class Ordens {
 	public int getPrioridade() {
 		return prioridade;
 	}
-	
-	
+
 	public String getDataInicio() {
 		return dataInicio;
 	}
@@ -39,47 +38,53 @@ public class Ordens {
 	public void setPrioridade(int prioridade) {
 		this.prioridade = prioridade;
 	}
-	/**Cria o objeto ordens, em que no inicio prioridade = atrasoMaximo, ao longo do tempo a prioridade vai decrementando à medida que o tempo passa*/
+
+	/**
+	 * Cria o objeto ordens, em que no inicio prioridade = atrasoMaximo, ao longo do
+	 * tempo a prioridade vai decrementando à medida que o tempo passa
+	 */
 	public Ordens(String numeroOrdem, int prioridade, String dataInicio, int atrasoMaximo, Fabrica fabrica) {
 		this.numeroOrdem = numeroOrdem;
 		this.prioridade = prioridade;
 		this.dataInicio = dataInicio;
 		this.atrasoMaximo = atrasoMaximo;
-		this.pecasEmProducao=0;
-		this.pecasPendentes=0;
-		this.pecasProduzidas=0;
+		this.pecasEmProducao = 0;
+		this.pecasPendentes = 0;
+		this.pecasProduzidas = 0;
 		this.sem = HeapSemaphore.getSem();
 		this.fabrica = fabrica;
 		db = DataBase.getInstance();
 	}
+
 	/***/
 	public Ordens(String numeroOrdem, String dataInicio, int atrasoMaximo) {
 		this.numeroOrdem = numeroOrdem;
 		this.prioridade = atrasoMaximo;
 		this.dataInicio = dataInicio;
 		this.atrasoMaximo = atrasoMaximo;
-		this.pecasEmProducao=0;
-		this.pecasPendentes=0;
-		this.pecasProduzidas=0;
+		this.pecasEmProducao = 0;
+		this.pecasPendentes = 0;
+		this.pecasProduzidas = 0;
 		this.sem = HeapSemaphore.getSem();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
 	}
+
 	public Ordens(String numeroOrdem, int atrasoMaximo) {
 		this.numeroOrdem = numeroOrdem;
 		this.prioridade = atrasoMaximo;
 		this.dataInicio = Ordem.localDate();
 		this.atrasoMaximo = atrasoMaximo;
-		this.pecasEmProducao=0;
-		this.pecasPendentes=0;
-		this.pecasProduzidas=0;
+		this.pecasEmProducao = 0;
+		this.pecasPendentes = 0;
+		this.pecasProduzidas = 0;
 		this.sem = HeapSemaphore.getSem();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
 	}
-	
+
 	/**
 	 * executa uma ordem
 	 * 
@@ -98,11 +103,16 @@ public class Ordens {
 		} catch (Exception e) {
 
 		}
+		System.out.println("feito");
 	}
-	/**Termina ordem
-	 * @param numeroOrdem - numero da ordem*/
+
+	/**
+	 * Termina ordem
+	 * 
+	 * @param numeroOrdem - numero da ordem
+	 */
 	public void terminaOrdem() {
-		if(db.terminaOrdemProducao(this.numeroOrdem)) {
+		if (db.terminaOrdemProducao(this.numeroOrdem)) {
 			try {
 				sem.acquire();
 			} catch (InterruptedException e1) {
@@ -114,22 +124,31 @@ public class Ordens {
 		}
 	}
 
-	/**Retira uma peça de "pendente" para "em produçao"*/
+	/** Retira uma peça de "pendente" para "em produçao" */
 	public void pecaParaProducao() {
-		if(this.pecasPendentes>0) {
+		if (this.pecasPendentes > 0) {
 			db.updatePecasPendentes(this.numeroOrdem, --this.pecasPendentes);
 			db.updatePecasEmProducao(this.numeroOrdem, ++this.pecasEmProducao);
 		}
-		
+
 	}
-	/**Retira uma peça de "em produçao" para "produzida"*/
+
+	/** Retira uma peça de "em produçao" para "produzida" */
 	public void pecasProduzidas() {
-		if(this.pecasEmProducao>0) {
+		if (this.pecasEmProducao > 0) {
 			db.updatePecasEmProducao(this.numeroOrdem, --this.pecasEmProducao);
 			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);
 		}
-		
+
 	}
+
+	/**
+	 * entradaData (dd/MM/yy HH:mm:ss)
+	 */
+	public int calculaPrioridade() {
+		return (int) Ordem.calculaTempoRestante(Ordem.converteData3(this.dataInicio), Integer.valueOf(this.atrasoMaximo));
+	}
+
 	public int getPecasProduzidas() {
 		return pecasProduzidas;
 	}
@@ -201,6 +220,5 @@ public class Ordens {
 				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
 				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + "]";
 	}
-	
 
 }

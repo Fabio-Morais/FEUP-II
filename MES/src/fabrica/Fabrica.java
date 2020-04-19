@@ -75,7 +75,7 @@ public class Fabrica {
 				ordem.setPecasPendentes(Integer.valueOf(desc.getString("pecaspendentes")));
 				ordem.setPecasEmProducao(Integer.valueOf(desc.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(desc.getString("pecasproduzidas")));
-				
+				ordem.setPrioridade(Integer.valueOf(desc.getString("folgaexecucao")));
 				if (desc.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);// ordem imediata
 				} else if (desc.getString("estadoOrdem").equals("1")) {
@@ -90,6 +90,7 @@ public class Fabrica {
 				ordem.setPecasPendentes(Integer.valueOf(prod.getString("pecaspendentes")));
 				ordem.setPecasEmProducao(Integer.valueOf(prod.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(prod.getString("pecasproduzidas")));
+				ordem.setPrioridade(ordem.calculaPrioridade());
 
 				if (prod.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);
@@ -106,6 +107,7 @@ public class Fabrica {
 		 */
 
 	}
+	
 
 	/** Retorna uma nova heap, que é uma copia da original */
 	public PriorityQueue<Ordens> getCopyHeapOrdemPendente() {
@@ -150,7 +152,7 @@ public class Fabrica {
 			System.out.println(aux.poll());
 		}
 		System.out.println("----------------------------");
-		HashMap<String, Ordens> aux2 = getHeapOrdemExecucao();
+		HashMap<String, Ordens> aux2 = getCopyHeapOrdemExecucao();
 		System.out.println("ORDENS EM EXECUÇAO");
 		for (Map.Entry<String, Ordens> entry : aux2.entrySet()) {
 			String key = entry.getKey();

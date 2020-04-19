@@ -76,5 +76,8 @@ public class Producao {
 	public int getQuantidadeProduzir() {
 		return quantidadeProduzir;
 	}
+	public int getAtrasoMaximo() {
+		return atrasoMaximo;
+	}
 	
 }

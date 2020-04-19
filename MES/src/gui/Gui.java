@@ -75,8 +75,8 @@ public class Gui {
 
 	private boolean opcRunning;
 	private boolean dbRunning;
-	private DataBase db = DataBase.getInstance();
-	private OpcClient opc = OpcClient.getInstance();
+	private DataBase db ;
+	private OpcClient opc ;
 	private JPanel panel_2;
 
 	/**
@@ -87,9 +87,14 @@ public class Gui {
 	 * Create the application.
 	 */
 	public Gui() {
+		this.db = DataBase.getInstance();
+		
+		this.opc = OpcClient.getInstance();
 		this.estatistica = new Estatistica();
+
 		this.fabrica = Fabrica.getInstance();
 		initialize();
+
 	}
 
 	/**
@@ -288,7 +293,6 @@ public class Gui {
 		DefaultDesign.buttons(btnConectarOpc);
 
 		dbIcon = new JLabel("");
-		System.out.println(Gui.class.getResource("/img/on.png"));
 		dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
 
 		opcIcon = new JLabel("");
@@ -596,7 +600,7 @@ public class Gui {
 	private void backgroundTimerConexoes() {
 		counterTimer3 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				verificaConexoes();
+				//verificaConexoes();
 			}
 
 		});

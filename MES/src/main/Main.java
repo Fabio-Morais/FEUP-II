@@ -18,24 +18,8 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		/*
-		 * ServerUdp udp = ServerUdp.getInstance(); udp.start(); OpcClient opc =
-		 * OpcClient.getInstance();
-		 * 
-		 * try { Thread.sleep(1000); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 * 
-		 * 
-		 * 
-		 * try { Thread.sleep(1000); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 * 
-		 * Fabrica fabrica = Fabrica.getInstance(); fabrica.atualizaHeap();
-		 * 
-		 * Receitas receitas = new Receitas();
-		 * System.out.println(receitas.rotaMaquinas("p3", "p9", 0));
-		 */
 		testaDB();
+		System.out.println("Enviou para DB");
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -47,13 +31,13 @@ public class Main {
 				}
 			}
 		});
+		System.out.println("Abriu gui");
 		DataBase db = DataBase.getInstance();
 
 		System.out.println("ESPERAR 4s");
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("PRONTO:");
@@ -76,8 +60,7 @@ public class Main {
 			System.out.println("Vazia? " + fabrica.getHeapOrdemPendente().isEmpty());
 			if (numeroOrdem.equals("a")) {
 				if (!fabrica.getHeapOrdemPendente().isEmpty()) {
-					
-					fabrica.executaOrdem(fabrica.getHeapOrdemPendente().poll());
+					fabrica.getHeapOrdemPendente().poll().executaOrdem();
 
 				}
 			} else if(numeroOrdem.equals("s")){
@@ -87,7 +70,11 @@ public class Main {
 				fabrica.addToHeap(ordem4);
 				fabrica.addToHeap(ordem5);
 			}else if(numeroOrdem.charAt(0)=='e'){
-				 fabrica.terminaOrdem(numeroOrdem.substring(2, numeroOrdem.length()));
+				 fabrica.getHeapOrdemExecucao().get(numeroOrdem.substring(2, numeroOrdem.length())).terminaOrdem();
+			}else if(numeroOrdem.charAt(0)=='1'){
+				 fabrica.getHeapOrdemExecucao().get(numeroOrdem.substring(2, numeroOrdem.length())).pecaParaProducao();
+			}else if(numeroOrdem.charAt(0)=='2'){
+				 fabrica.getHeapOrdemExecucao().get(numeroOrdem.substring(2, numeroOrdem.length())).pecasProduzidas();
 			}else {
 				Ordens ordem = fabrica.getHeapOrdemExecucao().get(numeroOrdem);
 				if (ordem != null) {

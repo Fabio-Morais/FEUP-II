@@ -1,5 +1,8 @@
 package fabrica;
 
+import java.util.concurrent.Semaphore;
+
+import db.DataBase;
 import db.Ordem;
 
 public class Ordens {
@@ -12,7 +15,10 @@ public class Ordens {
 	private int pecasPendentes;
 	private String pecaOrigem;
 	private String pecaFinal;
-	
+	private Semaphore sem;
+	private Fabrica fabrica;
+	private DataBase db;
+
 	public String getNumeroOrdem() {
 		return numeroOrdem;
 	}
@@ -34,7 +40,7 @@ public class Ordens {
 		this.prioridade = prioridade;
 	}
 	/**Cria o objeto ordens, em que no inicio prioridade = atrasoMaximo, ao longo do tempo a prioridade vai decrementando à medida que o tempo passa*/
-	public Ordens(String numeroOrdem, int prioridade, String dataInicio, int atrasoMaximo) {
+	public Ordens(String numeroOrdem, int prioridade, String dataInicio, int atrasoMaximo, Fabrica fabrica) {
 		this.numeroOrdem = numeroOrdem;
 		this.prioridade = prioridade;
 		this.dataInicio = dataInicio;
@@ -42,6 +48,9 @@ public class Ordens {
 		this.pecasEmProducao=0;
 		this.pecasPendentes=0;
 		this.pecasProduzidas=0;
+		this.sem = HeapSemaphore.getSem();
+		this.fabrica = fabrica;
+		db = DataBase.getInstance();
 	}
 	/***/
 	public Ordens(String numeroOrdem, String dataInicio, int atrasoMaximo) {
@@ -52,6 +61,10 @@ public class Ordens {
 		this.pecasEmProducao=0;
 		this.pecasPendentes=0;
 		this.pecasProduzidas=0;
+		this.sem = HeapSemaphore.getSem();
+		this.fabrica = Fabrica.getInstance();
+		db = DataBase.getInstance();
+
 	}
 	public Ordens(String numeroOrdem, int atrasoMaximo) {
 		this.numeroOrdem = numeroOrdem;
@@ -61,9 +74,62 @@ public class Ordens {
 		this.pecasEmProducao=0;
 		this.pecasPendentes=0;
 		this.pecasProduzidas=0;
+		this.sem = HeapSemaphore.getSem();
+		this.fabrica = Fabrica.getInstance();
+		db = DataBase.getInstance();
+
+	}
+	
+	/**
+	 * executa uma ordem
+	 * 
+	 * @param ordem - Ordem a executar
+	 */
+	public void executaOrdem() {
+		try {
+			sem.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
+		sem.release();
+		try {
+			db.executaOrdemProducao(this.numeroOrdem);
+		} catch (Exception e) {
+
+		}
+	}
+	/**Termina ordem
+	 * @param numeroOrdem - numero da ordem*/
+	public void terminaOrdem() {
+		if(db.terminaOrdemProducao(this.numeroOrdem)) {
+			try {
+				sem.acquire();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
+			sem.release();
+
+		}
 	}
 
-
+	/**Retira uma peça de "pendente" para "em produçao"*/
+	public void pecaParaProducao() {
+		if(this.pecasPendentes>0) {
+			db.updatePecasPendentes(this.numeroOrdem, --this.pecasPendentes);
+			db.updatePecasEmProducao(this.numeroOrdem, ++this.pecasEmProducao);
+		}
+		
+	}
+	/**Retira uma peça de "em produçao" para "produzida"*/
+	public void pecasProduzidas() {
+		if(this.pecasEmProducao>0) {
+			db.updatePecasEmProducao(this.numeroOrdem, --this.pecasEmProducao);
+			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);
+		}
+		
+	}
 	public int getPecasProduzidas() {
 		return pecasProduzidas;
 	}
@@ -127,6 +193,13 @@ public class Ordens {
 		} else if (!numeroOrdem.equals(other.numeroOrdem))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Ordens [numeroOrdem=" + numeroOrdem + ", prioridade=" + prioridade + ", dataInicio=" + dataInicio
+				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
+				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + "]";
 	}
 	
 

@@ -13,14 +13,15 @@ public class Ordem {
 
 	private String numeroOrdem;
 	private String horaEntradaOrdem;
-
+	private int pecasPendentes;
 	public Ordem() {
 
 	}
 
-	public Ordem(String numeroOrdem) {
+	public Ordem(String numeroOrdem, int pecasPendentes) {
 		this.horaEntradaOrdem = Ordem.localDate(); // (MM/dd/yyyy HH:mm:ss)
 		this.numeroOrdem = numeroOrdem;
+		this.pecasPendentes= pecasPendentes;
 	}
 
 	/**
@@ -37,7 +38,8 @@ public class Ordem {
 
 	/**
 	 * Funçao para converter do formato (MM/dd/yyyy HH:mm:ss) para (dd/MM/yyyy
-	 * HH:mm:ss) 
+	 * HH:mm:ss)
+	 * 
 	 * @param firstDateString - Data em formato de String (MM/dd/yyyy HH:mm:ss)
 	 * @return Data em string
 	 */
@@ -65,7 +67,8 @@ public class Ordem {
 
 	/**
 	 * Funçao para converter do formato (yyyy/MM/dd HH:mm:ss) para (MM/dd/yyyy
-	 * HH:mm:ss) 
+	 * HH:mm:ss)
+	 * 
 	 * @param firstDateString - Data em formato de String (yyyy/MM/dd HH:mm:ss)
 	 * @return Data em string
 	 */
@@ -88,10 +91,11 @@ public class Ordem {
 
 		return newDateString;
 	}
-	
+
 	/**
 	 * Funçao para converter do formato (dd/MM/yyyy HH:mm:ss) para (MM/dd/yyyy
-	 * HH:mm:ss) 
+	 * HH:mm:ss)
+	 * 
 	 * @param firstDateString - Data em formato de String (dd/MM/yyyy HH:mm:ss)
 	 * @return Data em string
 	 */
@@ -114,8 +118,7 @@ public class Ordem {
 
 		return newDateString;
 	}
-	
-	
+
 	/**
 	 * Funçao usada para saber a diferença entre 2 datas
 	 * 
@@ -154,7 +157,8 @@ public class Ordem {
 	/**
 	 * Funçao usada para saber o tempo restante
 	 * 
-	 * @param date - Data que a ordem foi enviada em formato de String (MM/dd/yyyy HH:mm:ss)
+	 * @param date         - Data que a ordem foi enviada em formato de String
+	 *                     (MM/dd/yyyy HH:mm:ss)
 	 * @param atrasoMaximo - atraso maximo da ordem
 	 * @return retorna a diferença em segundos
 	 */
@@ -173,9 +177,8 @@ public class Ordem {
 			e.printStackTrace();
 		}
 		long diff = -1;
-		long diffInMillies =  firstDate.getTime() - secondDate.getTime();
+		long diffInMillies = firstDate.getTime() - secondDate.getTime();
 		diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-
 
 		return ((diff < 0) ? 0 : diff);
 	}
@@ -210,10 +213,11 @@ public class Ordem {
 	}
 
 	public boolean insert(DataBase db, Ordem ordem) {
-		String query = "INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem) VALUES ('" + ordem.numeroOrdem + "', '"
-				+ ordem.horaEntradaOrdem + "' )";
+		String query = "INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes) VALUES ('" + ordem.numeroOrdem + "', '"
+				+ ordem.horaEntradaOrdem + "',"+ordem.pecasPendentes +")";
 		return db.executeQuery(query);
 	}
+	
 
 	protected boolean executaOrdem(DataBase db, String numeroOrdem) {
 		String query = "UPDATE Ordem SET estadoOrdem= " + 1 + ", horaInicioExecucao= '" + Ordem.localDate()
@@ -233,6 +237,21 @@ public class Ordem {
 				+ "     FROM fabrica.Ordem\r\n"
 				+ "FULL OUTER JOIN fabrica.producao on ordem.numeroordem = producao.numeroordem";
 		return db.executeQueryResult(query);
+	}
+
+	public boolean updatePecasPendentes(DataBase db, String numeroOrdem, int pecas) {
+		String query = "UPDATE Ordem SET pecaspendentes="+pecas +"WHERE numeroOrdem = '" + numeroOrdem + "'";
+		return db.executeQuery(query);
+	}
+
+	public boolean updatePecasProduzidas(DataBase db, String numeroOrdem, int pecas) {
+		String query = "UPDATE Ordem SET pecasproduzidas="+pecas +" WHERE numeroOrdem = '" + numeroOrdem + "'";
+		return db.executeQuery(query);
+	}
+
+	public boolean updatePecasEmProducao(DataBase db, String numeroOrdem, int pecas) {
+		String query = "UPDATE Ordem SET pecasproducao="+pecas +" WHERE numeroOrdem = '" + numeroOrdem + "'";
+		return db.executeQuery(query);
 	}
 
 }

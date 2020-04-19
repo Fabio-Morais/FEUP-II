@@ -198,7 +198,7 @@ public class DataBase {
 	}
 	
 	public boolean insereProducao(Producao producao) {
-		return ordem.insert(this,new Ordem(producao.getNumeroOrdem())) && this.producao.insere(this, producao);
+		return ordem.insert(this,new Ordem(producao.getNumeroOrdem(), producao.getQuantidadeProduzir())) && this.producao.insere(this, producao);
 	}
 	
 	public boolean executaOrdemProducao(String numeroOrdem) {
@@ -210,7 +210,7 @@ public class DataBase {
 	}
 	
 	public boolean insereDescarga(Descarga descarga) {
-		return ordem.insert(this,new Ordem(descarga.getNumeroOrdem())) && this.descarga.insere(this, descarga);
+		return ordem.insert(this,new Ordem(descarga.getNumeroOrdem(), descarga.getQuantidadePecasDescarregar())) && this.descarga.insere(this, descarga);
 	}	
 	/**Retorna as ordens pendentes e em execuçao*/
 	public ResultSet selectProducao() {
@@ -224,6 +224,15 @@ public class DataBase {
 	
 	public ResultSet selectOrdem() {
 		return ordem.select(this);
+	}
+	public boolean updatePecasPendentes(String numeroOrdem, int pecas) {
+		return ordem.updatePecasPendentes(this, numeroOrdem,pecas);
+	}
+	public boolean updatePecasProduzidas(String numeroOrdem, int pecas) {
+		return ordem.updatePecasProduzidas(this, numeroOrdem,pecas);
+	}
+	public boolean updatePecasEmProducao(String numeroOrdem, int pecas) {
+		return ordem.updatePecasEmProducao(this, numeroOrdem,pecas);
 	}
 	
 	

@@ -40,13 +40,9 @@ public class AtualizaOrdensEspera extends Thread {
 			}
 			for(int i=0; i<size; i++) {
 				Ordens x = heap.poll();
-				String numeroOrdem = x.getNumeroOrdem();
-				String date = x.getDataInicio();
 				int prioridade =  (int) Ordem.calculaTempoRestante(x.getDataInicio(), x.getAtrasoMaximo());
-				int atrasoMax = x.getAtrasoMaximo();
-				
-				aux.add(new Ordens(numeroOrdem,(atrasoMax== 0 ? -1 : prioridade), 
-						date, atrasoMax));
+				x.setPrioridade(prioridade);
+				aux.add(x);
 			}
 			
 			fabrica.setHeapOrdemPendente(aux);

@@ -34,7 +34,7 @@ public class Transform {
 		System.out.println(numeroOrdem);
 		/*so adiciona na heap caso adicione na DB com exito*/
 		if(db.insereProducao(new Producao(numeroOrdem, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo))))
-			fabrica.addToHeap(new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo)));
+			fabrica.addToHeap(new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo), fabrica));
 	}
 	
 	public void debug() {

@@ -71,6 +71,9 @@ public class Descarga {
 	public String getNumeroOrdem() {
 		return numeroOrdem;
 	}
+	public int getQuantidadePecasDescarregar() {
+		return quantidadePecasDescarregar;
+	}
 	
 	
 }

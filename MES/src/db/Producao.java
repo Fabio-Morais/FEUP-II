@@ -73,5 +73,8 @@ public class Producao {
 	public String getNumeroOrdem() {
 		return numeroOrdem;
 	}
+	public int getQuantidadeProduzir() {
+		return quantidadeProduzir;
+	}
 	
 }

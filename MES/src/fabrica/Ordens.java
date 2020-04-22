@@ -13,11 +13,56 @@ public class Ordens {
 	private int pecasProduzidas;
 	private int pecasEmProducao;
 	private int pecasPendentes;
-	private String pecaOrigem;
-	private String pecaFinal;
 	private Semaphore sem;
 	private Fabrica fabrica;
 	private DataBase db;
+	private Transform transform;
+	private Unload unload;
+	
+	public class  Transform{
+		private String from;
+		private String to;
+		public Transform(String from, String to) {
+			super();
+			this.from = from;
+			this.to = to;
+		}
+		public String getFrom() {
+			return from;
+		}
+		public String getTo() {
+			return to;
+		}
+		@Override
+		public String toString() {
+			return "Transform [from=" + from + ", to=" + to + "]";
+		}
+		
+
+		
+	};
+	public class  Unload{
+		private String type;
+		private String destinantion;
+		public Unload(String type, String destinantion) {
+			super();
+			this.type = type;
+			this.destinantion = destinantion;
+		}
+		public String getType() {
+			return type;
+		}
+		public String getDestinantion() {
+			return destinantion;
+		}
+		@Override
+		public String toString() {
+			return "Unload [type=" + type + ", destinantion=" + destinantion + "]";
+		}
+		
+		
+	};
+
 
 	public String getNumeroOrdem() {
 		return numeroOrdem;
@@ -173,20 +218,24 @@ public class Ordens {
 		this.pecasPendentes = pecasPendentes;
 	}
 
-	public String getPecaOrigem() {
-		return pecaOrigem;
+
+	
+
+	public Transform getTransform() {
+		return transform;
 	}
 
-	public void setPecaOrigem(String pecaOrigem) {
-		this.pecaOrigem = pecaOrigem;
+
+	public Unload getUnload() {
+		return unload;
+	}
+	
+	public void setTransform(Transform transform) {
+		this.transform = transform;
 	}
 
-	public String getPecaFinal() {
-		return pecaFinal;
-	}
-
-	public void setPecaFinal(String pecaFinal) {
-		this.pecaFinal = pecaFinal;
+	public void setUnload(Unload unload) {
+		this.unload = unload;
 	}
 
 	@Override
@@ -218,7 +267,9 @@ public class Ordens {
 	public String toString() {
 		return "Ordens [numeroOrdem=" + numeroOrdem + ", prioridade=" + prioridade + ", dataInicio=" + dataInicio
 				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
-				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + "]";
+				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + sem + ", fabrica=" + fabrica + ", db=" + db + ", transform=" + transform
+				+ ", unload=" + unload + "]";
 	}
+
 
 }

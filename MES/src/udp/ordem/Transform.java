@@ -36,6 +36,7 @@ public class Transform {
 		if(db.insereProducao(new Producao(numeroOrdem, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo)))) {
 			Ordens ordem = new Ordens(numeroOrdem, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo), fabrica);
 			ordem.setPecasPendentes(Integer.valueOf(quantidadeProduzir));
+			ordem.setTransform(ordem.new Transform(this.pecaOrigem,  this.pecaFinal));
 			fabrica.addToHeap(ordem);
 		}
 	}

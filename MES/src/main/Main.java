@@ -19,8 +19,11 @@ public class Main {
 	public static void main(String[] args) {
 
 		//testaDB();
-		System.out.println("Enviou para DB");
+		//System.out.println("Enviou para DB");
 
+		ServerUdp udp = ServerUdp.getInstance();
+		udp.start();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -51,7 +54,7 @@ public class Main {
 		Fabrica fabrica = Fabrica.getInstance();
 		fabrica.atualizaHeap();
 		
-
+		
 		Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
 		while (true) {
@@ -60,6 +63,7 @@ public class Main {
 			System.out.println("Vazia? " + fabrica.getHeapOrdemPendente().isEmpty());
 			if (numeroOrdem.equals("a")) {
 				if (!fabrica.getHeapOrdemPendente().isEmpty()) {
+					System.out.println(fabrica.getCopyHeapOrdemPendente().peek());
 					fabrica.getHeapOrdemPendente().poll().executaOrdem();
 
 				}

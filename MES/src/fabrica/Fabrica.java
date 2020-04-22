@@ -76,6 +76,7 @@ public class Fabrica {
 				ordem.setPecasEmProducao(Integer.valueOf(desc.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(desc.getString("pecasproduzidas")));
 				ordem.setPrioridade(Integer.valueOf(desc.getString("folgaexecucao")));
+				ordem.setUnload(ordem.new Unload(desc.getString("pecaDescarga"), desc.getString("destino")));
 				if (desc.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);// ordem imediata
 				} else if (desc.getString("estadoOrdem").equals("1")) {
@@ -91,7 +92,7 @@ public class Fabrica {
 				ordem.setPecasEmProducao(Integer.valueOf(prod.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(prod.getString("pecasproduzidas")));
 				ordem.setPrioridade(ordem.calculaPrioridade());
-
+				ordem.setTransform(ordem.new Transform(prod.getString("pecaorigem"),prod.getString("pecafinal")));
 				if (prod.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);
 				} else if (prod.getString("estadoOrdem").equals("1")) {

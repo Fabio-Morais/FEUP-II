@@ -501,13 +501,13 @@ public class Gui {
 	private void tableOrdemProcessamento(JScrollPane scrollPane) {
 
 		modelOrdemProcessamento = new DefaultTableModel(new Object[][] {}, new String[] { "numero ordem",
-				"Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção", "Peças pendentes" }) {
+				"Tempo restante", "Tipo Ordem", "Peças produzidas", "Peças em produção", "Peças pendentes", "Operação" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
-			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
+			boolean[] columnEditables = new boolean[] { false, false, false, false, false, false, false };
 			@SuppressWarnings("rawtypes")
 			Class[] columnTypes = new Class[] { String.class, String.class, String.class, String.class, String.class,
-					String.class };
+					String.class, String.class };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -529,12 +529,12 @@ public class Gui {
 	private void tableOrdemEspera(JScrollPane scrollPane_1) {
 
 		modelOrdemEspera = new DefaultTableModel(new Object[][] {},
-				new String[] { "Numero Ordem", "tipo de ordem", "tempo restante" }) {
+				new String[] { "Numero Ordem", "tipo de ordem", "tempo restante", "Operação" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;
-			boolean[] columnEditables = new boolean[] { false, false, false };
+			boolean[] columnEditables = new boolean[] { false, false, false, false };
 			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] { String.class, String.class, String.class };
+			Class[] columnTypes = new Class[] { String.class, String.class, String.class, String.class };
 
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
@@ -672,12 +672,19 @@ public class Gui {
 				modelOrdemProcessamento.setValueAt(ord.getPecasProduzidas(), i, 3);
 				modelOrdemProcessamento.setValueAt(ord.getPecasEmProducao(), i, 4);
 				modelOrdemProcessamento.setValueAt(ord.getPecasPendentes(), i, 5);
-
+				if(ord.getTransform() != null)
+					modelOrdemProcessamento.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 6);
+				else if(ord.getUnload() != null)
+					modelOrdemProcessamento.setValueAt(ord.getUnload().getType()+"->"+ord.getUnload().getDestinantion(), i, 6);
 			} else {
 				modelOrdemProcessamento.addRow(
 						new Object[] { ord.getNumeroOrdem(), "" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),
 								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), ord.getPecasProduzidas(),
 								ord.getPecasEmProducao(), ord.getPecasPendentes() });
+				if(ord.getTransform() != null)
+					modelOrdemProcessamento.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 6);
+				else if(ord.getUnload() != null)
+					modelOrdemProcessamento.setValueAt(ord.getUnload().getType()+"->"+ord.getUnload().getDestinantion(), i, 6);
 			}
 			i++;
 
@@ -697,10 +704,18 @@ public class Gui {
 				modelOrdemEspera.setValueAt(ord.getNumeroOrdem(), i, 0);
 				modelOrdemEspera.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), i, 1);
 				modelOrdemEspera.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 2);
+				if(ord.getTransform() != null)
+					modelOrdemEspera.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 3);
+				else if(ord.getUnload() != null)
+					modelOrdemEspera.setValueAt(ord.getUnload().getType()+"->"+ord.getUnload().getDestinantion(), i, 3);
 			} else {
 				modelOrdemEspera.addRow(
 						new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"),
-								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()) });
+								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),"" });
+				if(ord.getTransform() != null)
+					modelOrdemEspera.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 3);
+				else if(ord.getUnload() != null)
+					modelOrdemEspera.setValueAt(ord.getUnload().getType()+"->"+ord.getUnload().getDestinantion(), i, 3);
 			}
 
 		}

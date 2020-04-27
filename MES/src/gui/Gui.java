@@ -66,7 +66,6 @@ public class Gui {
 	private Timer counterTimer4;
 	private Timer counterTimer5;
 	private JLabel label_1;
-	private OpcClient opcClient;
 	private Fabrica fabrica;
 	private JLabel dbIcon;
 	private JLabel opcIcon;
@@ -728,7 +727,7 @@ public class Gui {
 	}
 
 	private void stock() {
-		short[] stock = opcClient.getValue("SFS", "Stock");
+		short[] stock = opc.getValue("SFS", "Stock");
 		for (int i = 0; i < stock.length; i++) {
 			modelStock.setValueAt("P" + (i + 1), i, 0);
 			modelStock.setValueAt("" + stock[i], i, 1);
@@ -737,7 +736,9 @@ public class Gui {
 	}
 
 	private void pecasFabrica() {
-		label_1.setText("" + opcClient.getValue("SFS", "PecasSistema")[0]);
+		System.out.println("entra");
+		label_1.setText("" + opc.getValue("SFS", "PecasnoSistema")[0]);
+		System.out.println(opc.getValue("SFS", "PecasnoSistema")[0]);
 
 	}
 

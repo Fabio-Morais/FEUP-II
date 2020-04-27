@@ -9,16 +9,18 @@ import dijkstra.Edge;
 import dijkstra.Graph;
 import dijkstra.Vertex;
 
-public class Receitas {
+public abstract class Receitas {
 
 	public Receitas() {
 		// TODO Auto-generated constructor stub
 	}
 
-	List<Vertex> nodes;
-	List<Edge> edges;
-
-	public List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina) {
+	static List<Vertex> nodes;
+	static List<Edge> edges;
+	/** maquina | tempo ! ferramenta
+	 * 
+	 * */
+	public static List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina) {
 		List<String> rota = new ArrayList<String>();
 		int origemInt = Integer.valueOf(origem.substring(1, 2));
 		int destinoInt = Integer.valueOf(destino.substring(1, 2));
@@ -84,7 +86,7 @@ public class Receitas {
 		return rota;
 	}
 
-	private void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {
+	private static void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {
 		Edge lane = new Edge(laneId, nodes.get(sourceLocNo), nodes.get(destLocNo), duration);
 		edges.add(lane);
 	}

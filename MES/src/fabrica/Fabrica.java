@@ -14,7 +14,6 @@ public class Fabrica {
 	private PriorityQueue<Ordens> heapOrdemPendente;
 	private HashMap<String, Ordens> heapOrdemExecucao;
 	private DataBase db;
-	private Plant plant;
 	private ControlaPlc controlaPlc;
 	private AtualizaOrdensEspera atualizaOrdensEspera;
 
@@ -23,7 +22,7 @@ public class Fabrica {
 		// this.plant = new Plant();
 		// this.controlaPlc = new ControlaPlc();
 		criaHeap();
-		sincronizaOrdens();
+		//sincronizaOrdens();
 	}
 
 	/** Inicializa a classe SINGLETON */
@@ -164,10 +163,6 @@ public class Fabrica {
 
 	}
 
-	/** retorna a classe Plant */
-	public Plant getPlant() {
-		return plant;
-	}
 
 	/** retorna a classe ControlaPlc */
 	public ControlaPlc getControlaPlc() {

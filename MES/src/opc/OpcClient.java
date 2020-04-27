@@ -121,15 +121,14 @@ public class OpcClient {
 	/** Sempre que uma variavel muda de valor esta função corre */
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
-		System.out.println(value.getValue().getValue());
 		boolean valor = (boolean) value.getValue().getValue();
 		//System.out.println("->" + aux.substring(44, aux.length()) + " - " + value.getValue().getValue());
-		String node = aux.substring(44, aux.length());
+		/*String node = aux.substring(44, aux.length());
 		int estado = (valor == true) ? 0 : 1; // se estiver free -> 0, se estiver ocupado -> 1
 		int[] coords = calculaCoords(node);
 		if(coords.length == 2) {
 			fabrica.getPlant().changeMap(coords[0], coords[1], estado);
-		}
+		}*/
 	}
 
 	/** Vai buscar os Nodes ID no ficheiro de texto */
@@ -239,7 +238,8 @@ public class OpcClient {
 	private short[] readToArray(String id) {
 		short[] valueShort = new short[9];
 		for (int i = 0; i < 9; i++) {
-			String idArray = id + "[" + (i + 1) + "]";
+			String idArray = id + "[" + (i) + "]";
+			System.out.println(idArray);
 			NodeId nodeIdString = new NodeId(idNode, idArray);
 			client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 			try {

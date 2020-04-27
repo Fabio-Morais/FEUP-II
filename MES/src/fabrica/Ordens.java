@@ -1,5 +1,6 @@
 package fabrica;
 
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import db.DataBase;
@@ -185,6 +186,12 @@ public class Ordens {
 			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);
 		}
 
+	}
+	
+	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
+	 * */
+	public List<String> getReceita(int tempoRestanteMaquina){
+		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina);
 	}
 
 	/**

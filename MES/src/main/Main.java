@@ -1,15 +1,11 @@
 package main;
 
-import java.awt.EventQueue;
 import java.io.IOException;
-import java.util.Scanner;
 
 import db.DataBase;
 import db.Descarga;
 import db.Producao;
-import fabrica.Fabrica;
-import fabrica.Ordens;
-import gui.Gui;
+import fabrica.ControlaPlc;
 import opc.OpcClient;
 import udp.ServerUdp;
 import udp.estatistica.Estatistica;
@@ -21,10 +17,14 @@ public class Main {
 		//testaDB();
 		//System.out.println("Enviou para DB");
 
-		ServerUdp udp = ServerUdp.getInstance();
-		udp.start();
+		ControlaPlc plc = new ControlaPlc();
+		plc.test();
 		
-		EventQueue.invokeLater(new Runnable() {
+		
+		/*ServerUdp udp = ServerUdp.getInstance();
+		udp.start();*/
+		
+		/*EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Gui window = new Gui();
@@ -57,6 +57,8 @@ public class Main {
 		
 		Scanner myObj = new Scanner(System.in); // Create a Scanner object
 
+
+		
 		while (true) {
 			String numeroOrdem = myObj.nextLine(); // Read user input
 			System.out.println("Entra? " + numeroOrdem.equals("1"));
@@ -87,7 +89,7 @@ public class Main {
 					ordem.setPecasProduzidas(1 + ordem.getPecasProduzidas());
 				}
 			}
-		}
+		}*/
 
 	}
 

@@ -94,6 +94,7 @@ public class ControlaPlc{
 		List<String> transformations = ordem.getReceita(0);
 		int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort(""+ordem.getTransform().getFrom().charAt(1));
+		short tipoFinal = Short.parseShort(""+ordem.getTransform().getTo().charAt(1));
 		
 		for(int i=0; i<3; i++) 
 			for(int x=0; x<7; x++) 
@@ -118,15 +119,15 @@ public class ControlaPlc{
 			for(int j=0; j<path.length; j++)
 				for(int k=0; k<2; k++)
 					path[j][k] = (short) path_i[j][k];
-			sendPath(path, recipeTool, recipeTime, tipo);
+			sendPath(path, recipeTool, recipeTime, tipo,tipoFinal);
 		}
 		
 		short path[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path, recipeToolTest, recipeTime, (short) 0);
+		sendPath(path, recipeToolTest, recipeTime, (short) 0, (short) 0);
 	}
 
-	public void sendPath(short[][] path, short[] tool, long[] time, short tipo) {
+	public void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal) {
 		System.out.println("send new path");
 		OpcClient opcClient = OpcClient.getInstance();
 		boolean in;	
@@ -148,6 +149,8 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
 		opcClient.setValue("Fabrica", "pecainput.recipeTime", time);
 		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
+		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
+
 		if(path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", MacProcessa);
 		
@@ -504,7 +507,7 @@ public class ControlaPlc{
 		int [][] path = new int[50][2];
 		Ordens ordem = new Ordens("123","2015", 10);
 		ordem.setPecasPendentes(5);
-		ordem.setTransform(ordem.new Transform("P1", "P4"));
+		ordem.setTransform(ordem.new Transform("P1", "P2"));
 		List<String> transformations = ordem.getReceita(0);
 		System.out.println(transformations.toString());
 		System.out.println("begin");

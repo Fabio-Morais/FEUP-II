@@ -1,10 +1,13 @@
 package fabrica;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.concurrent.Semaphore;
 
 import db.DataBase;
 import db.Ordem;
@@ -14,15 +17,15 @@ public class Fabrica {
 	private PriorityQueue<Ordens> heapOrdemPendente;
 	private HashMap<String, Ordens> heapOrdemExecucao;
 	private DataBase db;
-	private ControlaPlc controlaPlc;
 	private AtualizaOrdensEspera atualizaOrdensEspera;
+	Semaphore sem;
 
 	private Fabrica() {
 		this.db = DataBase.getInstance();
-		// this.plant = new Plant();
-		// this.controlaPlc = new ControlaPlc();
 		criaHeap();
-		//sincronizaOrdens();
+		sincronizaOrdens();
+		this.sem = GeneralSemaphore.getSem();
+
 	}
 
 	/** Inicializa a classe SINGLETON */
@@ -79,7 +82,7 @@ public class Fabrica {
 				if (desc.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);// ordem imediata
 				} else if (desc.getString("estadoOrdem").equals("1")) {
-					heapOrdemExecucao.put(ordem.getNumeroOrdem(),ordem);// ordem imediata
+					heapOrdemExecucao.put(ordem.getNumeroOrdem(), ordem);// ordem imediata
 				}
 			}
 			while (prod.next()) {
@@ -91,7 +94,7 @@ public class Fabrica {
 				ordem.setPecasEmProducao(Integer.valueOf(prod.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(prod.getString("pecasproduzidas")));
 				ordem.setPrioridade(ordem.calculaPrioridade());
-				ordem.setTransform(ordem.new Transform(prod.getString("pecaorigem"),prod.getString("pecafinal")));
+				ordem.setTransform(ordem.new Transform(prod.getString("pecaorigem"), prod.getString("pecafinal")));
 				if (prod.getString("estadoOrdem").equals("0")) {
 					heapOrdemPendente.add(ordem);
 				} else if (prod.getString("estadoOrdem").equals("1")) {
@@ -107,7 +110,6 @@ public class Fabrica {
 		 */
 
 	}
-	
 
 	/** Retorna uma nova heap, que é uma copia da original */
 	public PriorityQueue<Ordens> getCopyHeapOrdemPendente() {
@@ -163,10 +165,68 @@ public class Fabrica {
 
 	}
 
+	public void gereOrdens() {
+		ControlaPlc controlaPlc = new ControlaPlc();
+		int mandaOrdem = 3;
 
-	/** retorna a classe ControlaPlc */
-	public ControlaPlc getControlaPlc() {
-		return controlaPlc;
+		ArrayList<Ordens> listaOrdens = new ArrayList<Ordens>();
+		List<String> lista = null;
+		while (true) {
+			boolean maquinaALivre = true;
+			boolean maquinaBLivre = true;
+			boolean maquinaCLivre = true;
+			/*seleciona as ordens que podem entrar em paralelo*/
+			while (true) {
+				if (!heapOrdemPendente.isEmpty() && mandaOrdem > 0) {
+
+					try {
+						sem.acquire();//bloqueia a mutex
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					lista = heapOrdemPendente.peek().getReceita(0);
+					boolean ok = false;
+					for (int i = 0; i < lista.size(); i += 3) {
+						String x = lista.get(i);
+						if (x.equals("A") && maquinaALivre) {
+							System.out.println("x : " + x);
+							ok = true;
+							maquinaALivre=false;
+						} else if (x.equals("B") && maquinaBLivre) {
+							System.out.println("x : " + x);
+							ok = true;
+							maquinaBLivre=false;
+						} else if (x.equals("C") && maquinaCLivre) {
+							System.out.println("x : " + x);
+							ok = true;
+							maquinaCLivre=false;
+						} else {
+							ok = false;
+						}
+					}
+					if (ok) {
+						System.out.println("ordem :"+heapOrdemPendente.peek());
+						listaOrdens.add(heapOrdemPendente.poll());
+						mandaOrdem--;
+					}
+				}
+				sem.release();// liberta a mutex
+
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+			
+			
+	
+			
+
+		}
+
 	}
 
 }

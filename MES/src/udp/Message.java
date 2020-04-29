@@ -1,9 +1,17 @@
 package udp;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.DocumentBuilder;
+
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -12,14 +20,6 @@ import fabrica.Fabrica;
 import opc.OpcClient;
 import udp.estatistica.Estatistica;
 import udp.ordem.Ordem;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 
 public class Message {
 	private String address;
@@ -90,9 +90,7 @@ public class Message {
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println("-------------------");
-		fabrica.imprimeHeap();
-		System.out.println("-------------------");
+
 
 		return true;
 

@@ -13,7 +13,7 @@ public class AtualizaOrdensEspera extends Thread {
 	Semaphore sem;
 	public AtualizaOrdensEspera() {
 		this.fabrica= Fabrica.getInstance();
-		this.sem = HeapSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem();
 	}
 
 	/**Atualiza a Heap com o tempo que falta, ((Tempo entrada de ordem + atraso maximo) - hora atual)

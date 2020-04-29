@@ -107,14 +107,7 @@ public class OpcClient {
 				.createMonitoredItems(TimestampsToReturn.Both, createMonitoredItemCreateRequests(), onItemCreated)
 				.get();
 
-		/*for (UaMonitoredItem item : items) {
-			if (item.getStatusCode().isGood()) {
-				System.out.println("Item created for NodeId: " + item.getReadValueId().getNodeId());
-			} else {
-				System.out.println("Failed to create item for NodeId: " + item.getReadValueId().getNodeId()
-						+ item.getStatusCode());
-			}
-		}*/
+
 
 	}
 
@@ -122,9 +115,11 @@ public class OpcClient {
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
 		boolean valor = (boolean) value.getValue().getValue();
+		
 		//System.out.println("->" + aux.substring(44, aux.length()) + " - " + value.getValue().getValue());
-		/*String node = aux.substring(44, aux.length());
-		int estado = (valor == true) ? 0 : 1; // se estiver free -> 0, se estiver ocupado -> 1
+		String node = aux.substring(44, aux.length());
+		
+		/*int estado = (valor == true) ? 0 : 1; // se estiver free -> 0, se estiver ocupado -> 1
 		int[] coords = calculaCoords(node);
 		if(coords.length == 2) {
 			fabrica.getPlant().changeMap(coords[0], coords[1], estado);
@@ -205,7 +200,6 @@ public class OpcClient {
 			return new short[0];
 		}
 		valueShort[0] = (short) value.getValue().getValue();
-		System.out.println(nomeVariavel+ " - "+ valueShort[0]);
 		return valueShort;
 
 	}
@@ -239,7 +233,6 @@ public class OpcClient {
 		short[] valueShort = new short[9];
 		for (int i = 0; i < 9; i++) {
 			String idArray = id + "[" + (i) + "]";
-			System.out.println(idArray);
 			NodeId nodeIdString = new NodeId(idNode, idArray);
 			client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 			try {

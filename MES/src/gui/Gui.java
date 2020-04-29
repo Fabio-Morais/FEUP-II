@@ -611,13 +611,21 @@ public class Gui {
 	private void backgroundTimerHora() {
 		counterTimer4 = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
+				// All code inside SwingWorker runs on a seperate thread
+				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+					@Override
+					public Void doInBackground() {
 						String aux = Ordem.converteData(Ordem.localDate());
 						String[] split = aux.split(" ");
 						if (split.length == 2) {
 							hora.setText(split[0] + "  -  " + split[1]);
 						}
-					
+						return null;
+					}
+				};
+
+				// Call the SwingWorker from within the Swing thread
+				worker.execute();
 				
 			}
 
@@ -736,9 +744,7 @@ public class Gui {
 	}
 
 	private void pecasFabrica() {
-		System.out.println("entra");
 		label_1.setText("" + opc.getValue("SFS", "PecasnoSistema")[0]);
-		System.out.println(opc.getValue("SFS", "PecasnoSistema")[0]);
 
 	}
 
@@ -755,7 +761,7 @@ public class Gui {
 		SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
 			@Override
 			public Boolean doInBackground() {
-				if (opc.connect())
+				if (opc.getValue("SFS", "PecasnoSistema").length > 0)
 					return true;
 				else
 					return false;

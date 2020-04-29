@@ -19,6 +19,7 @@ public class Ordens {
 	private DataBase db;
 	private Transform transform;
 	private Unload unload;
+	private ControlaPlc enviaOrdem;
 	
 	public class  Transform{
 		private String from;
@@ -97,7 +98,7 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = HeapSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = fabrica;
 		db = DataBase.getInstance();
 	}
@@ -111,7 +112,7 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = HeapSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
@@ -125,7 +126,7 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = HeapSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
@@ -149,7 +150,11 @@ public class Ordens {
 		} catch (Exception e) {
 
 		}
-		System.out.println("feito");
+		/*if(this.getTransform() != null && this.getUnload() == null) {
+			System.out.println("executa ordem");
+
+		}*/
+		System.out.println("acaba o metodo executaOrdem");
 	}
 
 	/**
@@ -173,8 +178,8 @@ public class Ordens {
 	/** Retira uma peça de "pendente" para "em produçao" */
 	public void pecaParaProducao() {
 		if (this.pecasPendentes > 0) {
-			db.updatePecasPendentes(this.numeroOrdem, --this.pecasPendentes);
-			db.updatePecasEmProducao(this.numeroOrdem, ++this.pecasEmProducao);
+			db.updatePecasPendentes(this.numeroOrdem, --this.pecasPendentes);//atualiza db e variaveis da classe
+			db.updatePecasEmProducao(this.numeroOrdem, ++this.pecasEmProducao);//atualiza db e variaveis da classe
 		}
 
 	}
@@ -182,16 +187,22 @@ public class Ordens {
 	/** Retira uma peça de "em produçao" para "produzida" */
 	public void pecasProduzidas() {
 		if (this.pecasEmProducao > 0) {
-			db.updatePecasEmProducao(this.numeroOrdem, --this.pecasEmProducao);
-			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);
+			db.updatePecasEmProducao(this.numeroOrdem, --this.pecasEmProducao);//atualiza db e variaveis da classe
+			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);//atualiza db e variaveis da classe
 		}
 
+	}
+	
+	/**Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
+	 * */
+	public List<String> getListaPecas(int tempoRestanteMaquina){
+		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
 	}
 	
 	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
 	 * */
 	public List<String> getReceita(int tempoRestanteMaquina){
-		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina);
+		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
 	}
 
 	/**

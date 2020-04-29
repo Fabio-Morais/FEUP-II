@@ -17,11 +17,17 @@ public abstract class Receitas {
 
 	static List<Vertex> nodes;
 	static List<Edge> edges;
-	/** maquina | tempo ! ferramenta
-	 * 
+	/** Retorna lista de (tipo maquina | tempo processametno | tipo ferramenta) se option =0, ou lista de peças que se vao transformar
+	 * (P1 | P5 | P8), ou seja, para fazer P1->P8 vai passar por todo este processo
+	 * @param origem - Peça origem
+	 * @param destino - Peça destino
+	 * @param tempoRestanteMaquina - tempo que falta para acabar a maquina C ficar livre
+	 * @param option - 0 lista  (tipo maquina | tempo processametno | tipo ferramenta) <br> 1 lista (tipo peça)
 	 * */
-	public static List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina) {
+	public static List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina, int option) {
 		List<String> rota = new ArrayList<String>();
+		List<String> pecas = new ArrayList<String>();
+
 		int origemInt = Integer.valueOf(origem.substring(1, 2));
 		int destinoInt = Integer.valueOf(destino.substring(1, 2));
 		nodes = new ArrayList<Vertex>();
@@ -63,10 +69,11 @@ public abstract class Receitas {
 		LinkedList<Vertex> path = dijkstra.getPath(nodes.get(destinoInt));
 		if (path != null) {
 			for (int i = 0; i < path.size(); i++) {
+				pecas.add(path.get(i).getName());
 				for (Edge edge : edges) {
 					if (i != path.size() - 1) {
-						if (edge.getSource().getName().equals(path.get(i).getId())
-								&& edge.getDestination().getName().equals(path.get(i + 1).getId())) {
+						if (edge.getSource().getName().equals(path.get(i).getId()) && edge.getDestination().getName().equals(path.get(i + 1).getId())) {
+							
 							rota.add(""+edge.getId().charAt(0));//coloca maquina
 							if(edge.getSource().getName().equals("P4") && edge.getDestination().getName().equals("P8")) {
 								rota.add(""+10);
@@ -83,7 +90,8 @@ public abstract class Receitas {
 				}
 			}
 		}
-		return rota;
+
+		return option == 0 ? rota : pecas;
 	}
 
 	private static void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {

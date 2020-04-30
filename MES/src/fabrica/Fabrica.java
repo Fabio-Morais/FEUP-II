@@ -24,7 +24,7 @@ public class Fabrica {
 	}
 
 	/** Inicializa a classe SINGLETON */
-	public static Fabrica getInstance() {
+	public synchronized static Fabrica getInstance() {
 		if (instance == null)
 			instance = new Fabrica();
 		return instance;
@@ -32,8 +32,15 @@ public class Fabrica {
 
 	/** Adiciona ordens à heap pendente */
 	public void addToHeap(Ordens ordens) {
+		try {
+			GeneralSemaphore.getSem().acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (!heapOrdemPendente.contains(ordens))
 			heapOrdemPendente.add(ordens);
+		GeneralSemaphore.getSem().release();
 	}
 
 	public void atualizaHeap() {
@@ -107,25 +114,25 @@ public class Fabrica {
 	}
 
 	/** Retorna uma nova heap, que é uma copia da original */
-	public PriorityQueue<Ordens> getCopyHeapOrdemPendente() {
+	public synchronized PriorityQueue<Ordens> getCopyHeapOrdemPendente() {
 		PriorityQueue<Ordens> copy = new PriorityQueue<>(heapOrdemPendente);
 		return copy;
 	}
 
 	/** Retorna a heap original */
-	public PriorityQueue<Ordens> getHeapOrdemPendente() {
+	public synchronized PriorityQueue<Ordens> getHeapOrdemPendente() {
 		return heapOrdemPendente;
 
 	}
 
 	/** Retorna uma nova heap, que é uma copia da original */
-	public HashMap<String, Ordens> getCopyHeapOrdemExecucao() {
+	public synchronized HashMap<String, Ordens> getCopyHeapOrdemExecucao() {
 		HashMap<String, Ordens> copy = new HashMap<>(heapOrdemExecucao);
 		return copy;
 	}
 
 	/** Retorna a heap original */
-	public HashMap<String, Ordens> getHeapOrdemExecucao() {
+	public synchronized HashMap<String, Ordens> getHeapOrdemExecucao() {
 		return heapOrdemExecucao;
 	}
 
@@ -134,7 +141,7 @@ public class Fabrica {
 	 * 
 	 * @param heapOrdemPendente - heap que vai substituir a original
 	 */
-	public void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
+	public synchronized void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
 		this.heapOrdemPendente = heapOrdemPendente;
 	}
 
@@ -166,7 +173,7 @@ public class Fabrica {
 
 	}
 	
-	public void reorganizaHeap(Ordens ordem) {
+	public synchronized void reorganizaHeap(Ordens ordem) {
 		 PriorityQueue<Ordens> aux = new PriorityQueue<Ordens>();
 		 PriorityQueue<Ordens> original = heapOrdemPendente;
 		 int size = original.size();

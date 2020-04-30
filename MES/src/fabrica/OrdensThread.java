@@ -30,11 +30,23 @@ public class OrdensThread extends Thread {
 				ordem.pecaParaProducao();
 				GereOrdensThread.sem.release();
 			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		System.out.println("A SAIRR....");
 		/*Espera para terminar ordem*/
 		while(ordem.getQuantidade() != ordem.getPecasProduzidas()) {
-			
+			System.out.println(ordem.getQuantidade() + " - "+ ordem.getPecasProduzidas());
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+		System.out.println("*******SAIU********++");
 		ordem.terminaOrdem();
 		return;
 	}
@@ -57,14 +69,17 @@ public class OrdensThread extends Thread {
 		String receita = ordem.getReceita(0).get(0);
 		if(receita.equals("A")){
 			aux= GereOrdensThread.getmALivre();
+			//System.out.println("AAAAAAAAAAA");
 		}else if(receita.equals("B")){
 			aux= GereOrdensThread.getmBLivre();
+			System.out.println("BBBBBBBBB");
 		}else if(receita.equals("C")){
 			aux= GereOrdensThread.getmCLivre();
+			System.out.println("CCCCCCCCCC");
 		}
-
-			
-		return (aux[0] || aux[1] || aux[2] || selectTimer()[0] < 5000 || selectTimer()[1] < 5000 || selectTimer()[2] < 5000);
+		//System.out.println(aux[0] +" - "+ aux[1]  +" - "+ aux[2]);
+			// || selectTimer()[0] < 5000 || selectTimer()[1] < 5000 || selectTimer()[2] < 5000
+		return (aux[0] || aux[1] || aux[2]);
 		
 	}
 }

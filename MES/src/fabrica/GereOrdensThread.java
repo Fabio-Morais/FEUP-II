@@ -18,49 +18,49 @@ public class GereOrdensThread {
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
 	
-	public static boolean[] getmALivre() {
+	public synchronized static boolean[] getmALivre() {
 		return mALivre;
 	}
-	public static void setmALivre(boolean mALivre, int pos) {
+	public synchronized static void setmALivre(boolean mALivre, int pos) {
 		GereOrdensThread.mALivre[pos] = mALivre;
 	}
-	public static boolean[] getmBLivre() {
+	public synchronized static boolean[] getmBLivre() {
 		return mBLivre;
 	}
-	public static void setmBLivre(boolean mBLivre, int pos) {
+	public synchronized static void setmBLivre(boolean mBLivre, int pos) {
 		GereOrdensThread.mBLivre[pos] = mBLivre;
 	}
-	public static boolean[] getmCLivre() {
+	public synchronized static boolean[] getmCLivre() {
 		return mCLivre;
 	}
-	public static void setmCLivre(boolean mCLivre, int pos) {
+	public synchronized static void setmCLivre(boolean mCLivre, int pos) {
 		GereOrdensThread.mCLivre[pos] = mCLivre;
 	}
-	public static long[] getTempoMA() {
+	public synchronized static long[] getTempoMA() {
 		return tempoMA;
 	}
-	public static void setTempoMA(long tempoMA, int pos) {
+	public synchronized static void setTempoMA(long tempoMA, int pos) {
 		GereOrdensThread.tempoMA[pos] = tempoMA;
 	}
-	public static long[] getTempoMB() {
+	public synchronized static long[] getTempoMB() {
 		return tempoMB;
 	}
-	public static void setTempoMB(long tempoMB, int pos) {
+	public synchronized static void setTempoMB(long tempoMB, int pos) {
 		GereOrdensThread.tempoMB[pos] = tempoMB;
 	}
-	public static long[] getTempoMC() {
+	public synchronized static long[] getTempoMC() {
 		return tempoMC;
 	}
-	public static void setTempoMC(long tempoMC, int pos) {
+	public synchronized static void setTempoMC(long tempoMC, int pos) {
 		GereOrdensThread.tempoMC[pos] = tempoMC;
 	}
-	public static int getNumberOfThreads() {
+	public synchronized static int getNumberOfThreads() {
 		return numberOfThreads;
 	}
-	public static void incrementNumberOfThreads() {
+	public synchronized static void incrementNumberOfThreads() {
 		GereOrdensThread.numberOfThreads++;
 	}
-	public static void decrementNumberOfThreads() {
+	public synchronized static void decrementNumberOfThreads() {
 		GereOrdensThread.numberOfThreads++;
 	}
 	

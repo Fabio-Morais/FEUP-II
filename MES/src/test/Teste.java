@@ -41,8 +41,8 @@ public class Teste {
 
 		Fabrica fabrica = Fabrica.getInstance();
 		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(5);
-		ordem1.setTransform(ordem1.new Transform("P1","P4"));//maquina A
+		ordem1.setPecasPendentes(8);
+		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
 		Ordens ordem2 = new Ordens("2", 600,Ordem.localDate(), 600, fabrica);
 		ordem2.setPecasPendentes(5);
 		ordem2.setTransform(ordem2.new Transform("P1","P3"));//maquina B
@@ -64,8 +64,8 @@ public class Teste {
 		}
 		System.out.println("***COMEÇA***");
 		fabrica.addToHeap(ordem1);
-/*
-		try {
+
+		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();

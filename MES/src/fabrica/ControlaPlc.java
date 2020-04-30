@@ -101,7 +101,7 @@ public class ControlaPlc{
 	/**Corre apenas 1 vez
 	 * @param ordem- Ordem a se executar
 	 * */
-	public void runOrder(Ordens ordem) {
+	public synchronized void runOrder(Ordens ordem) {
 		List<String> transformations = ordem.getReceita(0);
 		//int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort(""+ordem.getTransform().getFrom().charAt(1));
@@ -112,7 +112,7 @@ public class ControlaPlc{
 		
 		long recipeTime[] = new long[31];
 		int time_since_last_piece;
-		
+		System.out.println(transformations);
 		for(int i=0; i<transformations.size()/3; i++)
 			recipeTime[i] = 1000*Long.valueOf(transformations.get((i*3)+1)); //tempo de ferramenta
 		//for(int i=0; i<numerOfPieces; i++) {
@@ -126,6 +126,7 @@ public class ControlaPlc{
 				for(int k=0; k<2; k++)
 					path[j][k] = (short) path_i[j][k];
 			sendPath(path, recipeTool, recipeTime, tipo,tipoFinal, numeroOrdem);
+
 			/*System.out.println("---> "+ i);
 		}*/
 		
@@ -151,6 +152,7 @@ public class ControlaPlc{
 			}
 			System.out.println();
 		}
+
 		
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);

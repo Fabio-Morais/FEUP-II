@@ -1,13 +1,10 @@
 package fabrica;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.Semaphore;
 
 import db.DataBase;
 import db.Ordem;
@@ -18,13 +15,11 @@ public class Fabrica {
 	private HashMap<String, Ordens> heapOrdemExecucao;
 	private DataBase db;
 	private AtualizaOrdensEspera atualizaOrdensEspera;
-	Semaphore sem;
 
 	private Fabrica() {
 		this.db = DataBase.getInstance();
 		criaHeap();
-		sincronizaOrdens();
-		this.sem = GeneralSemaphore.getSem();
+		// sincronizaOrdens();
 
 	}
 
@@ -166,67 +161,23 @@ public class Fabrica {
 	}
 
 	public void gereOrdens() {
-		ControlaPlc controlaPlc = new ControlaPlc();
-		int mandaOrdem = 3;
+		SelecionaOrdens x = SelecionaOrdens.getInstance(this);
+		x.start();
 
-		ArrayList<Ordens> listaOrdens = new ArrayList<Ordens>();
-		List<String> lista = null;
-		while (true) {
-			boolean maquinaALivre = true;
-			boolean maquinaBLivre = true;
-			boolean maquinaCLivre = true;
-			/*seleciona as ordens que podem entrar em paralelo*/
-			while (true) {
-				if (!heapOrdemPendente.isEmpty() && mandaOrdem > 0) {
-
-					try {
-						sem.acquire();//bloqueia a mutex
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					lista = heapOrdemPendente.peek().getReceita(0);
-					boolean ok = false;
-					for (int i = 0; i < lista.size(); i += 3) {
-						String x = lista.get(i);
-						if (x.equals("A") && maquinaALivre) {
-							System.out.println("x : " + x);
-							ok = true;
-							maquinaALivre=false;
-						} else if (x.equals("B") && maquinaBLivre) {
-							System.out.println("x : " + x);
-							ok = true;
-							maquinaBLivre=false;
-						} else if (x.equals("C") && maquinaCLivre) {
-							System.out.println("x : " + x);
-							ok = true;
-							maquinaCLivre=false;
-						} else {
-							ok = false;
-						}
-					}
-					if (ok) {
-						System.out.println("ordem :"+heapOrdemPendente.peek());
-						listaOrdens.add(heapOrdemPendente.poll());
-						mandaOrdem--;
-					}
-				}
-				sem.release();// liberta a mutex
-
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			
-			
-			
+	}
 	
-			
-
-		}
-
+	public void reorganizaHeap(Ordens ordem) {
+		 PriorityQueue<Ordens> aux = new PriorityQueue<Ordens>();
+		 PriorityQueue<Ordens> original = heapOrdemPendente;
+		 int size = original.size();
+		 for(int i =0; i< size; i++) {
+			 Ordens ordemOriginal = original.poll();
+			 if(!ordem.equals(ordemOriginal)) {
+				 aux.add(ordemOriginal);
+			 }
+			 
+		 }
+		 setHeapOrdemPendente(aux);
 	}
 
 }

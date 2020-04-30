@@ -34,6 +34,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 
 import fabrica.Fabrica;
+import fabrica.GereOrdensThread;
 
 public class OpcClient {
 	private static OpcClient instance = null;
@@ -55,10 +56,9 @@ public class OpcClient {
 			e.printStackTrace();
 		}
 
-		
 	}
 
-	public static OpcClient getInstance() {
+	public synchronized static OpcClient getInstance() {
 		if (instance == null)
 			instance = new OpcClient();
 		return instance;
@@ -70,7 +70,7 @@ public class OpcClient {
 	 * 
 	 * @return true se fez conexão corretamente, false caso contrario
 	 */
-	public boolean connect() {
+	public synchronized boolean connect() {
 
 		EndpointDescription[] endpoints;
 		try {
@@ -107,23 +107,27 @@ public class OpcClient {
 				.createMonitoredItems(TimestampsToReturn.Both, createMonitoredItemCreateRequests(), onItemCreated)
 				.get();
 
-
-
 	}
 
 	/** Sempre que uma variavel muda de valor esta função corre */
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
-		boolean valor = (boolean) value.getValue().getValue();
-		
-		//System.out.println("->" + aux.substring(44, aux.length()) + " - " + value.getValue().getValue());
 		String node = aux.substring(44, aux.length());
-		
-		/*int estado = (valor == true) ? 0 : 1; // se estiver free -> 0, se estiver ocupado -> 1
-		int[] coords = calculaCoords(node);
-		if(coords.length == 2) {
-			fabrica.getPlant().changeMap(coords[0], coords[1], estado);
-		}*/
+		if (node.substring(13, node.length()).equals("tempoReal")) {
+			organizaTempo(node, (long) value.getValue().getValue());
+		} else if (node.substring(13, node.length()).equals("free")) {
+			organizaFree(node, (boolean) value.getValue().getValue());
+		}else if(node.substring(12, node.length()).equals("PodeLer")) {
+			System.out.println("ENTROUUUU");
+			if((boolean)value.getValue().getValue()) {
+				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
+				System.out.println("numero : "+numeroOrdem);
+				fabrica.getHeapOrdemExecucao().get(""+numeroOrdem).pecasProduzidas();
+				setValue("SFS", "tapeteEntradaLido", true);
+			}
+
+		}
+
 	}
 
 	/** Vai buscar os Nodes ID no ficheiro de texto */
@@ -147,28 +151,95 @@ public class OpcClient {
 		return MICR;
 	}
 
+	private void organizaTempo(String node, long tempo) {
+		String aux = node.substring(8, 12);
+		switch (aux) {
+		case "C1T3":
+			GereOrdensThread.setTempoMA(tempo, 0);
+			break;
+		case "C1T4":
+			GereOrdensThread.setTempoMB(tempo, 0);
+			break;
+		case "C1T5":
+			GereOrdensThread.setTempoMC(tempo, 0);
+			break;
+		case "C3T3":
+			GereOrdensThread.setTempoMA(tempo, 1);
+			break;
+		case "C3T4":
+			GereOrdensThread.setTempoMB(tempo, 1);
+			break;
+		case "C3T5":
+			GereOrdensThread.setTempoMC(tempo, 1);
+			break;
+		case "C5T3":
+			GereOrdensThread.setTempoMA(tempo, 2);
+			break;
+		case "C5T4":
+			GereOrdensThread.setTempoMB(tempo, 2);
+			break;
+		case "C5T5":
+			GereOrdensThread.setTempoMC(tempo, 2);
+			break;
+		}
+	}
+
+	private void organizaFree(String node, boolean valor) {
+		String aux = node.substring(8, 12);
+		switch (aux) {
+		case "C1T3":
+			GereOrdensThread.setmALivre(valor,0);
+			break;
+		case "C1T4":
+			GereOrdensThread.setmBLivre(valor,0);
+			break;
+		case "C1T5":
+			GereOrdensThread.setmCLivre(valor,0);
+			break;
+		case "C3T3":
+			GereOrdensThread.setmALivre(valor,1);
+			break;
+		case "C3T4":
+			GereOrdensThread.setmBLivre(valor,1);
+			break;
+		case "C3T5":
+			GereOrdensThread.setmCLivre(valor,1);
+			break;
+		case "C5T3":
+			GereOrdensThread.setmALivre(valor,2);
+			break;
+		case "C5T4":
+			GereOrdensThread.setmBLivre(valor,2);
+			break;
+		case "C5T5":
+			GereOrdensThread.setmCLivre(valor,2);
+			break;
+		}
+	}
+
 	private int[] calculaCoords(String string) {
 		String aux = string.substring(8, string.length() - ".free".length());
 		int[] x = new int[2];
 		int correcaoX = 0;
-		/*para o caso do C7T1a OU C7T1b ...etc*/
-		if(aux.substring(aux.length()-1, aux.length()).equals("b")) {
-			correcaoX=1;
+		/* para o caso do C7T1a OU C7T1b ...etc */
+		if (aux.substring(aux.length() - 1, aux.length()).equals("b")) {
+			correcaoX = 1;
 		}
-		if(aux.equals("AT1") || aux.equals("AT2")) {
-			try{
+		if (aux.equals("AT1") || aux.equals("AT2")) {
+			try {
 				x[0] = 0;
-				x[1] = aux.substring(aux.length()-1, aux.length()).equals("1") ? 0: 6;//corrige o valor, pois o Y começa em 1
-			} catch(Exception e ) {
-				return new int [0];
+				x[1] = aux.substring(aux.length() - 1, aux.length()).equals("1") ? 0 : 6;// corrige o valor, pois o Y
+																							// começa em 1
+			} catch (Exception e) {
+				return new int[0];
 			}
 			return x;
 		}
-		try{
-			x[0] = Integer.valueOf(aux.substring(1, 2))+correcaoX;
-			x[1] = Integer.valueOf(aux.substring(3, 4))-1;//corrige o valor, pois o Y começa em 1
-		} catch(Exception e ) {
-			return new int [0];
+		try {
+			x[0] = Integer.valueOf(aux.substring(1, 2)) + correcaoX;
+			x[1] = Integer.valueOf(aux.substring(3, 4)) - 1;// corrige o valor, pois o Y começa em 1
+		} catch (Exception e) {
+			return new int[0];
 		}
 		return x;
 	}
@@ -181,7 +252,7 @@ public class OpcClient {
 	 * @param nomeVariavel - contém o nome da variavel
 	 * @return short[1] caso retorne uma valor, ou um short[x] caso retorne um array
 	 */
-	public short[] getValue(String localizacao, String nomeVariavel) {
+	public synchronized short[] getValue(String localizacao, String nomeVariavel) {
 		short[] valueShort = new short[1];
 
 		String id = sfc + localizacao + "." + nomeVariavel;
@@ -212,7 +283,7 @@ public class OpcClient {
 	 * @param nomeVariavel - contém o nome da variavel
 	 * @return short[1] caso retorne uma valor, ou um short[x] caso retorne um array
 	 */
-	public boolean getValueBool(String localizacao, String nomeVariavel) {
+	public synchronized boolean getValueBool(String localizacao, String nomeVariavel) {
 
 		String id = sfc + localizacao + "." + nomeVariavel;
 		NodeId nodeIdString = new NodeId(idNode, id);
@@ -236,7 +307,8 @@ public class OpcClient {
 			NodeId nodeIdString = new NodeId(idNode, idArray);
 			client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 			try {
-				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue().getValue();
+				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+						.getValue();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new short[0];
@@ -255,7 +327,7 @@ public class OpcClient {
 	 * @param set          - valor da variavel a alterar (pode ser qualquer tipo)
 	 * @return true se inseriu corretamente, false caso contrario
 	 */
-	public <E> boolean setValue(String localizacao, String nomeVariavel, E set) {
+	public synchronized <E> boolean setValue(String localizacao, String nomeVariavel, E set) {
 		String id = sfc + localizacao + "." + nomeVariavel;
 		NodeId nodeIdString = new NodeId(idNode, id);
 		Variant v = new Variant(set);

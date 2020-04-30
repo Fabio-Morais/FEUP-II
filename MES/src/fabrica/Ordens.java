@@ -14,6 +14,7 @@ public class Ordens {
 	private int pecasProduzidas;
 	private int pecasEmProducao;
 	private int pecasPendentes;
+	private int quantidade;
 	private Semaphore sem;
 	private Fabrica fabrica;
 	private DataBase db;
@@ -39,7 +40,6 @@ public class Ordens {
 		public String toString() {
 			return "Transform [from=" + from + ", to=" + to + "]";
 		}
-		
 
 		
 	};
@@ -154,6 +154,14 @@ public class Ordens {
 			System.out.println("executa ordem");
 
 		}*/
+		if(this.fabrica.getHeapOrdemPendente().peek().equals(this)){
+			this.fabrica.getHeapOrdemPendente().poll();
+			System.out.println("removeu corretamente da heap");
+		}else {
+			System.out.println("errada");
+			fabrica.reorganizaHeap(this);
+		}
+			
 		System.out.println("acaba o metodo executaOrdem");
 	}
 
@@ -234,10 +242,15 @@ public class Ordens {
 
 	public void setPecasPendentes(int pecasPendentes) {
 		this.pecasPendentes = pecasPendentes;
+		this.quantidade=pecasPendentes;
 	}
 
 
 	
+
+	public int getQuantidade() {
+		return quantidade;
+	}
 
 	public Transform getTransform() {
 		return transform;

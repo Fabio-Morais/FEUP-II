@@ -48,7 +48,7 @@ public class Teste {
 		ordem2.setTransform(ordem2.new Transform("P1","P3"));//maquina B
 		Ordens ordem3 = new Ordens("3", 700,Ordem.localDate(), 700, fabrica);
 		ordem3.setPecasPendentes(5);
-		ordem3.setTransform(ordem3.new Transform("P1","P9"));//maquina A
+		ordem3.setTransform(ordem3.new Transform("P1","P2"));//maquina A
 		Ordens ordem4 = new Ordens("4", 800,Ordem.localDate(), 800, fabrica);
 		ordem4.setPecasPendentes(5);
 		ordem4.setTransform(ordem4.new Transform("P1","P4"));//maquina C

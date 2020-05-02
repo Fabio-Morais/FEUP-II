@@ -18,3 +18,12 @@ Fabrica.C5T3.free
 Fabrica.C5T4.free
 Fabrica.C5T5.free
 Fabrica.AT2.PodeLer
+SFS.mA1Livre
+SFS.mA2Livre
+SFS.mA3Livre
+SFS.mB1Livre
+SFS.mB2Livre
+SFS.mB3Livre
+SFS.mC1Livre
+SFS.mC2Livre
+SFS.mC3Livre

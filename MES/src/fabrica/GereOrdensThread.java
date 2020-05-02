@@ -10,6 +10,10 @@ public class GereOrdensThread {
 	private static boolean[] mALivre= {true,true,true};
 	private static boolean[] mBLivre= {true,true,true};
 	private static boolean[] mCLivre= {true,true,true};
+	
+	private static boolean[] mALivreOpc= {true,true,true};
+	private static boolean[] mBLivreOpc= {true,true,true};
+	private static boolean[] mCLivreOpc= {true,true,true};
 	private static long[] tempoMA = {0,0,0};
 	private static long[] tempoMB = {0,0,0};
 	private static long[] tempoMC = {0,0,0};
@@ -63,6 +67,22 @@ public class GereOrdensThread {
 	public synchronized static void decrementNumberOfThreads() {
 		GereOrdensThread.numberOfThreads++;
 	}
+	public synchronized static boolean[] getmALivreOpc() {
+		return mALivreOpc;
+	}
+	public synchronized static boolean[] getmBLivreOpc() {
+		return mBLivreOpc;
+	}
+	public synchronized static boolean[] getmCLivreOpc() {
+		return mCLivreOpc;
+	}
 	
-	
+	public synchronized static void setmALivreOpc(boolean mALivre, int pos) {
+		GereOrdensThread.mALivreOpc[pos] = mALivre;
+	}
+	public synchronized static void setmBLivreOpc(boolean mBLivre, int pos) {
+		GereOrdensThread.mBLivreOpc[pos] = mBLivre;
+	}public synchronized static void setmCLivreOpc(boolean mCLivre, int pos) {
+		GereOrdensThread.mCLivreOpc[pos] = mCLivre;
+	}
 }

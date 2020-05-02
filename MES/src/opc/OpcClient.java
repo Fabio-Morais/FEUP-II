@@ -113,19 +113,27 @@ public class OpcClient {
 	private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
 		String aux = item.getReadValueId().getNodeId().getIdentifier().toString();
 		String node = aux.substring(44, aux.length());
-		if (node.substring(13, node.length()).equals("tempoReal")) {
-			organizaTempo(node, (long) value.getValue().getValue());
-		} else if (node.substring(13, node.length()).equals("free")) {
+
+		if (node.substring(7, node.length()).equals("Livre")) {
 			organizaFree(node, (boolean) value.getValue().getValue());
-		}else if(node.substring(12, node.length()).equals("PodeLer")) {
+		} else if (node.substring(12, node.length()).equals("PodeLer")) {
 			System.out.println("ENTROUUUU");
-			if((boolean)value.getValue().getValue()) {
+			if ((boolean) value.getValue().getValue()) {
 				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : "+numeroOrdem);
-				fabrica.getHeapOrdemExecucao().get(""+numeroOrdem).pecasProduzidas();
+				System.out.println("numero : " + numeroOrdem);
+				try {
+					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+
+				} catch (Exception e) {
+					System.out.println("aiiiiiiiiiiiiii");
+				}
 				setValue("SFS", "tapeteEntradaLido", true);
 			}
 
+		} else if (node.substring(13, node.length()).equals("free")) {
+			organizaFreeOpc(node, (boolean) value.getValue().getValue());
+		} else if (node.substring(13, node.length()).equals("tempoReal")) {
+			organizaTempo(node, (long) value.getValue().getValue());
 		}
 
 	}
@@ -149,6 +157,39 @@ public class OpcClient {
 			MICR.add(new MonitoredItemCreateRequest(ID, MonitoringMode.Reporting, parameters));
 		}
 		return MICR;
+	}
+
+	private void organizaFreeOpc(String node, boolean value) {
+		String aux = node.substring(8, 12);
+		switch (aux) {
+		case "C1T3":
+			GereOrdensThread.setmALivreOpc(value, 0);
+			break;
+		case "C1T4":
+			GereOrdensThread.setmBLivreOpc(value, 0);
+			break;
+		case "C1T5":
+			GereOrdensThread.setmCLivreOpc(value, 0);
+			break;
+		case "C3T3":
+			GereOrdensThread.setmALivreOpc(value, 1);
+			break;
+		case "C3T4":
+			GereOrdensThread.setmBLivreOpc(value, 1);
+			break;
+		case "C3T5":
+			GereOrdensThread.setmCLivreOpc(value, 1);
+			break;
+		case "C5T3":
+			GereOrdensThread.setmALivreOpc(value, 2);
+			break;
+		case "C5T4":
+			GereOrdensThread.setmBLivreOpc(value, 2);
+			break;
+		case "C5T5":
+			GereOrdensThread.setmCLivreOpc(value, 2);
+			break;
+		}
 	}
 
 	private void organizaTempo(String node, long tempo) {
@@ -185,34 +226,34 @@ public class OpcClient {
 	}
 
 	private void organizaFree(String node, boolean valor) {
-		String aux = node.substring(8, 12);
+		String aux = node.substring(4, 7);
 		switch (aux) {
-		case "C1T3":
-			GereOrdensThread.setmALivre(valor,0);
+		case "mA1":
+			GereOrdensThread.setmALivre(valor, 0);
 			break;
-		case "C1T4":
-			GereOrdensThread.setmBLivre(valor,0);
+		case "mA2":
+			GereOrdensThread.setmALivre(valor, 1);
 			break;
-		case "C1T5":
-			GereOrdensThread.setmCLivre(valor,0);
+		case "mA3":
+			GereOrdensThread.setmALivre(valor, 2);
 			break;
-		case "C3T3":
-			GereOrdensThread.setmALivre(valor,1);
+		case "mB1":
+			GereOrdensThread.setmBLivre(valor, 0);
 			break;
-		case "C3T4":
-			GereOrdensThread.setmBLivre(valor,1);
+		case "mB2":
+			GereOrdensThread.setmBLivre(valor, 1);
 			break;
-		case "C3T5":
-			GereOrdensThread.setmCLivre(valor,1);
+		case "mB3":
+			GereOrdensThread.setmBLivre(valor, 2);
 			break;
-		case "C5T3":
-			GereOrdensThread.setmALivre(valor,2);
+		case "mC1":
+			GereOrdensThread.setmCLivre(valor, 0);
 			break;
-		case "C5T4":
-			GereOrdensThread.setmBLivre(valor,2);
+		case "mC2":
+			GereOrdensThread.setmCLivre(valor, 1);
 			break;
-		case "C5T5":
-			GereOrdensThread.setmCLivre(valor,2);
+		case "mC3":
+			GereOrdensThread.setmCLivre(valor, 2);
 			break;
 		}
 	}

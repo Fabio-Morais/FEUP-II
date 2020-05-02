@@ -145,7 +145,7 @@ public class Ordens {
 	 * 
 	 * @param ordem - Ordem a executar
 	 */
-	public void executaOrdem() {
+	public synchronized void executaOrdem() {
 		try {
 			semExecucao.acquire();
 		} catch (InterruptedException e1) {
@@ -181,21 +181,23 @@ public class Ordens {
 	 * 
 	 * @param numeroOrdem - numero da ordem
 	 */
-	public void terminaOrdem() {
+	public synchronized void terminaOrdem() {
 		db.terminaOrdemProducao(this.numeroOrdem);
+		System.out.println("entra em terminar");
 			try {
 				semExecucao.acquire();
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			System.out.println("passa a mutex");
 			fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
 			semExecucao.release();
-
+System.out.println("finaliza");
 		
 	}
 
 	/** Retira uma peça de "pendente" para "em produçao" */
-	public void pecaParaProducao() {
+	public synchronized void pecaParaProducao() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
@@ -212,7 +214,7 @@ public class Ordens {
 	}
 
 	/** Retira uma peça de "em produçao" para "produzida" */
-	public void pecasProduzidas() {
+	public synchronized void pecasProduzidas() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {

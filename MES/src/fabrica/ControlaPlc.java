@@ -112,9 +112,11 @@ public class ControlaPlc{
 		
 		long recipeTime[] = new long[31];
 		int time_since_last_piece;
-		System.out.println(transformations);
-		for(int i=0; i<transformations.size()/3; i++)
+		//System.out.println(transformations);
+		for(int i=0; i<transformations.size()/3; i++) {
 			recipeTime[i] = 1000*Long.valueOf(transformations.get((i*3)+1)); //tempo de ferramenta
+			//System.out.println("tempo: "+i+ " : "+recipeTime[i]);
+		}
 		//for(int i=0; i<numerOfPieces; i++) {
 			short path[][] = new short [50][2];
 			int path_i[][] = new int [50][2];
@@ -126,7 +128,7 @@ public class ControlaPlc{
 				for(int k=0; k<2; k++)
 					path[j][k] = (short) path_i[j][k];
 			sendPath(path, recipeTool, recipeTime, tipo,tipoFinal, numeroOrdem);
-
+			//System.out.println(Arrays.toString(recipeTool));
 			/*System.out.println("---> "+ i);
 		}*/
 		
@@ -136,14 +138,14 @@ public class ControlaPlc{
 	}
 
 	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem) {
-		System.out.println("send new path");
+		//System.out.println("send new path");
 		OpcClient opcClient = OpcClient.getInstance();
 		boolean in;	
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
 		}while(! in);
 		
-		for(int i=0; i<3; i++) {
+	/*	for(int i=0; i<3; i++) {
 			for(int j=0; j<3; j++) {
 				for(int k=0; k<10; k++) {
 					System.out.print(machineTool[j][i][k]);
@@ -151,7 +153,7 @@ public class ControlaPlc{
 				System.out.print("  ");
 			}
 			System.out.println();
-		}
+		}*/
 
 		
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
@@ -164,10 +166,10 @@ public class ControlaPlc{
 		if(path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 		
-		for(int i=0;i<4; i++) {
+	/*	for(int i=0;i<4; i++) {
 			System.out.print(macProcessa[i] + " ");
 		}
-		System.out.println();
+		System.out.println();*/
 		
 		short [] path_x = new short[sizeOfPath];
 		short [] path_y = new short[sizeOfPath];
@@ -189,7 +191,7 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "pecainput.pathLength", 0);
 		
 
-		System.out.println("path sent");
+		//System.out.println("path sent");
 	}
 	
 	

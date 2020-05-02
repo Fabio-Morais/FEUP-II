@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 
 import db.DataBase;
 import db.Ordem;
+import db.ZonaDescarga;
 
 public class Fabrica {
 	private static Fabrica instance = null;
@@ -30,6 +31,9 @@ public class Fabrica {
 		return instance;
 	}
 
+	public void mandarestatDescarga(ZonaDescarga tipoDescarga) {
+		db.insereZonaDescarga(tipoDescarga);
+	}
 	/** Adiciona ordens à heap pendente */
 	public void addToHeap(Ordens ordens) {
 		try {

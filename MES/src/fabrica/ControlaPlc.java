@@ -483,6 +483,39 @@ public class ControlaPlc{
 		return path;
 	}
 
+	public void ordemDescarga(short tipo,short pusher,short numeroOrdem){// tipo P1 = 1 # pusher1 =1 
+		short[][] path = new short[50][2];
+		path[0][0] = (short)1;
+		path[1][0] = (short)1;
+		path[2][0] = (short)2;
+		path[3][0] =(short) 3;
+		path[4][0] =(short) 4;
+		path[5][0] =(short) 5;
+		path[6][0] =(short) 6;
+		path[7][0] =(short) 7;
+		path[8][0] =(short) 7;
+		path[9][0] =(short) 7;
+		
+		path[0][1] = (short)1;
+		path[1][1] = (short)1;
+		path[2][1] = (short)1;
+		path[3][1] =(short) 1;
+		path[4][1] =(short) 1;
+		path[5][1] =(short) 1;
+		path[6][1] =(short) 1;
+		path[7][1] =(short) 1;
+		path[8][1] =(short) 2;
+		path[9][1] =(short) 3;
+		path[49][0] = (short)10;
+		short[] tool= new short[50];
+		tool [0] = (short)0;
+		long[] time= new long[50];
+		time[0] =(short)0;
+		sendPath(path, tool,time, (short)2, (short)2,numeroOrdem);
+		short path24[][] = new short [50][2];
+		short [] recipeToolTest = new short [31];
+		sendPath(path24, recipeToolTest,time, (short) 0, (short) 0,numeroOrdem);
+	}
 	
 	public void test() {
 		int [][] path = new int[50][2];

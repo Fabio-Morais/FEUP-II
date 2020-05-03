@@ -521,6 +521,7 @@ public class ControlaPlc{
 <<<<<<< HEAD
 		sendPath(path, tool, time, tipo, (short)0, numeroOrdem, new short[30]);
 =======
+		sendPath(path, tool,time, tipo, tipo,numeroOrdem, new short[30]);
 >>>>>>> fadad3467ab3249041a0012a7e8d1ddb72a4c2de
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];

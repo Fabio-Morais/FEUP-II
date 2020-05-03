@@ -35,7 +35,7 @@ public class SelecionaOrdens extends Thread {
 			}
 			PriorityQueue<Ordens> heapOrdemPendente = fabrica.getCopyHeapOrdemPendente();
 
-			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 3) {
+			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 5) {
 				while (!heapOrdemPendente.isEmpty()) {
 					Ordens ordem = heapOrdemPendente.poll();
 					List<String> lista = ordem.getReceita(0);
@@ -73,9 +73,16 @@ public class SelecionaOrdens extends Thread {
 
 	}
 /**Se a ordem que chega quiser ir para a maquina X e esta tiver livre entao retorna OK (executa ordem)
- * Se ordem tiver que ir a 2 maquinas e so uma delas estiver livre, entao nao executa*/
+ * Se ordem tiver que ir a 2 maquinas e so uma delas estiver livre, entao nao executa
+ * @param lista - se lista tiver no indice 0 o D é descarga, caso contrario é carga
+ * */
 	private boolean chooseOrder(List<String> lista) {
 		boolean ok = false;
+		
+		/*Se lista tiver um D entao é uma descarga*/
+		if(lista.get(0).equals("D")) {
+			return true;
+		}
 		List<String> select = new ArrayList<>();
 		for (int i = 0; i < lista.size(); i += 3) {
 			String x = lista.get(i);

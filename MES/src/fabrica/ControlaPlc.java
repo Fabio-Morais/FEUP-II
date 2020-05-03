@@ -490,7 +490,10 @@ public class ControlaPlc{
 		return path;
 	}
 
-	public void ordemDescarga(short tipo,short pusher,short numeroOrdem){// tipo P1 = 1 # pusher1 =1 
+	public void runOrdemDescarga(Ordens ordem){// tipo P1 = 1 # pusher1 =1 
+		short tipo = Short.parseShort(""+ ordem.getUnload().getType().charAt(1));
+		short pusher = Short.parseShort(""+ ordem.getUnload().getDestinantion().charAt(2));
+		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem());
 		short[][] path = new short[50][2];
 		path[0][0] = (short)1;
 		path[1][0] = (short)1;
@@ -533,11 +536,11 @@ public class ControlaPlc{
 		tool [0] = (short)0;
 		long[] time= new long[50];
 		time[0] =(short)0;
-		sendPath(path, tool, time, tipo, (short)0, numeroOrdem, new short[30]);
-		sendPath(path, tool,time, tipo, tipo,numeroOrdem, new short[30]);
+		System.out.println(path + " - "+ tipo);
+		sendPath(path, tool,time, tipo, tipo,numeroOrdem, new short[31]);
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path24, recipeToolTest, time, (short) 0, (short) 0,numeroOrdem, new short[30]);
+		sendPath(path24, recipeToolTest, time, (short) 0, (short) 0,numeroOrdem, new short[31]);
 	}
 	
 	public void test() {

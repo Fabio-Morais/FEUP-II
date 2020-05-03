@@ -252,10 +252,12 @@ public class Ordens {
 	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
 	 * */
 	public synchronized List<String> getReceita(int tempoRestanteMaquina){
+		List<String> x = new ArrayList<>();
+		x.add("D");
 		if(transform != null)
 			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
 		else
-			return new ArrayList<>();
+			return x;
 	}
 
 	/**

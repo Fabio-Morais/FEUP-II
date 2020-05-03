@@ -63,8 +63,8 @@ public class Teste {
 
 		Fabrica fabrica = Fabrica.getInstance();
 		/*Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(2);
-		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
+		ordem1.setPecasPendentes(3);
+		ordem1.setTransform(ordem1.new Transform("P1","P9"));//maquina A
 		Ordens ordem2 = new Ordens("2", 600,Ordem.localDate(), 600, fabrica);
 		ordem2.setPecasPendentes(4);
 		ordem2.setTransform(ordem2.new Transform("P1","P2"));//maquina B
@@ -75,17 +75,17 @@ public class Teste {
 		ordem4.setPecasPendentes(5);
 		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C*/
 		
-		Ordens ordem5 = new Ordens("5", 800,Ordem.localDate(), -1, fabrica);
+		/*Ordens ordem5 = new Ordens("5", 800,Ordem.localDate(), -1, fabrica);
 		ordem5.setPecasPendentes(3);
-		ordem5.setUnload(ordem5.new Unload("P1", "PM2"));
+		ordem5.setUnload(ordem5.new Unload("P1", "PM2"));*/
 		
 		Ordens ordem6 = new Ordens("6", 500,Ordem.localDate(), -1, fabrica);
 		ordem6.setPecasPendentes(3);
 		ordem6.setUnload(ordem6.new Unload("P5", "PM1"));
 		
-		/*Ordens ordem7 = new Ordens("7", 500,Ordem.localDate(), -1, fabrica);
+		Ordens ordem7 = new Ordens("7", 500,Ordem.localDate(), -1, fabrica);
 		ordem7.setPecasPendentes(3);
-		ordem7.setUnload(ordem6.new Unload("P3", "PM3"));*/
+		ordem7.setUnload(ordem6.new Unload("P3", "PM3"));
 
 
 		fabrica.atualizaHeap();
@@ -97,14 +97,14 @@ public class Teste {
 			e.printStackTrace();
 		}
 		System.out.println("***COMEÇA***");
-		fabrica.addToHeap(ordem5);
+		fabrica.addToHeap(ordem6);
 
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem6);
+		fabrica.addToHeap(ordem7);
 		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {

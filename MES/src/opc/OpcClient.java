@@ -139,6 +139,14 @@ public class OpcClient {
 				String pecaDescarga = ""+this.getValue("Fabrica","Pusher1.pecaNoTapete.tipoFinal")[0];
 				String destino = "PM1";
 				fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
+				short numeroOrdem = getValue("Fabrica", "Pusher1.pecaNoTapete.numeroOrdem")[0];
+				System.out.println("numero : " + numeroOrdem);
+				try {
+					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+
+				} catch (Exception e) {
+					System.out.println("erro no opc on subscription");
+				}
 				this.setValue("SFS","pusher_1Lido", true);
 			}
 		}
@@ -147,6 +155,14 @@ public class OpcClient {
 					String pecaDescarga = ""+this.getValue("Fabrica","Pusher2.pecaNoTapete.tipoFinal")[0];
 					String destino = "PM2";
 					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
+					short numeroOrdem = getValue("Fabrica", "Pusher2.pecaNoTapete.numeroOrdem")[0];
+					System.out.println("numero : " + numeroOrdem);
+					try {
+						fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+
+					} catch (Exception e) {
+						System.out.println("erro no opc on subscription");
+					}
 					this.setValue("SFS","pusher_2Lido", true);
 				}
 			}
@@ -156,6 +172,14 @@ public class OpcClient {
 					String pecaDescarga = ""+this.getValue("Fabrica","Pusher3.pecaNoTapete.tipoFinal")[0];
 					String destino = "PM3";
 					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
+					short numeroOrdem = getValue("Fabrica", "Pusher3.pecaNoTapete.numeroOrdem")[0];
+					System.out.println("numero : " + numeroOrdem);
+					try {
+						fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+
+					} catch (Exception e) {
+						System.out.println("erro no opc on subscription");
+					}
 					this.setValue("SFS","pusher_3Lido", true);
 				}
 			}
@@ -380,6 +404,7 @@ public class OpcClient {
 		return valueShort;
 
 	}
+	
 	public synchronized long[] getValueLong(String localizacao, String nomeVariavel) {
 		long[] valueShort = new long[1];
 

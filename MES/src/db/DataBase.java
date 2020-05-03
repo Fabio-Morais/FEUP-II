@@ -143,8 +143,8 @@ public class DataBase {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("UPS");
+			//e.printStackTrace();
+			//System.out.println("UPS");
 			disconnect();
 			
 			return false;

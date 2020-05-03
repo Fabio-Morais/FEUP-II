@@ -124,11 +124,11 @@ public class Gui {
 		backgroundTimer();
 		backgroundTimerConexoes();
 		backgroundTimerHora();
-		backgroundTimerSendDb();
+		//backgroundTimerSendDb();
 		counterTimer3.start();
 		counterTimer4.start();
 		counterTimer2.start();
-		counterTimer5.start();
+		//counterTimer5.start();
 		opcRunning = false;
 		dbRunning = false;
 

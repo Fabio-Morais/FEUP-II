@@ -21,7 +21,7 @@ public class ServerUdp extends Thread {
 			e.printStackTrace();
 		}
 	}
-
+	@Override
 	public void run() {
 
 		while (true) {

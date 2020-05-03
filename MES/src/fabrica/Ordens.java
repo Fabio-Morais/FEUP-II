@@ -14,6 +14,9 @@ public class Ordens {
 	private int pecasProduzidas;
 	private int pecasEmProducao;
 	private int pecasPendentes;
+	private int quantidade;
+	private Semaphore semExecucao;
+	private Semaphore semPendente;
 	private Semaphore sem;
 	private Fabrica fabrica;
 	private DataBase db;
@@ -39,7 +42,6 @@ public class Ordens {
 		public String toString() {
 			return "Transform [from=" + from + ", to=" + to + "]";
 		}
-		
 
 		
 	};
@@ -82,7 +84,7 @@ public class Ordens {
 		return atrasoMaximo;
 	}
 
-	public void setPrioridade(int prioridade) {
+	public synchronized void setPrioridade(int prioridade) {
 		this.prioridade = prioridade;
 	}
 
@@ -98,7 +100,9 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = GeneralSemaphore.getSem();
+		this.semExecucao = GeneralSemaphore.getSem4();
+		this.semPendente = GeneralSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem3();
 		this.fabrica = fabrica;
 		db = DataBase.getInstance();
 	}
@@ -112,7 +116,9 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = GeneralSemaphore.getSem();
+		this.semExecucao = GeneralSemaphore.getSem4();
+		this.semPendente = GeneralSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem3();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
@@ -126,7 +132,9 @@ public class Ordens {
 		this.pecasEmProducao = 0;
 		this.pecasPendentes = 0;
 		this.pecasProduzidas = 0;
-		this.sem = GeneralSemaphore.getSem();
+		this.semExecucao = GeneralSemaphore.getSem4();
+		this.semPendente = GeneralSemaphore.getSem();
+		this.sem = GeneralSemaphore.getSem3();
 		this.fabrica = Fabrica.getInstance();
 		db = DataBase.getInstance();
 
@@ -137,23 +145,34 @@ public class Ordens {
 	 * 
 	 * @param ordem - Ordem a executar
 	 */
-	public void executaOrdem() {
+	public synchronized void executaOrdem() {
 		try {
-			sem.acquire();
+			semExecucao.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
-		sem.release();
+		semExecucao.release();
 		try {
 			db.executaOrdemProducao(this.numeroOrdem);
 		} catch (Exception e) {
 
 		}
-		/*if(this.getTransform() != null && this.getUnload() == null) {
-			System.out.println("executa ordem");
 
-		}*/
+		try {
+			semPendente.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+		if(this.fabrica.getHeapOrdemPendente().peek().equals(this)){
+			this.fabrica.getHeapOrdemPendente().poll();
+			System.out.println("removeu corretamente da heap");
+		}else {
+			System.out.println("errada");
+			fabrica.reorganizaHeap(this);
+		}
+			semPendente.release();
 		System.out.println("acaba o metodo executaOrdem");
 	}
 
@@ -162,46 +181,73 @@ public class Ordens {
 	 * 
 	 * @param numeroOrdem - numero da ordem
 	 */
-	public void terminaOrdem() {
-		if (db.terminaOrdemProducao(this.numeroOrdem)) {
+	public synchronized void terminaOrdem() {
+		db.terminaOrdemProducao(this.numeroOrdem);
+		System.out.println("entra em terminar");
 			try {
-				sem.acquire();
+				semExecucao.acquire();
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			System.out.println("passa a mutex");
 			fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
-			sem.release();
-
-		}
+			semExecucao.release();
+System.out.println("finaliza");
+		
 	}
 
 	/** Retira uma peça de "pendente" para "em produçao" */
 	public void pecaParaProducao() {
-		if (this.pecasPendentes > 0) {
-			db.updatePecasPendentes(this.numeroOrdem, --this.pecasPendentes);//atualiza db e variaveis da classe
-			db.updatePecasEmProducao(this.numeroOrdem, ++this.pecasEmProducao);//atualiza db e variaveis da classe
+		try {
+			sem.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
 		}
+		System.out.println(Thread.currentThread() + " antes : " + this.pecasPendentes);
+		this.pecasPendentes--;
+		this.pecasEmProducao++;
+		if (this.pecasPendentes > 0) {
+			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);//atualiza db e variaveis da classe
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
+		}
+		System.out.println(Thread.currentThread() + " depois : " + this.pecasPendentes);
+		sem.release();
 
 	}
 
 	/** Retira uma peça de "em produçao" para "produzida" */
 	public void pecasProduzidas() {
-		if (this.pecasEmProducao > 0) {
-			db.updatePecasEmProducao(this.numeroOrdem, --this.pecasEmProducao);//atualiza db e variaveis da classe
-			db.updatePecasProduzidas(this.numeroOrdem, ++this.pecasProduzidas);//atualiza db e variaveis da classe
+		try {
+			sem.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
 		}
+		System.out.println("---------------------------------");
+		System.out.println(this);
+		System.out.println(Thread.currentThread() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
+		this.pecasEmProducao--;
+		this.pecasProduzidas++;
+		if (this.pecasEmProducao > 0) {
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
+			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);//atualiza db e variaveis da classe
+		}
+		System.out.println(Thread.currentThread() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println("---------------------------------");
+
+		sem.release();
+
 
 	}
 	
 	/**Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
 	 * */
-	public List<String> getListaPecas(int tempoRestanteMaquina){
+	public synchronized  List<String> getListaPecas(int tempoRestanteMaquina){
 		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
 	}
 	
 	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
 	 * */
-	public List<String> getReceita(int tempoRestanteMaquina){
+	public synchronized List<String> getReceita(int tempoRestanteMaquina){
 		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
 	}
 
@@ -216,7 +262,7 @@ public class Ordens {
 		return pecasProduzidas;
 	}
 
-	public void setPecasProduzidas(int pecasProduzidas) {
+	public synchronized void setPecasProduzidas(int pecasProduzidas) {
 		this.pecasProduzidas = pecasProduzidas;
 	}
 
@@ -224,7 +270,7 @@ public class Ordens {
 		return pecasEmProducao;
 	}
 
-	public void setPecasEmProducao(int pecasEmProducao) {
+	public synchronized void setPecasEmProducao(int pecasEmProducao) {
 		this.pecasEmProducao = pecasEmProducao;
 	}
 
@@ -232,12 +278,17 @@ public class Ordens {
 		return pecasPendentes;
 	}
 
-	public void setPecasPendentes(int pecasPendentes) {
+	public synchronized void setPecasPendentes(int pecasPendentes) {
 		this.pecasPendentes = pecasPendentes;
+		this.quantidade=pecasPendentes;
 	}
 
 
 	
+
+	public int getQuantidade() {
+		return quantidade;
+	}
 
 	public Transform getTransform() {
 		return transform;
@@ -285,7 +336,7 @@ public class Ordens {
 	public String toString() {
 		return "Ordens [numeroOrdem=" + numeroOrdem + ", prioridade=" + prioridade + ", dataInicio=" + dataInicio
 				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
-				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + sem + ", fabrica=" + fabrica + ", db=" + db + ", transform=" + transform
+				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + semExecucao + ", fabrica=" + fabrica + ", db=" + db + ", transform=" + transform
 				+ ", unload=" + unload + "]";
 	}
 

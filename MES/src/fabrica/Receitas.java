@@ -24,7 +24,7 @@ public abstract class Receitas {
 	 * @param tempoRestanteMaquina - tempo que falta para acabar a maquina C ficar livre
 	 * @param option - 0 lista  (tipo maquina | tempo processametno | tipo ferramenta) <br> 1 lista (tipo peça)
 	 * */
-	public static List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina, int option) {
+	public synchronized static  List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina, int option) {
 		List<String> rota = new ArrayList<String>();
 		List<String> pecas = new ArrayList<String>();
 

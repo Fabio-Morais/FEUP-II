@@ -518,10 +518,10 @@ public class ControlaPlc{
 		tool [0] = (short)0;
 		long[] time= new long[50];
 		time[0] =(short)0;
-		sendPath(path, tool,time, (short)2, (short)2,numeroOrdem, new short[30]);
+		sendPath(path, tool, time, tipo, (short)0, numeroOrdem, new short[30]);
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path24, recipeToolTest,time, (short) 0, (short) 0,numeroOrdem, new short[30]);
+		sendPath(path24, recipeToolTest, time, (short) 0, (short) 0,numeroOrdem, new short[30]);
 	}
 	
 	public void test() {

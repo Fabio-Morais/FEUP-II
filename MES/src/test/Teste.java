@@ -75,9 +75,17 @@ public class Teste {
 		ordem4.setPecasPendentes(5);
 		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C*/
 		
-		Ordens ordem5 = new Ordens("5", 800,Ordem.localDate(), 800, fabrica);
-		ordem5.setPecasPendentes(5);
-		ordem5.setUnload(new Unload("P1", ));
+		Ordens ordem5 = new Ordens("5", 800,Ordem.localDate(), -1, fabrica);
+		ordem5.setPecasPendentes(3);
+		ordem5.setUnload(ordem5.new Unload("P1", "PM2"));
+		
+		Ordens ordem6 = new Ordens("6", 500,Ordem.localDate(), -1, fabrica);
+		ordem6.setPecasPendentes(3);
+		ordem6.setUnload(ordem6.new Unload("P5", "PM1"));
+		
+		/*Ordens ordem7 = new Ordens("7", 500,Ordem.localDate(), -1, fabrica);
+		ordem7.setPecasPendentes(3);
+		ordem7.setUnload(ordem6.new Unload("P3", "PM3"));*/
 
 
 		fabrica.atualizaHeap();

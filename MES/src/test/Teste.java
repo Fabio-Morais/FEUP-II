@@ -13,7 +13,29 @@ public class Teste {
 	public Teste() {
 		// TODO Auto-generated constructor stub
 	}
-	
+	public void enviaSoUma() {
+		/*Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
+		ordem1.setPecasPendentes(2);
+		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
+		 ordem1.executaOrdem();
+		ControlaPlc p = new ControlaPlc();
+		while(ordem1.getPecasPendentes()>0) {
+			System.out.println(ordem1.getPecasPendentes());
+			p.runOrder(ordem1);
+			ordem1.pecaParaProducao();
+		}
+		System.out.println("saiu do 1º ciclo");
+		while(ordem1.getPecasProduzidas()!=ordem1.getQuantidade()) {
+			System.out.println(ordem1.getPecasProduzidas()+" - "+ordem1.getQuantidade());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("saiu do 2º ciclo");
+		ordem1.terminaOrdem();*/
+	}
 	public void testar() {
 		/*ServerUdp udp = ServerUdp.getInstance();
 		udp.start();*/
@@ -40,18 +62,22 @@ public class Teste {
 		System.out.println("PRONTO:");
 
 		Fabrica fabrica = Fabrica.getInstance();
-		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(10);
+		/*Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
+		ordem1.setPecasPendentes(2);
 		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
 		Ordens ordem2 = new Ordens("2", 600,Ordem.localDate(), 600, fabrica);
-		ordem2.setPecasPendentes(7);
+		ordem2.setPecasPendentes(4);
 		ordem2.setTransform(ordem2.new Transform("P1","P2"));//maquina B
 		Ordens ordem3 = new Ordens("3", 700,Ordem.localDate(), 700, fabrica);
 		ordem3.setPecasPendentes(5);
-		ordem3.setTransform(ordem3.new Transform("P1","P9"));//maquina A
+		ordem3.setTransform(ordem3.new Transform("P1","P2"));//maquina A
 		Ordens ordem4 = new Ordens("4", 800,Ordem.localDate(), 800, fabrica);
-		ordem4.setPecasPendentes(8);
-		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C
+		ordem4.setPecasPendentes(5);
+		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C*/
+		
+		Ordens ordem5 = new Ordens("5", 800,Ordem.localDate(), 800, fabrica);
+		ordem5.setPecasPendentes(5);
+		ordem5.setUnload(new Unload("P1", ));
 
 
 		fabrica.atualizaHeap();
@@ -63,32 +89,15 @@ public class Teste {
 			e.printStackTrace();
 		}
 		System.out.println("***COMEÇA***");
-		fabrica.addToHeap(ordem1);
-		/*ordem1.executaOrdem();
-		ControlaPlc p = new ControlaPlc();
-		while(ordem1.getPecasPendentes()>0) {
-			System.out.println(ordem1.getPecasPendentes());
-			p.runOrder(ordem1);
-			ordem1.pecaParaProducao();
-		}
-		System.out.println("saiu do 1º ciclo");
-		while(ordem1.getPecasProduzidas()!=ordem1.getQuantidade()) {
-			System.out.println(ordem1.getPecasProduzidas()+" - "+ordem1.getQuantidade());
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println("saiu do 2º ciclo");
-		ordem1.terminaOrdem();*/
+		fabrica.addToHeap(ordem5);
+
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem2);
-		try {
+		fabrica.addToHeap(ordem6);
+		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -104,7 +113,7 @@ public class Teste {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		/*
 		Scanner myObj = new Scanner(System.in); // Create a Scanner object

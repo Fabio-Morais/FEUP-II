@@ -18,6 +18,7 @@ public class GereOrdensThread {
 	private static long[] tempoMB = {0,0,0};
 	private static long[] tempoMC = {0,0,0};
 	private static int numberOfThreads =0;
+	private static boolean voltaInicio= false;
 	
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
@@ -65,7 +66,7 @@ public class GereOrdensThread {
 		GereOrdensThread.numberOfThreads++;
 	}
 	public static synchronized void decrementNumberOfThreads() {
-		GereOrdensThread.numberOfThreads++;
+		GereOrdensThread.numberOfThreads--;
 	}
 
 	
@@ -85,5 +86,11 @@ public class GereOrdensThread {
 		GereOrdensThread.mBLivreSeleciona[pos] = mBLivre;
 	}public static synchronized void setmCLivreSeleciona(boolean mCLivre, int pos) {
 		GereOrdensThread.mCLivreSeleciona[pos] = mCLivre;
+	}
+	public static boolean isVoltaInicio() {
+		return voltaInicio;
+	}
+	public static void setVoltaInicio(boolean voltaInicio) {
+		GereOrdensThread.voltaInicio = voltaInicio;
 	}
 }

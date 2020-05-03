@@ -39,11 +39,19 @@ public class SelecionaOrdens extends Thread {
 				while (!heapOrdemPendente.isEmpty()) {
 					Ordens ordem = heapOrdemPendente.poll();
 					List<String> lista = ordem.getReceita(0);
-					System.out.println(lista);
-					boolean ok = chooseOrder(lista);
+					boolean ok = false;
+					if(GereOrdensThread.isVoltaInicio()){
+						GereOrdensThread.setVoltaInicio(false);
+						break;
+					}else {
+						ok = chooseOrder(lista);
+					}
+					
 					if (ok) {
 						System.out.println("ordem :" + ordem);
-						new OrdensThread(ordem, controlaPlc).start();// inicio thread
+						OrdensThread x =new OrdensThread(ordem, controlaPlc);// inicio thread
+						x.setName("Thread "+ordem.getNumeroOrdem());
+						x.start();
 						GereOrdensThread.incrementNumberOfThreads();
 					}
 					try {

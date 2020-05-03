@@ -30,14 +30,15 @@ public class AtualizaOrdensEspera extends Thread {
 	    };
 	    
 		while(true) {
-			PriorityQueue<Ordens> heap = fabrica.getHeapOrdemPendente();
-			PriorityQueue<Ordens> aux =  new PriorityQueue<>(result);
-			int size= heap.size();
 			try {
 				sem.acquire();
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
+			PriorityQueue<Ordens> heap = fabrica.getHeapOrdemPendente();
+			PriorityQueue<Ordens> aux =  new PriorityQueue<>(result);
+			int size= heap.size();
+			
 			for(int i=0; i<size; i++) {
 				Ordens x = heap.poll();
 				int prioridade =  (int) Ordem.calculaTempoRestante(x.getDataInicio(), x.getAtrasoMaximo());

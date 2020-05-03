@@ -48,10 +48,25 @@ public class OrdensThread extends Thread {
 		this.ordem.terminaOrdem();
 		resetMaquinaSelect();
 		GereOrdensThread.decrementNumberOfThreads();// para permitir entrar mais
-		
+		GereOrdensThread.setVoltaInicio(true);
 		return;
 	}
 	private void resetMaquinaSelect() {
+		for(int i=0; i < ordem.getReceita(0).size(); i+=3) {
+			if(ordem.getReceita(0).get(i).equals("A")) {
+				for(int j = 0 ; j < 3; j++) {
+					GereOrdensThread.setmALivreSeleciona(true, j);
+				}
+			}else if(ordem.getReceita(0).get(i).equals("B")) {
+				for(int j = 0 ; j < 3; j++) {
+					GereOrdensThread.setmBLivreSeleciona(true, j);
+				}
+			}else if(ordem.getReceita(0).get(i).equals("C")) {
+				for(int j = 0 ; j < 3; j++) {
+					GereOrdensThread.setmCLivreSeleciona(true, j);
+				}
+			}
+		}
 		
 	}
 	

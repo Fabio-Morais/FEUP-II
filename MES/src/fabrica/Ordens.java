@@ -1,5 +1,6 @@
 package fabrica;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -169,7 +170,7 @@ public class Ordens {
 			this.fabrica.getHeapOrdemPendente().poll();
 			System.out.println("removeu corretamente da heap");
 		}else {
-			System.out.println("errada");
+			System.out.println("errada, "+ this.fabrica.getHeapOrdemPendente().peek());
 			fabrica.reorganizaHeap(this);
 		}
 			semPendente.release();
@@ -192,7 +193,7 @@ public class Ordens {
 			System.out.println("passa a mutex");
 			fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
 			semExecucao.release();
-System.out.println("finaliza");
+			System.out.println("finaliza");
 		
 	}
 
@@ -224,14 +225,14 @@ System.out.println("finaliza");
 		}
 		System.out.println("---------------------------------");
 		System.out.println(this);
-		System.out.println(Thread.currentThread() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println(Thread.currentThread().getName() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
 		this.pecasEmProducao--;
 		this.pecasProduzidas++;
 		if (this.pecasEmProducao > 0) {
 			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
 			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);//atualiza db e variaveis da classe
 		}
-		System.out.println(Thread.currentThread() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println(Thread.currentThread().getName() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
 		System.out.println("---------------------------------");
 
 		sem.release();
@@ -242,13 +243,19 @@ System.out.println("finaliza");
 	/**Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
 	 * */
 	public synchronized  List<String> getListaPecas(int tempoRestanteMaquina){
-		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
+		if(transform != null)
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
+		else
+			return new ArrayList<>();
 	}
 	
 	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
 	 * */
 	public synchronized List<String> getReceita(int tempoRestanteMaquina){
-		return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
+		if(transform != null)
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
+		else
+			return new ArrayList<>();
 	}
 
 	/**

@@ -136,22 +136,16 @@ public class OpcClient {
 			organizaTempo(node, (long) value.getValue().getValue());
 		}else if(node.equals("Fabrica.Pusher1.podeLer")) {
 			if((boolean)value.getValue().getValue()) {
-				System.out.println("asdqw");
-				
-				//String numeroOrdem = ""+this.getValue("Fabrica","Pusher1.pecaNoTapete.numeroOrdem")[0];
 				String pecaDescarga = ""+this.getValue("Fabrica","Pusher1.pecaNoTapete.tipoFinal")[0];
 				String destino = "PM1";
-				int quantidadePecasDescarregar = 1;
 				fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
 				this.setValue("SFS","pusher_1Lido", true);
 			}
 		}
 		else if(node.equals("Fabrica.Pusher2.podeLer")) {
 				if((boolean)value.getValue().getValue()) {
-					String numeroOrdem = ""+this.getValue("Fabrica","Pusher2.pecaNoTapete.numeroOrdem")[0];
 					String pecaDescarga = ""+this.getValue("Fabrica","Pusher2.pecaNoTapete.tipoFinal")[0];
 					String destino = "PM2";
-					int quantidadePecasDescarregar = 1;
 					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
 					this.setValue("SFS","pusher_2Lido", true);
 				}
@@ -159,10 +153,8 @@ public class OpcClient {
 		
 		else if(node.equals("Fabrica.Pusher3.podeLer")) {
 				if((boolean) value.getValue().getValue()) {
-					String numeroOrdem = ""+this.getValue("Fabrica","Pusher3.pecaNoTapete.numeroOrdem")[0];
 					String pecaDescarga = ""+this.getValue("Fabrica","Pusher3.pecaNoTapete.tipoFinal")[0];
 					String destino = "PM3";
-					int quantidadePecasDescarregar = 1;
 					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
 					this.setValue("SFS","pusher_3Lido", true);
 				}

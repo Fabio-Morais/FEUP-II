@@ -197,36 +197,45 @@ System.out.println("finaliza");
 	}
 
 	/** Retira uma peça de "pendente" para "em produçao" */
-	public synchronized void pecaParaProducao() {
+	public void pecaParaProducao() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println(Thread.currentThread() + " antes : " + this.pecasPendentes);
 		this.pecasPendentes--;
 		this.pecasEmProducao++;
-		sem.release();
 		if (this.pecasPendentes > 0) {
 			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);//atualiza db e variaveis da classe
 			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
 		}
+		System.out.println(Thread.currentThread() + " depois : " + this.pecasPendentes);
+		sem.release();
 
 	}
 
 	/** Retira uma peça de "em produçao" para "produzida" */
-	public synchronized void pecasProduzidas() {
+	public void pecasProduzidas() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
+		System.out.println("---------------------------------");
+		System.out.println(this);
+		System.out.println(Thread.currentThread() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
 		this.pecasEmProducao--;
 		this.pecasProduzidas++;
-		sem.release();
 		if (this.pecasEmProducao > 0) {
 			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
 			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);//atualiza db e variaveis da classe
 		}
+		System.out.println(Thread.currentThread() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println("---------------------------------");
+
+		sem.release();
+
 
 	}
 	

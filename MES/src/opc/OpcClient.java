@@ -118,7 +118,7 @@ public class OpcClient {
 		if (node.substring(7, node.length()).equals("Livre")) {
 			organizaFree(node, (boolean) value.getValue().getValue());
 		} else if (node.substring(12, node.length()).equals("PodeLer")) {
-			System.out.println("ENTROUUUU");
+			System.out.println("leu no tapete de saida");
 			if ((boolean) value.getValue().getValue()) {
 				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
 				System.out.println("numero : " + numeroOrdem);
@@ -126,13 +126,11 @@ public class OpcClient {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
-					System.out.println("aiiiiiiiiiiiiii");
+					System.out.println("erro no opc on subscription");
 				}
 				setValue("SFS", "tapeteEntradaLido", true);
 			}
 
-		} else if (node.substring(13, node.length()).equals("free")) {
-			organizaFreeOpc(node, (boolean) value.getValue().getValue());
 		} else if (node.substring(13, node.length()).equals("tempoReal")) {
 			organizaTempo(node, (long) value.getValue().getValue());
 		}else if(node.equals("Fabrica.Pusher1.podeLer")) {
@@ -194,38 +192,6 @@ public class OpcClient {
 		return MICR;
 	}
 
-	private void organizaFreeOpc(String node, boolean value) {
-		String aux = node.substring(8, 12);
-		switch (aux) {
-		case "C1T3":
-			GereOrdensThread.setmALivreOpc(value, 0);
-			break;
-		case "C1T4":
-			GereOrdensThread.setmBLivreOpc(value, 0);
-			break;
-		case "C1T5":
-			GereOrdensThread.setmCLivreOpc(value, 0);
-			break;
-		case "C3T3":
-			GereOrdensThread.setmALivreOpc(value, 1);
-			break;
-		case "C3T4":
-			GereOrdensThread.setmBLivreOpc(value, 1);
-			break;
-		case "C3T5":
-			GereOrdensThread.setmCLivreOpc(value, 1);
-			break;
-		case "C5T3":
-			GereOrdensThread.setmALivreOpc(value, 2);
-			break;
-		case "C5T4":
-			GereOrdensThread.setmBLivreOpc(value, 2);
-			break;
-		case "C5T5":
-			GereOrdensThread.setmCLivreOpc(value, 2);
-			break;
-		}
-	}
 
 	private void organizaTempo(String node, long tempo) {
 		String aux = node.substring(8, 12);

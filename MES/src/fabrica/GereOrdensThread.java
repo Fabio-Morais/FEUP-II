@@ -11,9 +11,9 @@ public class GereOrdensThread {
 	private static boolean[] mBLivre= {true,true,true};
 	private static boolean[] mCLivre= {true,true,true};
 	
-	private static boolean[] mALivreOpc= {true,true,true};
-	private static boolean[] mBLivreOpc= {true,true,true};
-	private static boolean[] mCLivreOpc= {true,true,true};
+	private static boolean[] mALivreSeleciona = {true, true, true};
+	private static boolean[] mBLivreSeleciona = {true, true, true};
+	private static boolean[] mCLivreSeleciona = {true, true, true};
 	private static long[] tempoMA = {0,0,0};
 	private static long[] tempoMB = {0,0,0};
 	private static long[] tempoMC = {0,0,0};
@@ -22,67 +22,68 @@ public class GereOrdensThread {
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
 	
-	public synchronized static boolean[] getmALivre() {
+	public static synchronized  boolean[] getmALivre() {
 		return mALivre;
 	}
-	public synchronized static void setmALivre(boolean mALivre, int pos) {
+	public static synchronized void setmALivre(boolean mALivre, int pos) {
 		GereOrdensThread.mALivre[pos] = mALivre;
 	}
-	public synchronized static boolean[] getmBLivre() {
+	public static synchronized boolean[] getmBLivre() {
 		return mBLivre;
 	}
-	public synchronized static void setmBLivre(boolean mBLivre, int pos) {
+	public static synchronized void setmBLivre(boolean mBLivre, int pos) {
 		GereOrdensThread.mBLivre[pos] = mBLivre;
 	}
-	public synchronized static boolean[] getmCLivre() {
+	public static synchronized  boolean[] getmCLivre() {
 		return mCLivre;
 	}
-	public synchronized static void setmCLivre(boolean mCLivre, int pos) {
+	public static synchronized void setmCLivre(boolean mCLivre, int pos) {
 		GereOrdensThread.mCLivre[pos] = mCLivre;
 	}
-	public synchronized static long[] getTempoMA() {
+	public static synchronized long[] getTempoMA() {
 		return tempoMA;
 	}
-	public synchronized static void setTempoMA(long tempoMA, int pos) {
+	public static synchronized void setTempoMA(long tempoMA, int pos) {
 		GereOrdensThread.tempoMA[pos] = tempoMA;
 	}
-	public synchronized static long[] getTempoMB() {
+	public static synchronized long[] getTempoMB() {
 		return tempoMB;
 	}
-	public synchronized static void setTempoMB(long tempoMB, int pos) {
+	public static synchronized void setTempoMB(long tempoMB, int pos) {
 		GereOrdensThread.tempoMB[pos] = tempoMB;
 	}
-	public synchronized static long[] getTempoMC() {
+	public static synchronized long[] getTempoMC() {
 		return tempoMC;
 	}
-	public synchronized static void setTempoMC(long tempoMC, int pos) {
+	public static synchronized void setTempoMC(long tempoMC, int pos) {
 		GereOrdensThread.tempoMC[pos] = tempoMC;
 	}
-	public synchronized static int getNumberOfThreads() {
+	public static synchronized int getNumberOfThreads() {
 		return numberOfThreads;
 	}
-	public synchronized static void incrementNumberOfThreads() {
+	public static synchronized void incrementNumberOfThreads() {
 		GereOrdensThread.numberOfThreads++;
 	}
-	public synchronized static void decrementNumberOfThreads() {
+	public static synchronized void decrementNumberOfThreads() {
 		GereOrdensThread.numberOfThreads++;
 	}
-	public synchronized static boolean[] getmALivreOpc() {
-		return mALivreOpc;
-	}
-	public synchronized static boolean[] getmBLivreOpc() {
-		return mBLivreOpc;
-	}
-	public synchronized static boolean[] getmCLivreOpc() {
-		return mCLivreOpc;
-	}
+
 	
-	public synchronized static void setmALivreOpc(boolean mALivre, int pos) {
-		GereOrdensThread.mALivreOpc[pos] = mALivre;
+	public static boolean[] getmALivreSeleciona() {
+		return mALivreSeleciona;
 	}
-	public synchronized static void setmBLivreOpc(boolean mBLivre, int pos) {
-		GereOrdensThread.mBLivreOpc[pos] = mBLivre;
-	}public synchronized static void setmCLivreOpc(boolean mCLivre, int pos) {
-		GereOrdensThread.mCLivreOpc[pos] = mCLivre;
+	public static boolean[] getmBLivreSeleciona() {
+		return mBLivreSeleciona;
+	}
+	public static boolean[] getmCLivreSeleciona() {
+		return mCLivreSeleciona;
+	}
+	public static synchronized void setmALivreSeleciona(boolean mALivre, int pos) {
+		GereOrdensThread.mALivreSeleciona[pos] = mALivre;
+	}
+	public static synchronized void setmBLivreSeleciona(boolean mBLivre, int pos) {
+		GereOrdensThread.mBLivreSeleciona[pos] = mBLivre;
+	}public static synchronized void setmCLivreSeleciona(boolean mCLivre, int pos) {
+		GereOrdensThread.mCLivreSeleciona[pos] = mCLivre;
 	}
 }

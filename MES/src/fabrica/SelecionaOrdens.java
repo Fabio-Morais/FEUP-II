@@ -1,5 +1,6 @@
 package fabrica;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.Semaphore;
@@ -8,9 +9,7 @@ public class SelecionaOrdens extends Thread {
 	private static SelecionaOrdens instance = null;
 	private Fabrica fabrica;
 	private Semaphore sem;
-	boolean[] mALivre = {true, true, true};
-	boolean[] mBLivre = {true, true, true};
-	boolean[] mCLivre = {true, true, true};
+
 	private SelecionaOrdens(Fabrica fabrica) {
 		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = fabrica;
@@ -40,12 +39,17 @@ public class SelecionaOrdens extends Thread {
 				while (!heapOrdemPendente.isEmpty()) {
 					Ordens ordem = heapOrdemPendente.poll();
 					List<String> lista = ordem.getReceita(0);
+					System.out.println(lista);
 					boolean ok = chooseOrder(lista);
-
 					if (ok) {
 						System.out.println("ordem :" + ordem);
 						new OrdensThread(ordem, controlaPlc).start();// inicio thread
 						GereOrdensThread.incrementNumberOfThreads();
+					}
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 
@@ -64,32 +68,43 @@ public class SelecionaOrdens extends Thread {
  * Se ordem tiver que ir a 2 maquinas e so uma delas estiver livre, entao nao executa*/
 	private boolean chooseOrder(List<String> lista) {
 		boolean ok = false;
-		
+		List<String> select = new ArrayList<>();
 		for (int i = 0; i < lista.size(); i += 3) {
 			String x = lista.get(i);
-			if (x.equals("A") && (mALivre[0] || mALivre[1] || mALivre[2])) {
-				System.out.println("x : " + x);
+			if (x.equals("A") && (GereOrdensThread.getmALivreSeleciona()[0] || GereOrdensThread.getmALivreSeleciona()[1] || GereOrdensThread.getmALivreSeleciona()[2])) {
 				ok = true;
-				mALivre[0]=false;
-				mALivre[1]=false;
-				mALivre[2]=false;
-			} else if (x.equals("B") && (mBLivre[0] || mBLivre[1] || mBLivre[2])) {
-				System.out.println("x : " + x);
+				select.add("A");
+			} else if (x.equals("B") && (GereOrdensThread.getmBLivreSeleciona()[0] || GereOrdensThread.getmBLivreSeleciona()[1] || GereOrdensThread.getmBLivreSeleciona()[2])) {
 				ok = true;
-				mBLivre[0]=false;
-				mBLivre[1]=false;
-				mBLivre[2]=false;
-			} else if (x.equals("C") && (mCLivre[0] || mCLivre[1] || mCLivre[2])) {
-				System.out.println("x : " + x);
+				select.add("B");
+			} else if (x.equals("C") && (GereOrdensThread.getmCLivreSeleciona()[0] || GereOrdensThread.getmCLivreSeleciona()[1] || GereOrdensThread.getmCLivreSeleciona()[2])) {
 				ok = true;
-				mCLivre[0]=false;
-				mCLivre[1]=false;
-				mCLivre[2]=false;
+				select.add("C");
 			}else {
 				ok= false;
 			}
 		}
+		if(ok)
+			selectList(select);
 		return ok;
+	}
+
+	private void selectList(List<String> select) {
+		for(String maquina : select) {
+			if(maquina.equals("A")) {
+				for(int i=0; i<3; i++) {
+					GereOrdensThread.setmALivreSeleciona(false, i);
+				}
+			}else if(maquina.equals("B")) {
+				for(int i=0; i<3; i++) {
+					GereOrdensThread.setmBLivreSeleciona(false, i);
+				}
+			}else if(maquina.equals("C")) {
+				for(int i=0; i<3; i++) {
+					GereOrdensThread.setmCLivreSeleciona(false, i);
+				}
+			}
+		}
 	}
 
 	public static SelecionaOrdens getInstance(Fabrica fabrica) {

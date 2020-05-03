@@ -127,17 +127,23 @@ public class ControlaPlc{
 			for(int j=0; j<path.length; j++)
 				for(int k=0; k<2; k++)
 					path[j][k] = (short) path_i[j][k];
-			sendPath(path, recipeTool, recipeTime, tipo,tipoFinal, numeroOrdem);
+			
+			short[] x = new short[30];
+			int i=0;
+			for(String aux : ordem.getListaPecas(0)) {
+				x[i++] = Short.parseShort(""+aux.charAt(1));
+			}
+			sendPath(path, recipeTool, recipeTime, tipo,tipoFinal, numeroOrdem,x);
 			//System.out.println(Arrays.toString(recipeTool));
 			/*System.out.println("---> "+ i);
 		}*/
 		
 		short path3[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path3, recipeToolTest, recipeTime, (short) 0, (short) 0, (short) 0);
+		sendPath(path3, recipeToolTest, recipeTime, (short) 0, (short) 0, (short) 0, new short[30]);
 	}
 
-	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem) {
+	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem, short[] listaPecas) {
 		//System.out.println("send new path");
 		OpcClient opcClient = OpcClient.getInstance();
 		boolean in;	
@@ -162,6 +168,8 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
 		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
+		opcClient.setValue("Fabrica", "pecainput.PecasEtapas", listaPecas);
+
 
 		if(path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
@@ -511,10 +519,10 @@ public class ControlaPlc{
 		tool [0] = (short)0;
 		long[] time= new long[50];
 		time[0] =(short)0;
-		sendPath(path, tool,time, (short)2, (short)2,numeroOrdem);
+		sendPath(path, tool,time, (short)2, (short)2,numeroOrdem, new short[30]);
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path24, recipeToolTest,time, (short) 0, (short) 0,numeroOrdem);
+		sendPath(path24, recipeToolTest,time, (short) 0, (short) 0,numeroOrdem, new short[30]);
 	}
 	
 	public void test() {

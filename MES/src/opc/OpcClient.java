@@ -33,6 +33,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateReq
 import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 
+import db.Maquina;
 import db.ZonaDescarga;
 import fabrica.Fabrica;
 import fabrica.GereOrdensThread;
@@ -166,7 +167,78 @@ public class OpcClient {
 					this.setValue("SFS","pusher_3Lido", true);
 				}
 			}
-		
+		else if(node.equals("Fabrica.C1T3.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T3.tipoPeca")[0];
+				long tempo = this.getValueLong("Fabrica","C1T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA1",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMA1", true);
+			}
+		}
+		else if(node.equals("Fabrica.C1T4.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T4.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C1T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB1",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMB1", true);
+			}
+		}
+		else if(node.equals("Fabrica.C1T5.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T5.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C1T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC1",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMC1", true);
+			}
+		}
+		else if(node.equals("Fabrica.C3T3.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T3.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C3T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA2",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMA2", true);
+			}
+		}
+		else if(node.equals("Fabrica.C3T4.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T4.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C3T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB2",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMB2", true);
+			}
+		}
+		else if(node.equals("Fabrica.C3T5.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T5.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C3T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC2",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMC2", true);
+			}
+		}
+		else if(node.equals("Fabrica.C5T3.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T3.tipoPeca")[0];
+				short tempo = (short)this.getValueLong("Fabrica","C5T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA3",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMA3", true);
+			}
+		}
+		else if(node.equals("Fabrica.C5T4.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T4.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C5T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB3",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMB3", true);
+			}
+		}
+		else if(node.equals("Fabrica.C5T5.PodeLer")) {
+			if((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T5.tipoPeca")[0];
+				long tempo = (long)this.getValueLong("Fabrica","C5T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC3",tipoPecaOperada,(int)tempo));
+				this.setValue("SFS","LidoMC3", true);
+			}
+		}
 		
 
 	}
@@ -313,6 +385,25 @@ public class OpcClient {
 			return new short[0];
 		}
 		valueShort[0] = (short) value.getValue().getValue();
+		return valueShort;
+
+	}
+	public synchronized long[] getValueLong(String localizacao, String nomeVariavel) {
+		long[] valueShort = new long[1];
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+		NodeId nodeIdString = new NodeId(idNode, id);
+		DataValue value = null;
+
+		
+		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+		try {
+			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new long[0];
+		}
+		valueShort[0] = (long) value.getValue().getValue()/1000;
 		return valueShort;
 
 	}

@@ -27,3 +27,15 @@ SFS.mB3Livre
 SFS.mC1Livre
 SFS.mC2Livre
 SFS.mC3Livre
+Fabrica.Pusher1.podeLer
+Fabrica.Pusher2.podeLer
+Fabrica.Pusher3.podeLer
+Fabrica.C1T3.PodeLer
+Fabrica.C1T4.PodeLer
+Fabrica.C1T5.PodeLer
+Fabrica.C3T3.PodeLer
+Fabrica.C3T4.PodeLer
+Fabrica.C3T5.PodeLer
+Fabrica.C5T3.PodeLer
+Fabrica.C5T4.PodeLer
+Fabrica.C5T5.PodeLer

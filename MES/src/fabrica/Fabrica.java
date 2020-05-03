@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import db.DataBase;
+import db.Maquina;
 import db.Ordem;
 import db.ZonaDescarga;
 
@@ -33,6 +34,9 @@ public class Fabrica {
 
 	public void mandarestatDescarga(ZonaDescarga tipoDescarga) {
 		db.insereZonaDescarga(tipoDescarga);
+	}
+	public void mandarestatMaquina(Maquina maquina) {
+		db.insereMaquina(maquina);
 	}
 	/** Adiciona ordens à heap pendente */
 	public void addToHeap(Ordens ordens) {

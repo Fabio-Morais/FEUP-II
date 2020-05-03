@@ -128,7 +128,7 @@ public class ControlaPlc{
 				for(int k=0; k<2; k++)
 					path[j][k] = (short) path_i[j][k];
 			
-			short[] x = new short[30];
+			short[] x = new short[31];
 			int i=0;
 			for(String aux : ordem.getListaPecas(0)) {
 				x[i++] = Short.parseShort(""+aux.charAt(1));
@@ -140,7 +140,7 @@ public class ControlaPlc{
 		
 		short path3[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
-		sendPath(path3, recipeToolTest, recipeTime, (short) 0, (short) 0, (short) 0, new short[30]);
+		sendPath(path3, recipeToolTest, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
 	}
 
 	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem, short[] listaPecas) {
@@ -168,8 +168,7 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
 		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
-		opcClient.setValue("Fabrica", "pecainput.PecasEtapas", listaPecas);
-
+		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
 
 		if(path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);

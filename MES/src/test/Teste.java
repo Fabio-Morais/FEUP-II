@@ -45,13 +45,13 @@ public class Teste {
 		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
 		Ordens ordem2 = new Ordens("2", 600,Ordem.localDate(), 600, fabrica);
 		ordem2.setPecasPendentes(7);
-		ordem2.setTransform(ordem2.new Transform("P3","P7"));//maquina B
+		ordem2.setTransform(ordem2.new Transform("P1","P2"));//maquina B
 		Ordens ordem3 = new Ordens("3", 700,Ordem.localDate(), 700, fabrica);
 		ordem3.setPecasPendentes(5);
 		ordem3.setTransform(ordem3.new Transform("P1","P9"));//maquina A
 		Ordens ordem4 = new Ordens("4", 800,Ordem.localDate(), 800, fabrica);
 		ordem4.setPecasPendentes(8);
-		ordem4.setTransform(ordem4.new Transform("P4","P8"));//maquina C
+		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C
 
 
 		fabrica.atualizaHeap();

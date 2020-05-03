@@ -513,12 +513,27 @@ public class ControlaPlc{
 		path[7][1] =(short) 1;
 		path[8][1] =(short) 2;
 		path[9][1] =(short) 3;
-		path[49][0] = (short)10;
+		
+		if(pusher==1) {
+			path[49][0] = (short)10;
+		}
+		if( pusher == 2) {
+			path[10][0] =(short) 7;
+			path[10][1] =(short) 4;
+			path[49][0] = (short)11;
+		}
+		if( pusher == 3) {
+			path[10][0] =(short) 7;
+			path[10][1] =(short) 4;
+			path[11][0] =(short) 7;
+			path[11][1] =(short) 5;
+			path[49][0] = (short)12;
+		}
 		short[] tool= new short[50];
 		tool [0] = (short)0;
 		long[] time= new long[50];
 		time[0] =(short)0;
-		sendPath(path, tool,time, (short)2, (short)2,numeroOrdem, new short[30]);
+		sendPath(path, tool,time, tipo, tipo,numeroOrdem, new short[30]);
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];
 		sendPath(path24, recipeToolTest,time, (short) 0, (short) 0,numeroOrdem, new short[30]);

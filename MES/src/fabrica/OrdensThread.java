@@ -20,9 +20,12 @@ public class OrdensThread extends Thread {
 		if (option == 1) {
 			System.out.println("corre carga");
 			controlaPlc.runOrder(this.ordem);
+			System.out.println("correu carga");
 		} else if (option == 0) {
 			System.out.println("corre descarga");
 			controlaPlc.runOrdemDescarga(this.ordem);
+			System.out.println("correu descarga");
+
 		}
 	}
 

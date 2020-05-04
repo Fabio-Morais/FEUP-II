@@ -119,7 +119,7 @@ public class OpcClient {
 		if (node.substring(7, node.length()).equals("Livre")) {
 			organizaFree(node, (boolean) value.getValue().getValue());
 		} else if (node.substring(12, node.length()).equals("PodeLer")) {
-			System.out.println("leu no tapete de saida");
+			System.out.println("leu no tapete de saida valor: "+ (boolean) value.getValue().getValue());
 			if ((boolean) value.getValue().getValue()) {
 				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
 				System.out.println("numero : " + numeroOrdem);

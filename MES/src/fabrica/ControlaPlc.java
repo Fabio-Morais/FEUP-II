@@ -123,6 +123,7 @@ public class ControlaPlc{
 			present_time = System.currentTimeMillis();
 			time_since_last_piece = (int) (present_time - last_time);
 			last_time = present_time;
+			System.out.println(transformations);
 			path_i = runTransformation(transformations, time_since_last_piece);
 			for(int j=0; j<path.length; j++)
 				for(int k=0; k<2; k++)

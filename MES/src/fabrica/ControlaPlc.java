@@ -1,9 +1,11 @@
 package fabrica;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import db.Ordem;
 import opc.OpcClient;
 
 public class ControlaPlc{
@@ -102,14 +104,12 @@ public class ControlaPlc{
 	 * @param ordem- Ordem a se executar
 	 * */
 	public synchronized void runOrder(Ordens ordem) {
-		List<String> transformations = ordem.getReceita(0);
+		List<String> transformations =ordem.getReceita(0);
 		//int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort(""+ordem.getTransform().getFrom().charAt(1));
 		short tipoFinal = Short.parseShort(""+ordem.getTransform().getTo().charAt(1));
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem());
-		
-		
-		
+
 		long recipeTime[] = new long[31];
 		int time_since_last_piece;
 		//System.out.println(transformations);
@@ -123,7 +123,6 @@ public class ControlaPlc{
 			present_time = System.currentTimeMillis();
 			time_since_last_piece = (int) (present_time - last_time);
 			last_time = present_time;
-			System.out.println(transformations);
 			path_i = runTransformation(transformations, time_since_last_piece);
 			for(int j=0; j<path.length; j++)
 				for(int k=0; k<2; k++)
@@ -166,6 +165,7 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
 		opcClient.setValue("Fabrica", "pecainput.recipeTime", time);
+		System.out.println(Arrays.toString(time)+" - "+ Arrays.toString(tool));
 		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
 		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
@@ -202,13 +202,13 @@ public class ControlaPlc{
 		//System.out.println("path sent");
 	}
 	
-	
-	private int[][] runTransformation(List<String> transformations, int timeSinceLastPiece) {
+
+	private int[][] runTransformation(List<String> transformations, int time_since_last_piece) {
 		int [] departure = new int[2];
 		int [] arrival = new int[2];
 		int [][] total_path = new int [50][2];
 		int total_path_size = 0;
-		String maquina_anterior = new String("X");
+		String maquina_anterior = "X";
 		recipeToolPointer = 0;
 		macProcessaPointer = -1;
 		
@@ -220,14 +220,13 @@ public class ControlaPlc{
 		
 		for(int i=0; i<transformations.size(); i+=3) {
 			int[][][] local_path = new int[3][50][2];
-			String maquina = transformations.get(i); //tipo de maquina
+			String maquina = transformations.get(i);
 			int tempo;
-			tempo = 1000 * Integer.valueOf(transformations.get(i+1)); // tempo processamento 
+			tempo = 1000 * Integer.valueOf(transformations.get(i+1));
 			short tool;
-			tool = Short.valueOf(transformations.get(i+2));//ferramemta
-			
+			tool = Short.valueOf(transformations.get(i+2));
 			// Verifica Varias Transformacoes na mesma maquina
-			if((maquina == maquina_anterior) && (i>=3)) {
+			if((maquina.equals(maquina_anterior)) && (i>=3)) {
 				// Preenche No. Operacoes na maquina
 				macProcessa[macProcessaPointer] ++; 
 				
@@ -254,7 +253,7 @@ public class ControlaPlc{
 					// adicionar tempos extras do mapa original
 					for(int x=0; x<7; x++) {
 						for(int y=0; y<16; y++) {
-							temposExtras[arrival[1]-3][j][x][y] -= timeSinceLastPiece*0.65;
+							temposExtras[arrival[1]-3][j][x][y] -= time_since_last_piece*0.65;
 							// 0.75 funciona bem
 							if(temposExtras[arrival[1]-3][j][x][y] < 0) temposExtras[arrival[1]-3][j][x][y] = 0;
 							if(temposExtras[arrival[1]-3][j][x][y] > 0)
@@ -262,8 +261,36 @@ public class ControlaPlc{
 							
 						}
 					}
-				
 					
+					/*for(int x=0; x<7; x++) {
+						for(int y=0; y<16; y++) {
+							System.out.print(" " + original_map[x][y]);
+						}
+						System.out.println();
+					}
+					System.out.println();
+					System.out.println();
+					
+					for(int x=0; x<7; x++) {
+						for(int y=0; y<16; y++) {
+							int aux = 0;
+							for(int theta = 0; theta < 3; theta++) {
+								for(int omega = 0; omega < 3; omega++) {
+									aux = aux+tempos_extras[theta][omega][x][y];
+								}	
+							}
+							System.out.print(" " + aux);
+						}
+						System.out.println();
+					}
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					*/
+					
+					//parte que funciona!!
 					local_path[j] = findPath(arrival[0], arrival[1], departure[0], departure[1]);
 					if((local_path[j][49][1] + 1500) < min_tempo) {
 						min_tempo = local_path[j][49][1];
@@ -433,6 +460,7 @@ public class ControlaPlc{
 			
 			for(int i=0; i<4; i++) {
 				if(isValidNode(nn[i][0], nn[i][1])) {
+					//System.out.println(nn[i][0] + ", " + nn[i][1]);
 					if(map[nn[i][0]][ nn[i][1]] != 0) {
 						current_map[nn[i][0]][ nn[i][1]] = map[nn[i][0]][ nn[i][1]] + current_map[explore_node[0]][explore_node[1]];
 						//Adiciona à heap
@@ -445,6 +473,7 @@ public class ControlaPlc{
 			}
 			map[explore_node[0]][explore_node[1]] = 0;
 			
+			//S.remove[explore_node];
 			removeFromHeap(explore);	
 		}
 		
@@ -486,6 +515,7 @@ public class ControlaPlc{
 		
 		path[49][0] = pathCells;
 		path[49][1] = current_map[departure_x][departure_y] + originalMap[arrival_x][arrival_y];
+		// path[49][1] = current_map[departure_x][departure_y];
 		
 		clearHeap();
 		return path;
@@ -546,14 +576,16 @@ public class ControlaPlc{
 	
 	public void test() {
 		int [][] path = new int[50][2];
-		Ordens ordem = new Ordens("123","2015", 10);
-		ordem.setPecasPendentes(5);
-		ordem.setTransform(ordem.new Transform("P1", "P2"));
-		List<String> transformations = ordem.getReceita(0);
-		
+		Fabrica fabrica = Fabrica.getInstance();
+		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
+		ordem1.setPecasPendentes(5);
+		ordem1.setTransform(ordem1.new Transform("P1","P9"));//maquina A*/
+		List<String> transformations = ordem1.getReceita(0);
+	
 		System.out.println(transformations.toString());
+		System.out.println(ordem1.getListaPecas(0));
 		System.out.println("begin");
-		runOrder(ordem);
+		runOrder(ordem1);
 		System.out.println("end");
 		/*enviar numero de ordem*/
 	}

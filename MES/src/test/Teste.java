@@ -39,7 +39,7 @@ public class Teste {
 	public void testar() {
 		/*ServerUdp udp = ServerUdp.getInstance();
 		udp.start();*/
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

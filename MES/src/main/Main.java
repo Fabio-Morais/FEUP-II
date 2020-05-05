@@ -5,6 +5,8 @@ import java.io.IOException;
 import db.DataBase;
 import db.Descarga;
 import db.Producao;
+import fabrica.ControlaPlc;
+import fabrica.Fabrica;
 import opc.OpcClient;
 import test.Teste;
 import udp.ServerUdp;
@@ -16,7 +18,12 @@ public class Main {
 
 		//testaDB();
 		//System.out.println("Enviou para DB");
-
+		
+		//Correr isto uma vez quando o mes inicializa
+		Fabrica fabrica = Fabrica.getInstance();
+		ControlaPlc c = new ControlaPlc();
+		c.sincroniza_buffer();
+		
 		Teste teste = new Teste();
 		teste.testar();
 	}

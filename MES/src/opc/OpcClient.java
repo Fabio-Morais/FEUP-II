@@ -405,6 +405,75 @@ public class OpcClient {
 
 	}
 	
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][] getValueMatrix(String localizacao, String nomeVariavel) {
+		short[][] valueShort = new short[3][3];
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+		NodeId nodeIdString = new NodeId(idNode, id);
+		DataValue value = null;
+
+		/* ler para array */
+		if (nomeVariavel.equals("rebootToolPointer")) {
+			return readToMatrix(id);
+		}else {
+			return null;
+		}
+		/*
+		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+		try {
+			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new short[0];
+		}
+		valueShort[0] = (short) value.getValue().getValue();
+		return valueShort;*/
+
+	}
+	
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
+		short[][] valueShort = new short[3][3];
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+		NodeId nodeIdString = new NodeId(idNode, id);
+		DataValue value = null;
+
+		/* ler para array */
+		if (nomeVariavel.equals("rebootToolPointer")) {
+			return readToMatrix3(id);
+		}else {
+			return null;
+		}
+		/*
+		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+		try {
+			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new short[0];
+		}
+		valueShort[0] = (short) value.getValue().getValue();
+		return valueShort;*/
+
+	}
+	
+	
 	public synchronized long[] getValueLong(String localizacao, String nomeVariavel) {
 		long[] valueShort = new long[1];
 
@@ -468,6 +537,48 @@ public class OpcClient {
 		return valueShort;
 	}
 
+	private short[][] readToMatrix(String id) {
+		short[][] valueShort = new short[3][3];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				String idArray = id + "[" + (i) + "," + (j) + "]";
+				NodeId nodeIdString = new NodeId(idNode, idArray);
+				client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+				try {
+					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+							.getValue();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new short[0][0];
+				}
+		
+			}
+		}
+		return valueShort;
+	}
+		
+	private short[][][] readToMatrix3(String id) {
+		short[][][] valueShort = new short[3][3][50];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				for(int k=0; k< 50; k++) {
+					String idArray = id + "[" + (i) + "," + (j) + "," + (k) + "]";
+					NodeId nodeIdString = new NodeId(idNode, idArray);
+					client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+					try {
+						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+								.getValue();
+					} catch (Exception e) {
+						e.printStackTrace();
+						return new short[0][0][0];
+					}
+				}
+			}
+		}
+
+		return valueShort;
+	}
+	
 	/**
 	 * Função para inserir valores booleanos (|var|CODESYS Control Win V3
 	 * x64.Application.)

@@ -191,6 +191,7 @@ public class ControlaPlc{
 		
 
 		opcClient.setValue("Fabrica", "bufferMachineTools", machineTool);
+		opcClient.setValue("Fabrica", "rebootToolPointer", machineToolPointer);
 		
 		
 		do {
@@ -588,6 +589,16 @@ public class ControlaPlc{
 		runOrder(ordem1);
 		System.out.println("end");
 		/*enviar numero de ordem*/
+	}
+	
+	//Correr uma vez ao ligar o MES
+	public void sincroniza_buffer() {
+		OpcClient opcClient = OpcClient.getInstance();
+		
+		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
+		machineTool= opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
+		
+		
 	}
 
 

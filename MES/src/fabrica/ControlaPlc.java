@@ -19,6 +19,7 @@ public class ControlaPlc{
 	private short macProcessaPointer;
 	private long present_time;
 	private long last_time ;
+	private OpcClient opcClient;
 
 	private  PriorityQueue<S> heapS;
 	private  int[][] originalMap = {
@@ -39,6 +40,12 @@ public class ControlaPlc{
 				for(int y=0; y<16; y++) 
 					for(int j=0; j<3; j++)
 						temposExtras[i][j][x][y] = 0;
+		
+
+		opcClient = OpcClient.getInstance();
+		
+		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
+		machineTool= opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
 	}
 	
 	// warehouseOut: X = 0, Y = 1
@@ -144,8 +151,8 @@ public class ControlaPlc{
 	}
 
 	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem, short[] listaPecas) {
-		//System.out.println("send new path");
-		OpcClient opcClient = OpcClient.getInstance();
+		// System.out.println("send new path");
+		// OpcClient opcClient = OpcClient.getInstance();
 		boolean in;	
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
@@ -590,16 +597,5 @@ public class ControlaPlc{
 		System.out.println("end");
 		/*enviar numero de ordem*/
 	}
-	
-	//Correr uma vez ao ligar o MES
-	public void sincroniza_buffer() {
-		OpcClient opcClient = OpcClient.getInstance();
-		
-		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
-		machineTool= opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
-		
-		
-	}
-
 
 }

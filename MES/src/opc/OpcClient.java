@@ -448,14 +448,14 @@ public class OpcClient {
 	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
 	 */
 	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
-		short[][] valueShort = new short[3][3];
-
+		// short[][] valueShort = new short[3][3];
+		
 		String id = sfc + localizacao + "." + nomeVariavel;
 		NodeId nodeIdString = new NodeId(idNode, id);
 		DataValue value = null;
 
 		/* ler para array */
-		if (nomeVariavel.equals("rebootToolPointer")) {
+		if (nomeVariavel.equals("bufferMachineTools")) {
 			return readToMatrix3(id);
 		}else {
 			return null;

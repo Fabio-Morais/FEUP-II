@@ -1,5 +1,7 @@
 package fabrica;
 
+import java.util.Arrays;
+
 public class OrdensThread extends Thread {
 	private Ordens ordem;
 	private ControlaPlc controlaPlc;
@@ -95,7 +97,13 @@ public class OrdensThread extends Thread {
 		}
 		boolean[] aux = { false, false, false };
 		long[] auxTempo = GereOrdensThread.getTempoMC();
-		float smallest;
+		System.out.println();
+		System.out.println(Arrays.toString(GereOrdensThread.getTempoMA()));
+		System.out.println(Arrays.toString(GereOrdensThread.getTempoMB()));
+		System.out.println(Arrays.toString(GereOrdensThread.getTempoMC()));
+		System.out.println();
+
+		float smallest=0;
 		if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
 		    smallest = auxTempo[0]/1000;
 		} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {

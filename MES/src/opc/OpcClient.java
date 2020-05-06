@@ -47,6 +47,7 @@ public class OpcClient {
 	private String publicHostName;
 	private UaSubscription sub = null;
 	private final AtomicLong clientHandles = new AtomicLong(1L);
+	private EndpointDescription[] endpoints;
 
 	private OpcClient() {
 		super();
@@ -74,8 +75,10 @@ public class OpcClient {
 	 * @return true se fez conexão corretamente, false caso contrario
 	 */
 	public synchronized boolean connect() {
-
-		EndpointDescription[] endpoints;
+		System.out.println(endpoints != null);
+		if(endpoints != null)
+			return true;
+		
 		try {
 			endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + publicHostName + ":4840").get();
 			OpcUaClientConfig config = OpcUaClientConfig.builder()
@@ -123,10 +126,8 @@ public class OpcClient {
 		if (node.substring(7, node.length()).equals("Livre")) {
 			organizaFree(node, (boolean) value.getValue().getValue());
 		} else if (node.substring(12, node.length()).equals("PodeLer")) {
-			System.out.println("leu no tapete de saida valor: " + (boolean) value.getValue().getValue());
 			if ((boolean) value.getValue().getValue()) {
 				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
@@ -144,7 +145,6 @@ public class OpcClient {
 				String destino = "PM1";
 				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
 				short numeroOrdem = getValue("Fabrica", "Pusher1.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
@@ -159,7 +159,6 @@ public class OpcClient {
 				String destino = "PM2";
 				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
 				short numeroOrdem = getValue("Fabrica", "Pusher2.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
@@ -171,13 +170,11 @@ public class OpcClient {
 		}
 
 		else if (node.equals("Fabrica.Pusher3.podeLer")) {
-			System.out.println("leu no tapete de saida valor: " + (boolean) value.getValue().getValue());
 			if ((boolean) value.getValue().getValue()) {
 				String pecaDescarga = "" + this.getValue("Fabrica", "Pusher3.pecaNoTapete.tipoFinal")[0];
 				String destino = "PM3";
 				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
 				short numeroOrdem = getValue("Fabrica", "Pusher3.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 

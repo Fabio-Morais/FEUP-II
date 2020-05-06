@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import org.apache.commons.io.FileUtils;
 
 import db.DataBase;
-import db.Ordem;
 
 public class PecasDescarregadas {
 	private DataBase db;
@@ -81,7 +80,7 @@ public class PecasDescarregadas {
 			while(rs.next()) {
 				body.append("<tr>\r\n");
 				body.append("<td class=\"text-center\">"+rs.getString("tipodescarga")+"</td>\r\n");
-				body.append("<td class=\"text-center\">"+rs.getString("tipopecadescarregada")+"</td>\r\n");
+				body.append("<td class=\"text-center\">"+"P"+rs.getString("tipopecadescarregada")+"</td>\r\n");
 				body.append("<td class=\"text-center\">"+rs.getString("count")+"</td>\r\n");
 				body.append("</tr>\r\n");
 

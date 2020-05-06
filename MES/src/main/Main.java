@@ -17,6 +17,37 @@ public class Main {
 		//testaDB();
 		//System.out.println("Enviou para DB");
 
+
+
+/*
+		Fabrica fabrica = Fabrica.getInstance();
+		fabrica.atualizaHeap();
+		fabrica.gereOrdens();
+
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		ServerUdp udp = ServerUdp.getInstance();
+		udp.start();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		System.out.println("Abriu gui");
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Gui window = new Gui();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});*/
+		
 		Teste teste = new Teste();
 		teste.testar();
 	}

@@ -63,18 +63,18 @@ public class Teste {
 
 		Fabrica fabrica = Fabrica.getInstance();
 		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(10);
-		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
+		ordem1.setPecasPendentes(7);
+		ordem1.setTransform(ordem1.new Transform("P4","P8"));//maquina A
 
 		Ordens ordem2 = new Ordens("2", 600,Ordem.localDate(), 600, fabrica);
 		ordem2.setPecasPendentes(3);
 		ordem2.setTransform(ordem2.new Transform("P3","P4"));//maquina B
-		Ordens ordem3 = new Ordens("3", 700,Ordem.localDate(), 700, fabrica);
-		ordem3.setPecasPendentes(5);
-		ordem3.setTransform(ordem3.new Transform("P4","P8"));//maquina A
+		Ordens ordem3 = new Ordens("3", 700,Ordem.localDate(), -1, fabrica);
+		ordem3.setPecasPendentes(8);
+		ordem3.setUnload(ordem3.new Unload("P9", "PM2"));
 		Ordens ordem4 = new Ordens("4", 700,Ordem.localDate(), -1, fabrica);
-		ordem4.setPecasPendentes(5);
-		ordem4.setUnload(ordem4.new Unload("P9", "PM3"));
+		ordem4.setPecasPendentes(6);
+		ordem4.setUnload(ordem4.new Unload("P6", "PM3"));
 		/*Ordens ordem4 = new Ordens("4", 800,Ordem.localDate(), 800, fabrica);
 		ordem4.setPecasPendentes(5);
 		ordem4.setTransform(ordem4.new Transform("P1","P2"));//maquina C*/
@@ -102,8 +102,19 @@ public class Teste {
 		}
 		System.out.println("***COMEÇA***");
 		fabrica.addToHeap(ordem1);
-
 		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		fabrica.addToHeap(ordem3);
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		fabrica.addToHeap(ordem4);
+		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -114,13 +125,13 @@ public class Teste {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem4);
-		try {
+		fabrica.addToHeap(ordem4);*/
+		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem3);
+		fabrica.addToHeap(ordem3);*/
 		/*try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {

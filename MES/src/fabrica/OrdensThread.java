@@ -94,8 +94,18 @@ public class OrdensThread extends Thread {
 			return true;
 		}
 		boolean[] aux = { false, false, false };
-		String receita = ordem.getReceita(0).get(0);
-
+		long[] auxTempo = GereOrdensThread.getTempoMC();
+		float smallest;
+		if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
+		    smallest = auxTempo[0]/1000;
+		} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
+		    smallest = auxTempo[1]/1000;
+		} else {
+		    smallest = auxTempo[2]/1000;
+		}
+		String receita = ordem.getReceita((int)smallest).get(0);// nao serve para A->B, pois so vai buscar o primeiro
+		/*System.out.println("smallest: "+ (int)smallest);
+		System.out.println("receita: "+ receita);*/
 		if (receita.equals("A")) {
 			aux = GereOrdensThread.getmALivre();
 		} else if (receita.equals("B")) {

@@ -86,7 +86,7 @@ public class DataBase {
 			Class.forName("org.postgresql.Driver");
 			this.c = DriverManager.getConnection(url, user, password);
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			//System.out.println(e.toString());
 
 			return false;
 		}
@@ -170,7 +170,7 @@ public class DataBase {
 			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
 			disconnect();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		disconnect();
 		return rs;

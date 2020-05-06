@@ -675,7 +675,7 @@ public class Gui {
 			if (i < modelOrdemProcessamento.getRowCount()) {
 				modelOrdemProcessamento.setValueAt(ord.getNumeroOrdem(), i, 0);
 				modelOrdemProcessamento.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 1);
-				modelOrdemProcessamento.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Carga"), i, 2);
+				modelOrdemProcessamento.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transormacao"), i, 2);
 				modelOrdemProcessamento.setValueAt(ord.getPecasProduzidas(), i, 3);
 				modelOrdemProcessamento.setValueAt(ord.getPecasEmProducao(), i, 4);
 				modelOrdemProcessamento.setValueAt(ord.getPecasPendentes(), i, 5);

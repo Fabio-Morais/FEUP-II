@@ -198,26 +198,26 @@ public class Ordens {
 	}
 
 	/** Retira uma peça de "pendente" para "em produçao" */
-	public void pecaParaProducao() {
+	public synchronized void pecaParaProducao() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println(Thread.currentThread() + " antes : " + this.pecasPendentes);
+		System.out.println(this.getNumeroOrdem()+ "thread: "+Thread.currentThread().getName()  + " antes : " + this.pecasPendentes);
 		this.pecasPendentes--;
 		this.pecasEmProducao++;
 		if (this.pecasPendentes > 0) {
 			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);//atualiza db e variaveis da classe
 			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
 		}
-		System.out.println(Thread.currentThread() + " depois : " + this.pecasPendentes);
+		System.out.println(this.getNumeroOrdem()+ "thread: "+Thread.currentThread().getName() + " depois : " + this.pecasPendentes);
 		sem.release();
 
 	}
 
 	/** Retira uma peça de "em produçao" para "produzida" */
-	public void pecasProduzidas() {
+	public synchronized void pecasProduzidas() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
@@ -225,15 +225,15 @@ public class Ordens {
 		}
 		System.out.println("---------------------------------");
 		System.out.println(this);
-		System.out.println(Thread.currentThread().getName() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println(this.getNumeroOrdem()+ "thread: "+Thread.currentThread().getName() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
 		this.pecasEmProducao--;
 		this.pecasProduzidas++;
 		if (this.pecasEmProducao > 0) {
 			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
 			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);//atualiza db e variaveis da classe
 		}
-		System.out.println(Thread.currentThread().getName() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
-		System.out.println("---------------------------------");
+		System.out.println(this.getNumeroOrdem()+ "thread: "+Thread.currentThread().getName() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
+		System.out.println("---------------------------------\n\n");
 
 		sem.release();
 

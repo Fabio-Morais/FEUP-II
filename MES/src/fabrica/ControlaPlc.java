@@ -1,6 +1,5 @@
 package fabrica;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -104,7 +103,21 @@ public class ControlaPlc{
 	 * @param ordem- Ordem a se executar
 	 * */
 	public synchronized void runOrder(Ordens ordem) {
-		List<String> transformations =ordem.getReceita(0);
+		int smallest=0;
+		if(ordem.getTransform() != null) {
+			if(ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
+				long[] auxTempo = GereOrdensThread.getTempoMC();
+				if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
+				    smallest = (int)auxTempo[0]/1000;
+				} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
+				    smallest = (int)auxTempo[1]/1000;
+				} else {
+				    smallest =(int) auxTempo[2]/1000;
+				}
+			}
+		}
+		
+		List<String> transformations =ordem.getReceita(smallest);
 		//int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort(""+ordem.getTransform().getFrom().charAt(1));
 		short tipoFinal = Short.parseShort(""+ordem.getTransform().getTo().charAt(1));
@@ -165,7 +178,6 @@ public class ControlaPlc{
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
 		opcClient.setValue("Fabrica", "pecainput.recipeTime", time);
-		System.out.println(Arrays.toString(time)+" - "+ Arrays.toString(tool));
 		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
 		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
@@ -567,7 +579,7 @@ public class ControlaPlc{
 		tool [0] = (short)0;
 		long[] time= new long[50];
 		time[0] =(short)0;
-		System.out.println(path + " - "+ tipo);
+		//System.out.println(path + " - "+ tipo);
 		sendPath(path, tool,time, tipo, tipo,numeroOrdem, new short[31]);
 		short path24[][] = new short [50][2];
 		short [] recipeToolTest = new short [31];

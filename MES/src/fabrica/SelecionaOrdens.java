@@ -38,13 +38,12 @@ public class SelecionaOrdens extends Thread {
 			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 5) {
 				while (!heapOrdemPendente.isEmpty()) {
 					Ordens ordem = heapOrdemPendente.poll();
-					List<String> lista = ordem.getReceita(0);
 					boolean ok = false;
 					if(GereOrdensThread.isVoltaInicio()){
 						GereOrdensThread.setVoltaInicio(false);
 						break;
 					}else {
-						ok = chooseOrder(lista);
+						ok = chooseOrder(ordem);
 					}
 					
 					if (ok) {
@@ -76,13 +75,15 @@ public class SelecionaOrdens extends Thread {
  * Se ordem tiver que ir a 2 maquinas e so uma delas estiver livre, entao nao executa
  * @param lista - se lista tiver no indice 0 o D é descarga, caso contrario é carga
  * */
-	private boolean chooseOrder(List<String> lista) {
+	private boolean chooseOrder(Ordens ordem) {
 		boolean ok = false;
-		
+		List<String> lista = ordem.getReceita(0);
+		List<String> lista2= ordem.getReceita(1000);
 		/*Se lista tiver um D entao é uma descarga*/
 		if(lista.get(0).equals("D")) {
 			return true;
 		}
+
 		List<String> select = new ArrayList<>();
 		for (int i = 0; i < lista.size(); i += 3) {
 			String x = lista.get(i);
@@ -99,6 +100,28 @@ public class SelecionaOrdens extends Thread {
 				ok= false;
 			}
 		}
+		/**Se for maior que 3 entao pode usar mais que uma maquina, ex: (usar todas da C e usar a A)*/
+		if(ordem.getPecasPendentes() > 3) {
+			if(!lista.equals(lista2)) {
+			for (int i = 0; i < lista2.size(); i += 3) {
+				String x = lista2.get(i);
+				if (x.equals("A") && (GereOrdensThread.getmALivreSeleciona()[0] || GereOrdensThread.getmALivreSeleciona()[1] || GereOrdensThread.getmALivreSeleciona()[2])) {
+					ok = true;
+					select.add("A");
+				} else if (x.equals("B") && (GereOrdensThread.getmBLivreSeleciona()[0] || GereOrdensThread.getmBLivreSeleciona()[1] || GereOrdensThread.getmBLivreSeleciona()[2])) {
+					ok = true;
+					select.add("B");
+				} else if (x.equals("C") && (GereOrdensThread.getmCLivreSeleciona()[0] || GereOrdensThread.getmCLivreSeleciona()[1] || GereOrdensThread.getmCLivreSeleciona()[2])) {
+					ok = true;
+					select.add("C");
+				}else {
+					ok= false;
+				}
+			}
+		}
+		}
+		
+		System.out.println("***"+select);
 		if(ok)
 			selectList(select);
 		return ok;

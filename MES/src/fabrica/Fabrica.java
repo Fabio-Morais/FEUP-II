@@ -43,7 +43,6 @@ public class Fabrica {
 		try {
 			GeneralSemaphore.getSem().acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (!heapOrdemPendente.contains(ordens))
@@ -182,7 +181,16 @@ public class Fabrica {
 	}
 	
 	public synchronized void reorganizaHeap(Ordens ordem) {
-		 PriorityQueue<Ordens> aux = new PriorityQueue<Ordens>();
+		Comparator<Ordens> result = new Comparator<Ordens>() {
+
+			@Override
+			public int compare(Ordens arg0, Ordens arg1) {
+				Integer x = arg0.getPrioridade();
+				Integer y = arg1.getPrioridade();
+				return x.compareTo(y);
+			}
+		};
+		 PriorityQueue<Ordens> aux = new PriorityQueue<>(result);
 		 PriorityQueue<Ordens> original = heapOrdemPendente;
 		 int size = original.size();
 		 for(int i =0; i< size; i++) {

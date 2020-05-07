@@ -157,15 +157,14 @@ public class ControlaPlc {
 			x[i++] = Short.parseShort("" + aux.charAt(1));
 		}
 		sendPath(path, recipeTool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
-		// System.out.println(Arrays.toString(recipeTool));
-		/*
-		 * System.out.println("---> "+ i); }
-		 */
-		if (ordem.getPecasPendentes() <= 1)
-			sendPath(new short[50][2], new short[31], new long[31], (short) 0, (short) 0, (short) 0, new short[31]);
 
+		
+		if (ordem.getPecasPendentes() <= 1) {
+			System.out.println("envia cenas vazias para plc");
+			//sendPath(path, recipeTool, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
+		}
 	}
-	public void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
+	public synchronized void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
 		short tipo = Short.parseShort("" + ordem.getUnload().getType().charAt(1));
 		short pusher = Short.parseShort("" + ordem.getUnload().getDestinantion().charAt(2));
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem());
@@ -214,11 +213,13 @@ public class ControlaPlc {
 		// System.out.println(path + " - "+ tipo);
 		sendPath(path, tool, time, tipo, tipo, numeroOrdem, new short[31]);
 		
-		if (ordem.getPecasPendentes() <= 1)
-			sendPath(new short[50][2], new short[31], new long[31], (short) 0, (short) 0, (short) 0, new short[31]);
+		if (ordem.getPecasPendentes() <= 1) {
+			//sendPath(path, tool, time, (short) 0, (short) 0, (short) 0, new short[31]);
+			System.out.println("envia cenas vazias para plc");
+		}
 	}
 
-	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
+	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
 			short[] listaPecas) {
 		// System.out.println("send new path");
 		boolean in;
@@ -269,9 +270,10 @@ public class ControlaPlc {
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
 			long estimatedTime = System.currentTimeMillis() - startTime;
-			System.out.println(estimatedTime);
-			if(estimatedTime>20)
+			if(estimatedTime>20) {
+				System.out.println("excedeu "+estimatedTime+"s");
 				break;
+			}
 		}while(in);
 		opcClient.setValue("Fabrica", "pecainput.pathLength", 0);
 

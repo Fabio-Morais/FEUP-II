@@ -46,8 +46,14 @@ public class OrdensThread extends Thread {
 				}
 				selectRunOrder();
 				this.ordem.pecaParaProducao();
+
 				GereOrdensThread.sem.release();
 			}
+			System.out.println();
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMA()));
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMB()));
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMC()));
+			System.out.println();
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -55,7 +61,7 @@ public class OrdensThread extends Thread {
 			}
 
 		}
-		System.out.println("A SAIRR....");
+		System.out.println("A SAIRR.... "+ this.ordem.getNumeroOrdem());
 		/* Espera para terminar ordem */
 		while (this.ordem.getQuantidade() != this.ordem.getPecasProduzidas()) {
 			try {
@@ -64,7 +70,7 @@ public class OrdensThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("*******SAIU DA ORDEM (ordensThread)********++");
+		System.out.println("*******SAIU DA ORDEM (ordensThread)******** "+ this.ordem.getNumeroOrdem());
 		this.ordem.terminaOrdem();
 		resetMaquinaSelect();
 		GereOrdensThread.decrementNumberOfThreads();// para permitir entrar mais
@@ -97,11 +103,7 @@ public class OrdensThread extends Thread {
 		}
 		boolean[] aux = { false, false, false };
 		long[] auxTempo = GereOrdensThread.getTempoMC();
-		System.out.println();
-		System.out.println(Arrays.toString(GereOrdensThread.getTempoMA()));
-		System.out.println(Arrays.toString(GereOrdensThread.getTempoMB()));
-		System.out.println(Arrays.toString(GereOrdensThread.getTempoMC()));
-		System.out.println();
+
 
 		float smallest=0;
 		if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {

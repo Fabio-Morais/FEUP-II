@@ -19,8 +19,8 @@ public class Main {
 
 
 
-/*
-		Fabrica fabrica = Fabrica.getInstance();
+
+		/*Fabrica fabrica = Fabrica.getInstance();
 		fabrica.atualizaHeap();
 		fabrica.gereOrdens();
 

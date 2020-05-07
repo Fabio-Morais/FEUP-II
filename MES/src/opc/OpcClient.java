@@ -481,4 +481,92 @@ public class OpcClient {
 		return true;
 	}
 
+	
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)sfc
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][] getValueMatrix(String localizacao, String nomeVariavel) {
+		short[][] valueShort = new short[3][3];
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+
+
+		/* ler para array */
+		if (nomeVariavel.equals("rebootToolPointer")) {
+			return readToMatrix(id);
+		}else {
+			return new short[0][0];
+		}
+
+
+	}
+
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+
+
+		/* ler para array */
+		if (nomeVariavel.equals("bufferMachineTools")) {
+			return readToMatrix3(id);
+		}else {
+			return new short[0][0][0];
+		}
+
+
+	}
+	
+	private short[][] readToMatrix(String id) {
+		short[][] valueShort = new short[3][3];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				String idArray = id + "[" + (i) + "," + (j) + "]";
+				NodeId nodeIdString = new NodeId(idNode, idArray);
+				client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+				try {
+					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+							.getValue();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new short[0][0];
+				}
+
+			}
+		}
+		return valueShort;
+	}
+
+	private short[][][] readToMatrix3(String id) {
+		short[][][] valueShort = new short[3][3][50];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				for(int k=0; k< 50; k++) {
+					String idArray = id + "[" + (i) + "," + (j) + "," + (k) + "]";
+					NodeId nodeIdString = new NodeId(idNode, idArray);
+					client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+					try {
+						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+								.getValue();
+					} catch (Exception e) {
+						e.printStackTrace();
+						return new short[0][0][0];
+					}
+				}
+			}
+		}
+
+		return valueShort;
+	}
 }

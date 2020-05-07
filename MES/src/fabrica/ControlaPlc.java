@@ -161,7 +161,7 @@ public class ControlaPlc {
 		
 		if (ordem.getPecasPendentes() <= 1) {
 			System.out.println("envia cenas vazias para plc");
-			//sendPath(path, recipeTool, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
+			sendPath(path, recipeTool, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
 		}
 	}
 	public synchronized void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
@@ -214,7 +214,7 @@ public class ControlaPlc {
 		sendPath(path, tool, time, tipo, tipo, numeroOrdem, new short[31]);
 		
 		if (ordem.getPecasPendentes() <= 1) {
-			//sendPath(path, tool, time, (short) 0, (short) 0, (short) 0, new short[31]);
+			sendPath(path, tool, time, (short) 0, (short) 0, (short) 0, new short[31]);
 			System.out.println("envia cenas vazias para plc");
 		}
 	}

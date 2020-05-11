@@ -1,7 +1,5 @@
 package fabrica;
 
-import java.util.Arrays;
-
 public class OrdensThread extends Thread {
 	private Ordens ordem;
 	private ControlaPlc controlaPlc;
@@ -20,13 +18,13 @@ public class OrdensThread extends Thread {
 
 	private void selectRunOrder() {
 		if (option == 1) {
-			System.out.println("corre carga");
+			//System.out.println("corre transformacao");
 			controlaPlc.runOrder(this.ordem);
-			System.out.println("correu carga");
+			//System.out.println("correu transformacao");
 		} else if (option == 0) {
-			System.out.println("corre descarga");
+			//System.out.println("corre descarga");
 			controlaPlc.runOrdemDescarga(this.ordem);
-			System.out.println("correu descarga");
+			//System.out.println("correu descarga");
 
 		}
 	}
@@ -44,16 +42,19 @@ public class OrdensThread extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				selectRunOrder();
-				this.ordem.pecaParaProducao();
+				/** se for descarga envia 4 simultaneas, se for transformaçao é 3*/
+				int numeroPecas = (option ==0) ? 4 : 3; 
+				for(int i=0; i<numeroPecas; i++) {
+					if(this.ordem.getPecasPendentes()<=0)
+						break;
+					selectRunOrder();
+					this.ordem.pecaParaProducao();
+				}
+
 
 				GereOrdensThread.sem.release();
 			}
-			System.out.println();
-			System.out.println(Arrays.toString(GereOrdensThread.getTempoMA()));
-			System.out.println(Arrays.toString(GereOrdensThread.getTempoMB()));
-			System.out.println(Arrays.toString(GereOrdensThread.getTempoMC()));
-			System.out.println();
+
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -61,7 +62,7 @@ public class OrdensThread extends Thread {
 			}
 
 		}
-		System.out.println("A SAIRR.... "+ this.ordem.getNumeroOrdem());
+		System.out.println("A SAIRR.... numero de ordem: "+ this.ordem.getNumeroOrdem());
 		/* Espera para terminar ordem */
 		while (this.ordem.getQuantidade() != this.ordem.getPecasProduzidas()) {
 			try {
@@ -70,7 +71,7 @@ public class OrdensThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("*******SAIU DA ORDEM (ordensThread)******** "+ this.ordem.getNumeroOrdem());
+		System.out.println("*******SAIU DA ORDEM (ordensThread)******** numero de ordem:"+ this.ordem.getNumeroOrdem());
 		this.ordem.terminaOrdem();
 		resetMaquinaSelect();
 		GereOrdensThread.decrementNumberOfThreads();// para permitir entrar mais

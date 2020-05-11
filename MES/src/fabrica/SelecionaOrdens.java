@@ -28,11 +28,7 @@ public class SelecionaOrdens extends Thread {
 				System.out.println("Numero de threads " + aux);
 				auxPre = aux;
 			}
-			try {
-				sem.acquire();// bloqueia a mutex
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+
 			PriorityQueue<Ordens> heapOrdemPendente = fabrica.getCopyHeapOrdemPendente();
 
 			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 5) {
@@ -47,11 +43,12 @@ public class SelecionaOrdens extends Thread {
 					}
 					
 					if (ok) {
-						System.out.println("ordem :" + ordem);
+						System.out.println(" executa ordem :" + ordem);
 						OrdensThread x =new OrdensThread(ordem, controlaPlc);// inicio thread
 						x.setName("Thread "+ordem.getNumeroOrdem());
 						x.start();
 						GereOrdensThread.incrementNumberOfThreads();
+						break;
 					}
 					try {
 						Thread.sleep(200);
@@ -61,8 +58,11 @@ public class SelecionaOrdens extends Thread {
 				}
 
 			}
-			sem.release();// liberta a mutex
-
+			/*System.out.println();
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMA())+"\t"+Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMB())+"\t"+Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
+			System.out.println(Arrays.toString(GereOrdensThread.getTempoMC())+"\t"+Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));
+			System.out.println();*/
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -120,14 +120,15 @@ public class SelecionaOrdens extends Thread {
 			}
 		}
 		}
-		
-		System.out.println("***"+select);
+		if(select.size()>0)
+			System.out.println("***"+select);
 		if(ok)
 			selectList(select);
 		return ok;
 	}
 
 	private void selectList(List<String> select) {
+		System.out.println("entrou no select: "+select);
 		for(String maquina : select) {
 			if(maquina.equals("A")) {
 				for(int i=0; i<3; i++) {

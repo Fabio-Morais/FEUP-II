@@ -19,6 +19,7 @@ public class ControlaPlc {
 	private long present_time;
 	private long last_time;
 	private OpcClient opcClient;
+	private int testeOPC = 0;
 
 
 	private PriorityQueue<S> heapS;
@@ -42,6 +43,13 @@ public class ControlaPlc {
 
 		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
 		machineTool= opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
+		
+		// Add costs to warehouse
+		/*for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 3; y++) {
+				originalMap[(x * 2) + 1][(y + 3) * 2] += 100000;
+			}
+		}*/
 	}
 
 	// warehouseOut: X = 0, Y = 1
@@ -145,8 +153,8 @@ public class ControlaPlc {
 		int path_i[][] = new int[50][2];
 		present_time = System.currentTimeMillis();
 		time_since_last_piece = (int) (present_time - last_time);
-		last_time = present_time;
 		path_i = runTransformation(transformations, time_since_last_piece);
+		last_time = present_time;
 		for (int j = 0; j < path.length; j++)
 			for (int k = 0; k < 2; k++)
 				path[j][k] = (short) path_i[j][k];
@@ -157,15 +165,14 @@ public class ControlaPlc {
 			x[i++] = Short.parseShort("" + aux.charAt(1));
 		}
 		sendPath(path, recipeTool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
-		// System.out.println(Arrays.toString(recipeTool));
-		/*
-		 * System.out.println("---> "+ i); }
-		 */
-		if (ordem.getPecasPendentes() <= 1)
-			sendPath(new short[50][2], new short[31], new long[31], (short) 0, (short) 0, (short) 0, new short[31]);
 
+		
+		if (ordem.getPecasPendentes() <= 1) {
+			System.out.println("envia cenas vazias para plc");
+			// sendPath(path, recipeTool, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
+		}
 	}
-	public void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
+	public synchronized void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
 		short tipo = Short.parseShort("" + ordem.getUnload().getType().charAt(1));
 		short pusher = Short.parseShort("" + ordem.getUnload().getDestinantion().charAt(2));
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem());
@@ -214,22 +221,28 @@ public class ControlaPlc {
 		// System.out.println(path + " - "+ tipo);
 		sendPath(path, tool, time, tipo, tipo, numeroOrdem, new short[31]);
 		
-		if (ordem.getPecasPendentes() <= 1)
-			sendPath(new short[50][2], new short[31], new long[31], (short) 0, (short) 0, (short) 0, new short[31]);
+		if (ordem.getPecasPendentes() <= 1) {
+			// sendPath(path, tool, time, (short) 0, (short) 0, (short) 0, new short[31]);
+			System.out.println("envia cenas vazias para plc");
+		}
 	}
 
-	private void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
+	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
 			short[] listaPecas) {
 		// System.out.println("send new path");
 		boolean in;
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
+			System.out.println("Waiting free out");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		} while (!in);
+		
+
+		opcClient.setValue("Fabrica", "syncWarOut", "false");
 
 		/*
 		 * for(int i=0; i<3; i++) { for(int j=0; j<3; j++) { for(int k=0; k<10; k++) {
@@ -259,23 +272,29 @@ public class ControlaPlc {
 			path_x[i] = path[i][0];
 			path_y[i] = path[i][1];
 		}
+		opcClient.setValue("Fabrica", "bufferMachineTools", machineTool);
+		opcClient.setValue("Fabrica", "rebootToolPointer", machineToolPointer);
 		opcClient.setValue("Fabrica", "pecainput.pathX", path_x);
 		opcClient.setValue("Fabrica", "pecainput.pathY", path_y);
 		opcClient.setValue("Fabrica", "pecainput.pathLength", path[49][0]);
-		opcClient.setValue("Fabrica", "bufferMachineTools", machineTool);
-		opcClient.setValue("Fabrica", "rebootToolPointer", machineToolPointer);
 
+		System.out.println(testeOPC);
+		testeOPC++;
+		
 		long startTime = System.currentTimeMillis();
 		do {
-			in = opcClient.getValueBool("Fabrica", "freeOutput");
+			in = opcClient.getValueBool("Fabrica", "sentOutput");
 			long estimatedTime = System.currentTimeMillis() - startTime;
-			System.out.println(estimatedTime);
-			if(estimatedTime>20)
-				break;
-		}while(in);
-		opcClient.setValue("Fabrica", "pecainput.pathLength", 0);
+			if(estimatedTime>20) {
+				System.out.println("excedeu "+estimatedTime+"s");
+				// break;
+			}
+		}while(!in);
+		opcClient.setValue("Fabrica", "pecainput.pathLength", (short) 0);
+		opcClient.setValue("Fabrica", "tipoPecaInput", (short) 0);
+		opcClient.setValue("Fabrica", "syncWarOut", true);
 
-		// System.out.println("path sent");
+		System.out.println("path sent");
 	}
 
 	private int[][] runTransformation(List<String> transformations, int time_since_last_piece) {
@@ -291,12 +310,28 @@ public class ControlaPlc {
 		departure[1] = 1;
 
 		int min_index = 0;
+		
+		// Update TemposExtras
+		for (int x = 0; x < 7; x++) {
+			for (int y = 0; y < 16; y++) {
+				for(int k = 0; k < 3; k++) {
+					for(int j = 0; j < 3; j++) {
+						temposExtras[k][j][x][y] -= time_since_last_piece * 0.9;
+						// 0.75 funciona bem - 0.65
+						if (temposExtras[k][j][x][y] < 0)
+							temposExtras[k][j][x][y] = 0;
+					}
+				}
+			}
+		}
 
 		for (int i = 0; i < transformations.size(); i += 3) {
 			int[][][] local_path = new int[3][50][2];
 			String maquina = transformations.get(i);
 			int tempo;
 			tempo = 1000 * Integer.valueOf(transformations.get(i + 1));
+			System.out.println(tempo);
+			System.out.println();
 			short tool;
 			tool = Short.valueOf(transformations.get(i + 2));
 			// Verifica Varias Transformacoes na mesma maquina
@@ -315,42 +350,72 @@ public class ControlaPlc {
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
 					machineToolPointer[m_x][m_y] = 0;
+				
+				// Atualiza Tempos Extras c/ mudanca Ferramenta: 20s
+				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += (tempo + 20000);
 
 			} else {
 				int min_tempo;
 				min_tempo = 999999999;
 				arrival[1] = ((int) (maquina.charAt(0)) - 62);
 				local_path = new int[3][50][2];
+				
 				for (int j = 0; j < 3; j++) {
 					arrival[0] = (j * 2) + 1;
 
 					// adicionar tempos extras do mapa original
-					for (int x = 0; x < 7; x++) {
+					/* for (int x = 0; x < 7; x++) {
 						for (int y = 0; y < 16; y++) {
-							temposExtras[arrival[1] - 3][j][x][y] -= time_since_last_piece * 0.65;
-							// 0.75 funciona bem
+							temposExtras[arrival[1] - 3][j][x][y] -= time_since_last_piece * 1;
+							// 0.75 funciona bem - 0.65
 							if (temposExtras[arrival[1] - 3][j][x][y] < 0)
 								temposExtras[arrival[1] - 3][j][x][y] = 0;
 							if (temposExtras[arrival[1] - 3][j][x][y] > 0)
 								originalMap[x][y] += temposExtras[arrival[1] - 3][j][x][y];
 
 						}
+					} */
+					
+					for (int x = 0; x < 7; x++) {
+						for (int y = 0; y < 16; y++) {
+							if (temposExtras[arrival[1] - 3][j][x][y] > 0)
+								originalMap[x][y] += temposExtras[arrival[1] - 3][j][x][y];
+
+						}
 					}
+					
 
-					/*
-					 * for(int x=0; x<7; x++) { for(int y=0; y<16; y++) { System.out.print(" " +
-					 * original_map[x][y]); } System.out.println(); } System.out.println();
-					 * System.out.println();
-					 * 
-					 * for(int x=0; x<7; x++) { for(int y=0; y<16; y++) { int aux = 0; for(int theta
-					 * = 0; theta < 3; theta++) { for(int omega = 0; omega < 3; omega++) { aux =
-					 * aux+tempos_extras[theta][omega][x][y]; } } System.out.print(" " + aux); }
-					 * System.out.println(); } System.out.println(); System.out.println();
-					 * System.out.println(); System.out.println(); System.out.println();
-					 */
-
+					
+					/*for(int x=0; x<7; x++) { 
+						for(int y=0; y<16; y++) { 
+							System.out.print(" " +  originalMap[x][y]); 
+						} 
+						System.out.println(); 
+					} */
+					System.out.println();
+					System.out.println();
+					
+					if( j == 0) {
+						for(int x=0; x<7; x++) {
+							for(int y=0; y<16; y++) { 
+								int aux = 0; 
+								for(int theta = 0; theta < 3; theta++) { 
+									for(int omega = 0; omega < 3; omega++) { 
+										aux = aux+ temposExtras[theta][omega][x][y]; 
+										} 
+									} 
+								System.out.print(" " + aux); 
+							}
+							System.out.println(); 
+						} 
+						System.out.println(); System.out.println();
+						System.out.println(); System.out.println(); System.out.println();
+					}
+					 
+					
 					// parte que funciona!!
 					local_path[j] = findPath(arrival[0], arrival[1], departure[0], departure[1]);
+					// if ((local_path[j][49][1] + 1500) < min_tempo) {
 					if ((local_path[j][49][1] + 1500) < min_tempo) {
 						min_tempo = local_path[j][49][1];
 						min_index = j;
@@ -370,7 +435,7 @@ public class ControlaPlc {
 				int local_path_size = local_path[min_index][49][0];
 
 				// calculo dos tempos extras
-				for (int k = 0; k < local_path_size; k++) {
+				/* for (int k = 0; k < local_path_size; k++) {
 					// if Posição passagem
 					if ((local_path[min_index][k][1] == arrival[1])
 							&& ((Math.abs(arrival[0] - local_path[min_index][k][0]) == 1))) {
@@ -380,11 +445,11 @@ public class ControlaPlc {
 								* 2] += tempo;// - (local_path[min_index][49][1]-10000);
 					}
 
-				}
+				}*/
 
 				// (min_tempo-2500) aproximação do tempo que a proxima peca vai demorar a chegar
 				// lá
-				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += tempo; // -
+				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += (tempo + 6500); // -
 																								// (local_path[min_index][49][1]-10000);
 
 				for (int j = total_path_size; j < total_path_size + local_path_size; j++) {
@@ -422,8 +487,10 @@ public class ControlaPlc {
 			}
 			maquina_anterior = maquina;
 		}
+		
 		arrival[0] = 0;
 		arrival[1] = 7;
+		
 		// Add costs to warehouse
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {

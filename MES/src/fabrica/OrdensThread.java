@@ -8,12 +8,15 @@ public class OrdensThread extends Thread {
 	 * option = 1 -> carga
 	 */
 	private int option;
+	/**true se for uma ordem pendente, false se ja tiver sido executada anteriormente*/
+	private boolean pendente;
 
-	public OrdensThread(Ordens ordem, ControlaPlc controlaPlc) {
+	public OrdensThread(Ordens ordem, ControlaPlc controlaPlc, boolean pendente) {
 		super();
 		this.ordem = ordem;
 		this.controlaPlc = controlaPlc;
 		this.option = (ordem.getTransform() == null) ? 0 : 1;
+		this.pendente = pendente;
 	}
 
 	private void selectRunOrder() {
@@ -23,14 +26,9 @@ public class OrdensThread extends Thread {
 			e.printStackTrace();
 		}
 		if (option == 1) {
-			//System.out.println("corre transformacao");
 			controlaPlc.runOrder(this.ordem);
-			//System.out.println("correu transformacao");
 		} else if (option == 0) {
-			//System.out.println("corre descarga");
 			controlaPlc.runOrdemDescarga(this.ordem);
-			//System.out.println("correu descarga");
-
 		}
 		GeneralSemaphore.getSem5().release();
 		
@@ -38,7 +36,8 @@ public class OrdensThread extends Thread {
 
 	@Override
 	public void run() {
-		this.ordem.executaOrdem();
+		if(this.pendente)
+			this.ordem.executaOrdem();
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
 

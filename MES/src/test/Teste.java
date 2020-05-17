@@ -13,27 +13,7 @@ public class Teste {
 		// TODO Auto-generated constructor stub
 	}
 	public void enviaSoUma() {
-		/*Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(2);
-		ordem1.setTransform(ordem1.new Transform("P1","P2"));//maquina A
-		 ordem1.executaOrdem();
-		ControlaPlc p = new ControlaPlc();
-		while(ordem1.getPecasPendentes()>0) {
-			System.out.println(ordem1.getPecasPendentes());
-			p.runOrder(ordem1);
-			ordem1.pecaParaProducao();
-		}
-		System.out.println("saiu do 1º ciclo");
-		while(ordem1.getPecasProduzidas()!=ordem1.getQuantidade()) {
-			System.out.println(ordem1.getPecasProduzidas()+" - "+ordem1.getQuantidade());
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println("saiu do 2º ciclo");
-		ordem1.terminaOrdem();*/
+
 	}
 	public void testar() {
 		/*ServerUdp udp = ServerUdp.getInstance();
@@ -166,6 +146,10 @@ public class Teste {
 		}
 		fabrica.addToHeap(ordem8);
 	
+	}
+	
+	public void testar2() {
+		
 	}
 
 }

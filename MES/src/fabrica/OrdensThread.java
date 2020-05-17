@@ -17,6 +17,11 @@ public class OrdensThread extends Thread {
 	}
 
 	private void selectRunOrder() {
+		try {
+			GeneralSemaphore.getSem5().acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if (option == 1) {
 			//System.out.println("corre transformacao");
 			controlaPlc.runOrder(this.ordem);
@@ -27,6 +32,8 @@ public class OrdensThread extends Thread {
 			//System.out.println("correu descarga");
 
 		}
+		GeneralSemaphore.getSem5().release();
+		
 	}
 
 	@Override

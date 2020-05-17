@@ -143,12 +143,9 @@ public class ControlaPlc {
 
 		long recipeTime[] = new long[31];
 		int time_since_last_piece;
-		// System.out.println(transformations);
 		for (int i = 0; i < transformations.size() / 3; i++) {
 			recipeTime[i] = 1000 * Long.valueOf(transformations.get((i * 3) + 1)); // tempo de ferramenta
-			// System.out.println("tempo: "+i+ " : "+recipeTime[i]);
 		}
-		// for(int i=0; i<numerOfPieces; i++) {
 		short path[][] = new short[50][2];
 		int path_i[][] = new int[50][2];
 		present_time = System.currentTimeMillis();
@@ -167,10 +164,7 @@ public class ControlaPlc {
 		sendPath(path, recipeTool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
 
 		
-		if (ordem.getPecasPendentes() <= 1) {
-			System.out.println("envia cenas vazias para plc");
-			// sendPath(path, recipeTool, recipeTime, (short) 0, (short) 0, (short) 0, new short[31]);
-		}
+	
 	}
 	public synchronized void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
 		short tipo = Short.parseShort("" + ordem.getUnload().getType().charAt(1));
@@ -218,22 +212,16 @@ public class ControlaPlc {
 		tool[0] = (short) 0;
 		long[] time = new long[50];
 		time[0] = (short) 0;
-		// System.out.println(path + " - "+ tipo);
 		sendPath(path, tool, time, tipo, tipo, numeroOrdem, new short[31]);
 		
-		if (ordem.getPecasPendentes() <= 1) {
-			// sendPath(path, tool, time, (short) 0, (short) 0, (short) 0, new short[31]);
-			System.out.println("envia cenas vazias para plc");
-		}
+
 	}
 
 	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
 			short[] listaPecas) {
-		// System.out.println("send new path");
 		boolean in;
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
-			System.out.println("Waiting free out");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -244,11 +232,7 @@ public class ControlaPlc {
 
 		opcClient.setValue("Fabrica", "syncWarOut", "false");
 
-		/*
-		 * for(int i=0; i<3; i++) { for(int j=0; j<3; j++) { for(int k=0; k<10; k++) {
-		 * System.out.print(machineTool[j][i][k]); } System.out.print("  "); }
-		 * System.out.println(); }
-		 */
+
 
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
@@ -261,10 +245,7 @@ public class ControlaPlc {
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
-		/*
-		 * for(int i=0;i<4; i++) { System.out.print(macProcessa[i] + " "); }
-		 * System.out.println();
-		 */
+
 
 		short[] path_x = new short[sizeOfPath];
 		short[] path_y = new short[sizeOfPath];
@@ -278,23 +259,16 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.pathY", path_y);
 		opcClient.setValue("Fabrica", "pecainput.pathLength", path[49][0]);
 
-		System.out.println(testeOPC);
 		testeOPC++;
 		
 		long startTime = System.currentTimeMillis();
 		do {
 			in = opcClient.getValueBool("Fabrica", "sentOutput");
-			long estimatedTime = System.currentTimeMillis() - startTime;
-			if(estimatedTime>20) {
-				System.out.println("excedeu "+estimatedTime+"s");
-				// break;
-			}
 		}while(!in);
 		opcClient.setValue("Fabrica", "pecainput.pathLength", (short) 0);
 		opcClient.setValue("Fabrica", "tipoPecaInput", (short) 0);
 		opcClient.setValue("Fabrica", "syncWarOut", true);
 
-		System.out.println("path sent");
 	}
 
 	private int[][] runTransformation(List<String> transformations, int time_since_last_piece) {
@@ -330,8 +304,6 @@ public class ControlaPlc {
 			String maquina = transformations.get(i);
 			int tempo;
 			tempo = 1000 * Integer.valueOf(transformations.get(i + 1));
-			System.out.println(tempo);
-			System.out.println();
 			short tool;
 			tool = Short.valueOf(transformations.get(i + 2));
 			// Verifica Varias Transformacoes na mesma maquina
@@ -383,17 +355,7 @@ public class ControlaPlc {
 
 						}
 					}
-					
 
-					
-					/*for(int x=0; x<7; x++) { 
-						for(int y=0; y<16; y++) { 
-							System.out.print(" " +  originalMap[x][y]); 
-						} 
-						System.out.println(); 
-					} */
-					System.out.println();
-					System.out.println();
 					
 					if( j == 0) {
 						for(int x=0; x<7; x++) {
@@ -404,12 +366,9 @@ public class ControlaPlc {
 										aux = aux+ temposExtras[theta][omega][x][y]; 
 										} 
 									} 
-								System.out.print(" " + aux); 
 							}
-							System.out.println(); 
 						} 
-						System.out.println(); System.out.println();
-						System.out.println(); System.out.println(); System.out.println();
+
 					}
 					 
 					
@@ -500,9 +459,7 @@ public class ControlaPlc {
 
 		int[][][] local_path = new int[3][50][2];
 
-		if ((departure[0] == 5) && (departure[1] == 4)) {
-			System.out.println();
-		}
+
 
 		local_path[0] = findPath(arrival[0], arrival[1], departure[0], departure[1]);
 
@@ -585,7 +542,6 @@ public class ControlaPlc {
 
 			for (int i = 0; i < 4; i++) {
 				if (isValidNode(nn[i][0], nn[i][1])) {
-					// System.out.println(nn[i][0] + ", " + nn[i][1]);
 					if (map[nn[i][0]][nn[i][1]] != 0) {
 						current_map[nn[i][0]][nn[i][1]] = map[nn[i][0]][nn[i][1]]
 								+ current_map[explore_node[0]][explore_node[1]];

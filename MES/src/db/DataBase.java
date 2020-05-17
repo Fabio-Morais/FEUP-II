@@ -143,8 +143,7 @@ public class DataBase {
 			}
 			
 		} catch (Exception e) {
-			//e.printStackTrace();
-			//System.out.println("UPS");
+			e.printStackTrace();
 			disconnect();
 			
 			return false;
@@ -170,7 +169,7 @@ public class DataBase {
 			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
 			disconnect();
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		disconnect();
 		return rs;
@@ -239,8 +238,8 @@ public class DataBase {
 		return ordem.executaOrdem(this, numeroOrdem);
 	}
 
-	public boolean terminaOrdemProducao(String numeroOrdem) {
-		return ordem.terminaOrdem(this, numeroOrdem);
+	public boolean terminaOrdemProducao(String numeroOrdem, int prioridade) {
+		return ordem.terminaOrdem(this, numeroOrdem,prioridade);
 	}
 
 	public boolean insereDescarga(Descarga descarga) {
@@ -266,12 +265,12 @@ public class DataBase {
 		return ordem.updatePecasPendentes(this, numeroOrdem, pecas);
 	}
 
-	public boolean updatePecasProduzidas(String numeroOrdem, int pecas) {
-		return ordem.updatePecasProduzidas(this, numeroOrdem, pecas);
+	public boolean updatePecasProduzidas(String numeroOrdem, int pecas, int prioridade) {
+		return ordem.updatePecasProduzidas(this, numeroOrdem, pecas, prioridade);
 	}
 
-	public boolean updatePecasEmProducao(String numeroOrdem, int pecas) {
-		return ordem.updatePecasEmProducao(this, numeroOrdem, pecas);
+	public boolean updatePecasEmProducao(String numeroOrdem, int pecas, int prioridade) {
+		return ordem.updatePecasEmProducao(this, numeroOrdem, pecas, prioridade);
 	}
 
 	public boolean updateFolgaExecucao(Ordens ordem) {

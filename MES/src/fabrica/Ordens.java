@@ -170,15 +170,12 @@ public class Ordens {
 
 		if (this.fabrica.getHeapOrdemPendente().peek().equals(this)) {
 			this.fabrica.getHeapOrdemPendente().poll();
-			System.out.println("removeu corretamente da heap pendente");
 		} else {
-			System.out.println("errada, " + this.fabrica.getHeapOrdemPendente().peek());
 			fabrica.reorganizaHeap(this);
 		}
 		semPendente.release();
 		semExecucao.release();
 
-		System.out.println("acaba o metodo executaOrdem\n");
 	}
 
 	/**
@@ -187,17 +184,14 @@ public class Ordens {
 	 * @param numeroOrdem - numero da ordem
 	 */
 	public synchronized void terminaOrdem() {
-		db.terminaOrdemProducao(this.numeroOrdem);
-		System.out.println("entra em terminar");
+		db.terminaOrdemProducao(this.numeroOrdem, this.prioridade);
 		try {
 			semExecucao.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("passa a mutex");
 		fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
 		semExecucao.release();
-		System.out.println("finaliza");
 
 	}
 
@@ -208,16 +202,14 @@ public class Ordens {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		// System.out.println(this.getNumeroOrdem()+ "thread:
-		// "+Thread.currentThread().getName() + " antes : " + this.pecasPendentes);
+
 		if (this.pecasPendentes > 0) {
 			this.pecasPendentes--;
 			this.pecasEmProducao++;
 			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);// atualiza db e variaveis da classe
-			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);// atualiza db e variaveis da classe
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao, this.prioridade);// atualiza db e variaveis da classe
 		}
-		// System.out.println(this.getNumeroOrdem()+ "thread:
-		// "+Thread.currentThread().getName() + " depois : " + this.pecasPendentes);
+
 		sem.release();
 
 	}
@@ -229,21 +221,13 @@ public class Ordens {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		// System.out.println("---------------------------------");
-		// System.out.println(this);
-		// System.out.println(this.getNumeroOrdem()+ "thread:
-		// "+Thread.currentThread().getName() + " antes : "+ this.pecasProduzidas+":" +
-		// this.pecasEmProducao);
+
 		if (this.pecasEmProducao > 0) {
 			this.pecasEmProducao--;
 			this.pecasProduzidas++;
-			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);// atualiza db e variaveis da classe
-			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);// atualiza db e variaveis da classe
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao, this.prioridade);// atualiza db e variaveis da classe
+			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas, this.prioridade);// atualiza db e variaveis da classe
 		}
-		// System.out.println(this.getNumeroOrdem()+ "thread:
-		// "+Thread.currentThread().getName() + " depois : " + this.pecasProduzidas+":"
-		// + this.pecasEmProducao);
-		// System.out.println("---------------------------------\n\n");
 
 		sem.release();
 

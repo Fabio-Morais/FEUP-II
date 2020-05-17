@@ -21,7 +21,7 @@ public class Fabrica {
 	private Fabrica() {
 		this.db = DataBase.getInstance();
 		criaHeap();
-		// sincronizaOrdens();
+		sincronizaOrdens();
 
 	}
 
@@ -86,6 +86,7 @@ public class Fabrica {
 				ordem.setPecasPendentes(Integer.valueOf(desc.getString("pecaspendentes")));
 				ordem.setPecasEmProducao(Integer.valueOf(desc.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(desc.getString("pecasproduzidas")));
+				
 				ordem.setPrioridade(Integer.valueOf(desc.getString("folgaexecucao")));
 				ordem.setUnload(ordem.new Unload(desc.getString("pecaDescarga"), desc.getString("destino")));
 				if (desc.getString("estadoOrdem").equals("0")) {

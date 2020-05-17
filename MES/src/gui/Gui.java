@@ -124,11 +124,9 @@ public class Gui {
 		backgroundTimer();
 		backgroundTimerConexoes();
 		backgroundTimerHora();
-		//backgroundTimerSendDb();
 		counterTimer3.start();
 		counterTimer4.start();
 		counterTimer2.start();
-		//counterTimer5.start();
 		opcRunning = false;
 		dbRunning = false;
 
@@ -602,8 +600,7 @@ public class Gui {
 	private void backgroundTimerConexoes() {
 		counterTimer3 = new Timer(2000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 //verificaConexoes();
-
+				 verificaConexoes();
 			}
 		});
 	}
@@ -633,37 +630,7 @@ public class Gui {
 
 	}
 
-	private void backgroundTimerSendDb() {
-		counterTimer5 = new Timer(2500, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// All code inside SwingWorker runs on a seperate thread
-				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
-					@Override
-					public synchronized Void doInBackground() {
-						PriorityQueue<Ordens> aux = fabrica.getCopyHeapOrdemPendente();
-						int size = aux.size();
-						for (int i = 0; i < size; i++) {
-
-							if(aux.peek().getPrioridade()>0)
-								db.updateFolgaExecucao(aux.poll());
-							else
-								aux.poll();
-							try {
-								Thread.sleep(20);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						return null;
-					}
-				};
-
-				// Call the SwingWorker from within the Swing thread
-				worker.execute();
-			}
-		});
-	}
 
 	private void ordensExecucao() {
 		HashMap<String, Ordens> aux = fabrica.getCopyHeapOrdemExecucao();
@@ -749,13 +716,39 @@ public class Gui {
 	}
 
 	private void verificaConexoes() {
+		// All code inside SwingWorker runs on a seperate thread
+		SwingWorker<Boolean, Void> worker1 = new SwingWorker<Boolean, Void>() {
+			@Override
+			public Boolean doInBackground() {
 		if (db.checkConnection()) {
-			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
 			dbRunning = true;
+			return true;
 		} else {
-			dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
 			dbRunning = false;
+			return false;
 		}
+			}
+			@Override
+			public void done() {
+				try {
+					if(get()) {
+						dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/on3.png")));
+
+					}else {
+						dbIcon.setIcon(new ImageIcon(Gui.class.getResource("/img/off3.png")));
+
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		// Call the SwingWorker from within the Swing thread
+		worker1.execute();
+			
 
 		// All code inside SwingWorker runs on a seperate thread
 		SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {

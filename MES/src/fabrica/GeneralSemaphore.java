@@ -7,6 +7,7 @@ public abstract class GeneralSemaphore {
 	private static Semaphore sem2 = new Semaphore(1);
 	private static Semaphore sem3 = new Semaphore(1);
 	private static Semaphore sem4 = new Semaphore(1);
+	private static Semaphore sem5 = new Semaphore(1);
 
 	/**Usado para a heap das ordens pedentes*/
 	public static Semaphore getSem() {
@@ -26,6 +27,12 @@ public abstract class GeneralSemaphore {
 	/**Usado para a heap das ordens em execuçao*/
 	public static Semaphore getSem4() {
 		return sem4;
+	}
+	
+
+	/**Usado para o controlaPlc*/
+	public static Semaphore getSem5() {
+		return sem5;
 	}
 	
 }

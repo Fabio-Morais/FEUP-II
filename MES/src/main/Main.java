@@ -10,13 +10,15 @@ import udp.ServerUdp;
 public class Main {
 
 	public static void main(String[] args) {
-		//executaTeste();
-	
-		executaPrograma();
+		executaTeste();
+	/*ControlaPlc x = new ControlaPlc();
+	x.test();*/
+		//executaPrograma();
 	}
 	public static void executaTeste() {
 		Teste teste = new Teste();
-		teste.testar();
+		//teste.testar();
+		teste.testar3();
 	}
 	public static void executaPrograma() {
 		EventQueue.invokeLater(new Runnable() {

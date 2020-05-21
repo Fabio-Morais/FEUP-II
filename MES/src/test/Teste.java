@@ -58,27 +58,26 @@ public class Teste {
 		// command 3
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(7);
-		ordem4.setTransform(ordem4.new Transform("P4", "P8"));
+		ordem4.setTransform(ordem4.new Transform("P4", "P8"));//maquina C
 
 		Ordens ordem5 = new Ordens("5", -1, Ordem.localDate(), -1, fabrica);
 		ordem5.setPecasPendentes(8);
-		ordem5.setUnload(ordem5.new Unload("P9", "PM2"));
+		ordem5.setUnload(ordem5.new Unload("P9", "PM2"));//descarga
 
 		Ordens ordem6 = new Ordens("6", -1, Ordem.localDate(), -1, fabrica);
 		ordem6.setPecasPendentes(6);
-		ordem6.setUnload(ordem6.new Unload("P6", "PM3"));
+		ordem6.setUnload(ordem6.new Unload("P6", "PM3"));//descarga
 
 		// command 4
 		Ordens ordem7 = new Ordens("7", 900, Ordem.localDate(), 900, fabrica);
 		ordem7.setPecasPendentes(20);
-		ordem7.setTransform(ordem7.new Transform("P1", "P9"));
+		ordem7.setTransform(ordem7.new Transform("P1", "P9"));//maquina A OU C
 
 		Ordens ordem8 = new Ordens("101", 900, Ordem.localDate(), 900, fabrica);
 		ordem8.setPecasPendentes(6);
-		ordem8.setTransform(ordem8.new Transform("P4", "P5"));
+		ordem8.setTransform(ordem8.new Transform("P4", "P5"));//maquina C
 
 		fabrica.atualizaHeap();
-
 		fabrica.gereOrdens();
 		try {
 			Thread.sleep(5000);
@@ -165,9 +164,18 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(30);
+		ordem1.setPecasPendentes(10);
 		ordem1.setTransform(ordem1.new Transform("P2", "P6"));// maquina A
+		
+		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
+		ordem3.setPecasPendentes(6);
+		ordem3.setTransform(ordem3.new Transform("P1", "P3"));// maquina B
+		
+		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
+		ordem4.setPecasPendentes(5);
+		ordem4.setTransform(ordem4.new Transform("P4", "P5"));// maquina C
 
+		
 		fabrica.atualizaHeap();
 		fabrica.gereOrdens();
 		try {
@@ -180,6 +188,80 @@ public class Teste {
 
 		/** COMMAND 1 */
 		fabrica.addToHeap(ordem1);
+		fabrica.addToHeap(ordem3);
+		fabrica.addToHeap(ordem4);
+
+		try {
+			Thread.sleep(9000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
+		ordem2.setPecasPendentes(1);
+		ordem2.setTransform(ordem2.new Transform("P1", "P2"));// maquina A
+
+		fabrica.addToHeap(ordem2);
+
+	}
+	public void testar3() {
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Gui window = new Gui();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("PRONTO:");
+		Fabrica fabrica = Fabrica.getInstance();
+
+		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
+		ordem1.setPecasPendentes(20);
+		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
+		
+		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
+		ordem3.setPecasPendentes(10);
+		ordem3.setTransform(ordem3.new Transform("P1", "P9"));// maquina B
+		
+		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
+		ordem4.setPecasPendentes(3);
+		ordem4.setTransform(ordem4.new Transform("P4", "P8"));// maquina C
+
+		
+		fabrica.atualizaHeap();
+		fabrica.gereOrdens();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("***COMEÇA***");
+
+		/** COMMAND 1 */
+		fabrica.addToHeap(ordem1);
+		//fabrica.addToHeap(ordem3);
+		//fabrica.addToHeap(ordem4);
+
+		try {
+			Thread.sleep(9000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
+		ordem2.setPecasPendentes(5);
+		ordem2.setTransform(ordem2.new Transform("P3", "P5"));// maquina A
+
+		//fabrica.addToHeap(ordem2);
+
 	}
 
 }

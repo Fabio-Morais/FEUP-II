@@ -24,7 +24,9 @@ public class Ordens {
 	private Transform transform;
 	private Unload unload;
 	private ControlaPlc enviaOrdem;
-
+	/**false se for uma ordem pendente, true se ja tiver sido executada anteriormente*/
+	private boolean pendente=true;
+	
 	public class Transform {
 		private String from;
 		private String to;
@@ -162,17 +164,21 @@ public class Ordens {
 		}
 
 		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
-		try {
-			db.executaOrdemProducao(this.numeroOrdem);
-		} catch (Exception e) {
+		if(pendente) {
+			try {
+				db.executaOrdemProducao(this.numeroOrdem);
+			} catch (Exception e) {
 
+			}
 		}
+
 
 		if (this.fabrica.getHeapOrdemPendente().peek().equals(this)) {
 			this.fabrica.getHeapOrdemPendente().poll();
 		} else {
 			fabrica.reorganizaHeap(this);
 		}
+		pendente=false;
 		semPendente.release();
 		semExecucao.release();
 
@@ -307,6 +313,10 @@ public class Ordens {
 
 	public void setUnload(Unload unload) {
 		this.unload = unload;
+	}
+
+	public boolean pendente() {
+		return pendente;
 	}
 
 	@Override

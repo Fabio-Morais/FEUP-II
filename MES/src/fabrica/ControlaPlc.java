@@ -1,10 +1,17 @@
 package fabrica;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 import db.Ordem;
+import dijkstra.DijkstraAlgorithm;
+import dijkstra.Edge;
+import dijkstra.Graph;
+import dijkstra.Vertex;
 import opc.OpcClient;
 
 public class ControlaPlc {
@@ -20,7 +27,6 @@ public class ControlaPlc {
 	private long last_time;
 	private OpcClient opcClient;
 	private int testeOPC = 0;
-
 
 	private PriorityQueue<S> heapS;
 	private int[][] originalMap = { { 0, 0, 500, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 500, 0 },
@@ -38,18 +44,469 @@ public class ControlaPlc {
 				for (int y = 0; y < 16; y++)
 					for (int j = 0; j < 3; j++)
 						temposExtras[i][j][x][y] = 0;
-		
+
 		opcClient = OpcClient.getInstance();
 
 		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
-		machineTool= opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
-		
+		machineTool = opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
+
 		// Add costs to warehouse
-		/*for (int x = 0; x < 3; x++) {
-			for (int y = 0; y < 3; y++) {
-				originalMap[(x * 2) + 1][(y + 3) * 2] += 100000;
+		/*
+		 * for (int x = 0; x < 3; x++) { for (int y = 0; y < 3; y++) { originalMap[(x *
+		 * 2) + 1][(y + 3) * 2] += 100000; } }
+		 */
+	}
+
+	private void addLineAuto() {
+		/* tapetes cima */
+		for (int i = 0; i < 6; i++) {
+			addLane("tapete", i, (i + 1), 1);
+		}
+		/* tapetes baixo */
+		for (int i = 37; i > 31; i--) {
+			addLane("tapete", i, (i - 1), 1);
+		}
+
+		/* Maquinas */
+		int x = 0;
+		for (int i = 10; i < 27; i++) {
+			if (i != 15 && i != 21) {
+				if (i % 2 == 0) {
+					addLane("maquina", i, (i + 1), 15);
+					addLane("maquina", (i + 1), i, 15);
+				} else {
+					addLane("maquina", i, (i + 1), 14);
+				}
+
 			}
-		}*/
+
+		}
+		System.out.println();
+		/* 1º linha */
+		addLane("tapete", 2, 7, 1);
+		addLane("tapete", 4, 8, 1);
+		addLane("tapete", 6, 9, 1);
+
+		/* 5º linha */
+		addLane("tapete", 28, 33, 1);
+		addLane("tapete", 29, 35, 1);
+		addLane("tapete", 30, 37, 1);
+
+		/* 1º coluna */
+		addLane("tapete", 7, 11, 1);
+		addLane("tapete", 11, 17, 1);
+		addLane("tapete", 17, 23, 1);
+		addLane("tapete", 23, 28, 1);
+
+		/* 2º coluna */
+		addLane("tapete", 8, 13, 1);
+		addLane("tapete", 13, 19, 1);
+		addLane("tapete", 19, 25, 1);
+		addLane("tapete", 25, 29, 1);
+
+		/* 3º coluna */
+		addLane("tapete", 9, 15, 1);
+		addLane("tapete", 15, 21, 1);
+		addLane("tapete", 21, 27, 1);
+		addLane("tapete", 27, 30, 1);
+
+	}
+
+	private void addVertex() {
+		int x = 0;
+		int y = 1;
+		for (int i = 0; i < 38; i++) {
+
+			Vertex location = new Vertex("" + x + "," + y, "" + x + "," + y);
+			nodes.add(location);
+
+			if (i == 6 || i == 9 || i == 15 || i == 21 || i == 27 || i == 30) {
+				x = 0;
+				y++;
+			}
+			if (i == 6 || i == 7 || i == 8 || i == 27 || i == 28 || i == 29) {
+				x += 2;
+			} else {
+				if (i != 30) {
+					x++;
+				}
+
+			}
+
+		}
+	}
+
+	/** Escolhe o nó de acordo com a string enviada */
+	private int converteString(String string) {
+		String aux = string.toUpperCase();
+		switch (aux) {
+		case "A1":
+			return 10;
+		case "A2":
+			return 12;
+		case "A3":
+			return 14;
+		case "B1":
+			return 16;
+		case "B2":
+			return 18;
+		case "B3":
+			return 20;
+		case "C1":
+			return 22;
+		case "C2":
+			return 24;
+		case "C3":
+			return 26;
+
+		case "E":
+			return 0;
+		case "S":
+			return 31;
+		default:
+			return 0;
+		}
+	}
+
+	/** Converte a lista de coordenadas para um short[][] para enviar via opc */
+	private short[][] pathReturn(List<String> array) {
+		short path[][] = new short[50][2];
+		if (array.isEmpty()) {
+			return new short[0][0];
+		}
+		for (int i = 0; i < array.size(); i++) {
+			String[] coords = array.get(i).split(",");
+			path[i][0] = Short.valueOf(coords[0]);
+			path[i][1] = Short.valueOf(coords[1]);
+		}
+		path[49][0] = (short) array.size();
+		return path;
+
+	}
+
+	static List<Vertex> nodes;
+	static List<Edge> edges;
+
+	/**
+	 * Retorna a lista do path path
+	 * 
+	 * @param origem  - origem. E-Entrada<br>
+	 *                A1-maquina A 1<br>
+	 *                B2-maquina B 2<br>
+	 *                S-saida
+	 * @param destino - destino
+	 */
+	public synchronized List<String> rotaMaquinas(List<String> rota, String origem, String destino) {
+		int origemInt = converteString(origem);
+		int destinoInt = converteString(destino);
+		nodes = new ArrayList<>();
+		edges = new ArrayList<>();
+
+		addVertex();
+		addLineAuto();
+
+		// Lets check from location Loc_1 to Loc_10
+		Graph graph = new Graph(nodes, edges);
+		DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+		dijkstra.execute(nodes.get(origemInt));
+		LinkedList<Vertex> path = dijkstra.getPath(nodes.get(destinoInt));
+		String fim = "";
+		if (path != null) {
+			for (int i = 0; i < path.size(); i++) {
+				for (Edge edge : edges) {
+					if (i != path.size() - 1) {
+						if (edge.getSource().getName().equals(path.get(i).getId())
+								&& edge.getDestination().getName().equals(path.get(i + 1).getId())) {
+							rota.add(path.get(i).getId());
+							fim = path.get(i + 1).getId();
+						}
+					}
+				}
+			}
+			rota.add(fim);
+		}
+		if (origemInt == destinoInt) {
+			rota.add(nodes.get(origemInt).getId());
+		}
+		return rota;
+	}
+
+	private static void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {
+		Edge lane = new Edge(laneId, nodes.get(sourceLocNo), nodes.get(destLocNo), duration);
+		edges.add(lane);
+
+	}
+
+	/**
+	 * @return String - retorna o destino, ex: "A1"
+	 */
+	private String distribuiPecasParaMaquinas(List<String> rota, String origem, String destino, int pecasPendentes,
+			short tool) {
+		boolean[] maquinaLivre = { false, false, false };
+		String returnString = "";
+		int x = 0;
+		int y = 0;
+		int coluna = -1;
+		if (origem.length() > 1)
+			coluna = Integer.valueOf(origem.substring(1, 2));
+
+		if (destino.equals("A")) {
+			maquinaLivre = GereOrdensThread.getmALivre();
+		} else if (destino.equals("B")) {
+			maquinaLivre = GereOrdensThread.getmBLivre();
+			y = 1;
+		} else if (destino.equals("C")) {
+			maquinaLivre = GereOrdensThread.getmCLivre();
+			y = 2;
+		}
+
+		if (pecasPendentes >= 3) {
+			if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if ((coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if ((coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if ((coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			}
+		} else if (pecasPendentes >= 2) {
+			if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if ((coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if ((coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if ((coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			}
+
+		} else if (pecasPendentes >= 1) {
+			System.out.println(maquinaLivre[0] + " ; " + maquinaLivre[1] + " ; " + maquinaLivre[2]);
+			if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if ((coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if ((coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if ((coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			}
+		}
+		/*System.out.println("pendentes = " + pecasPendentes + " | " + origem + "->" + returnString + "-->"
+				+ maquinaLivre[0] + " . " + maquinaLivre[1] + " . " + maquinaLivre[2]);*/
+
+		// [1,2,0,0....] [b c]
+		/*
+		 * machineTool[x][B][0] = 1 machineTool[x][B][1] = 2 (c) machineTool[x][C][0] =
+		 * 1 machineTool[x][C][1] = 2
+		 * 
+		 * IDEALMENTE machineTool[x][B][0]=1 machineTool[x][c][0]=2
+		 * 
+		 * 
+		 * 
+		 */
+		System.out.println();
+		System.out.println("machineTool["+x+"]["+y+"]["+machineToolPointer[x][y]+"] = "+tool);
+		System.out.println();
+		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
+		machineToolPointer[x][y]++;
+		if (machineToolPointer[x][y] > 49) {
+			machineToolPointer[x][y] = 0;
+		}
+
+		return returnString;
+	}
+
+	private short[][] calculaRota(List<String> maquinas, int pecasPendentes, short[] tool) {
+		List<String> rota = new ArrayList<>();
+
+		String origem = "E";
+		String destino = "";
+
+		for (int i = 0; i < maquinas.size(); i++) {
+			destino = maquinas.get(i).toUpperCase();
+			origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
+			/* se houver seguinte */
+			if (rota.size() > 0 && (i + 1) < maquinas.size()) {
+				rota.remove(rota.size() - 1);
+			}
+
+		}
+
+		if (!rota.isEmpty()) {
+			rota.remove(rota.size() - 1);
+			rotaMaquinas(rota, origem, "S");
+		}
+		System.out.println(rota);
+		System.out.println("\n\n");
+		return pathReturn(rota);
+
+	}
+
+	/**
+	 * Corre apenas 1 vez
+	 * 
+	 * @param ordem- Ordem a se executar
+	 */
+	public synchronized boolean runOrder(Ordens ordem) {
+		int smallest = 0;
+		if (ordem.getTransform() != null) {
+			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
+				long[] auxTempo = GereOrdensThread.getTempoMC();
+				if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
+					smallest = (int) auxTempo[0] / 1000;
+				} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
+					smallest = (int) auxTempo[1] / 1000;
+				} else {
+					smallest = (int) auxTempo[2] / 1000;
+				}
+			}
+		}
+
+		List<String> transformations = ordem.getReceita(smallest);// lista de transformaçoes
+		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));// peça inicial
+		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));// peça final
+		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem()); // numero de ordem
+		List<String> maquinas = new ArrayList<>();
+		int auxIndice = -1;
+		String pre = "";
+		for (int i = 0; i < macProcessa.length; i++) {
+			macProcessa[i] = 0;
+		}
+		for (int i = 0; i < transformations.size(); i += 3) {
+			maquinas.add(transformations.get(i));
+			if (!transformations.get(i).equals(pre)) {
+				macProcessa[++auxIndice]++;
+				pre = transformations.get(i);
+			} else {
+				macProcessa[auxIndice]++;
+			}
+		}
+
+		long recipeTime[] = new long[31];
+		for (int i = 0; i < transformations.size() / 3; i++) {
+			recipeTime[i] = 1000 * Long.valueOf(transformations.get((i * 3) + 1)); // tempo de ferramenta
+		}
+		int i = 0;
+		short[] tool = new short[31];
+		for (int j = 2; j < transformations.size(); j += 3) {
+			tool[i++] = Short.valueOf(transformations.get(j));// [1,2,0,0,0]-> [1,1,0]
+		}
+
+		short[][] path = calculaRota(maquinas, ordem.getPecasPendentes(), tool);
+		if (path.length == 0) {
+			return false;
+		}
+		i = 0;
+		short[] x = new short[31];
+		for (String aux : ordem.getListaPecas(0)) {
+			x[i++] = Short.parseShort("" + aux.charAt(1));
+		}
+		// recipeTool => lsita de ferramentas
+
+		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
+		return true;
+
+	}
+
+	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal,
+			short numeroOrdem, short[] listaPecas) {
+		boolean in;
+		do {
+			in = opcClient.getValueBool("Fabrica", "freeOutput");
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} while (!in);
+
+		opcClient.setValue("Fabrica", "syncWarOut", "false");
+
+		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
+		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
+		opcClient.setValue("Fabrica", "pecainput.recipeTime", time);
+		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
+		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
+		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
+		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
+
+		System.out.println("tool "+Arrays.toString(tool));
+		System.out.println("time "+Arrays.toString(time));
+		if (path[49][0] > 0)
+			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
+
+		short[] path_x = new short[sizeOfPath];
+		short[] path_y = new short[sizeOfPath];
+		for (int i = 0; i < path[49][0]; i++) {
+			path_x[i] = path[i][0];
+			path_y[i] = path[i][1];
+		}
+		// 3,3,50
+		opcClient.setValue("Fabrica", "bufferMachineTools", machineTool);
+		opcClient.setValue("Fabrica", "rebootToolPointer", machineToolPointer);
+		opcClient.setValue("Fabrica", "pecainput.pathX", path_x);
+		opcClient.setValue("Fabrica", "pecainput.pathY", path_y);
+		opcClient.setValue("Fabrica", "pecainput.pathLength", path[49][0]);
+
+		testeOPC++;
+
+		do {
+			in = opcClient.getValueBool("Fabrica", "sentOutput");
+		} while (!in);
+		opcClient.setValue("Fabrica", "pecainput.pathLength", (short) 0);
+		opcClient.setValue("Fabrica", "tipoPecaInput", (short) 0);
+		opcClient.setValue("Fabrica", "syncWarOut", true);
+
 	}
 
 	// warehouseOut: X = 0, Y = 1
@@ -120,7 +577,7 @@ public class ControlaPlc {
 	 * 
 	 * @param ordem- Ordem a se executar
 	 */
-	public synchronized void runOrder(Ordens ordem) {
+	public synchronized boolean runOrder2(Ordens ordem) {
 		int smallest = 0;
 		if (ordem.getTransform() != null) {
 			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
@@ -152,20 +609,26 @@ public class ControlaPlc {
 		time_since_last_piece = (int) (present_time - last_time);
 		path_i = runTransformation(transformations, time_since_last_piece);
 		last_time = present_time;
-		for (int j = 0; j < path.length; j++)
-			for (int k = 0; k < 2; k++)
+		for (int j = 0; j < path.length; j++) {
+			for (int k = 0; k < 2; k++) {
 				path[j][k] = (short) path_i[j][k];
-
+			}
+		}
 		short[] x = new short[31];
 		int i = 0;
 		for (String aux : ordem.getListaPecas(0)) {
 			x[i++] = Short.parseShort("" + aux.charAt(1));
 		}
+		short[] tool = new short[31];
+		for (int j = 2; j < transformations.size(); j += 3) {
+			tool[i++] = Short.valueOf(transformations.get(j));
+		}
+		System.out.println("recipe " + Arrays.toString(recipeTool));
+		System.out.println("toll " + Arrays.toString(tool));
 		sendPath(path, recipeTool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
-
-		
-	
+		return true;
 	}
+
 	public synchronized void runOrdemDescarga(Ordens ordem) {// tipo P1 = 1 # pusher1 =1
 		short tipo = Short.parseShort("" + ordem.getUnload().getType().charAt(1));
 		short pusher = Short.parseShort("" + ordem.getUnload().getDestinantion().charAt(2));
@@ -213,61 +676,6 @@ public class ControlaPlc {
 		long[] time = new long[50];
 		time[0] = (short) 0;
 		sendPath(path, tool, time, tipo, tipo, numeroOrdem, new short[31]);
-		
-
-	}
-
-	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal, short numeroOrdem,
-			short[] listaPecas) {
-		boolean in;
-		do {
-			in = opcClient.getValueBool("Fabrica", "freeOutput");
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		} while (!in);
-		
-
-		opcClient.setValue("Fabrica", "syncWarOut", "false");
-
-
-
-		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
-		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
-		opcClient.setValue("Fabrica", "pecainput.recipeTime", time);
-		opcClient.setValue("Fabrica", "pecainput.pathPointer", (short) 1);
-		opcClient.setValue("Fabrica", "pecainput.tipofinal", (short) tipoFinal);
-		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
-		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
-
-		if (path[49][0] > 0)
-			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
-
-
-
-		short[] path_x = new short[sizeOfPath];
-		short[] path_y = new short[sizeOfPath];
-		for (int i = 0; i < path[49][0]; i++) {
-			path_x[i] = path[i][0];
-			path_y[i] = path[i][1];
-		}
-		opcClient.setValue("Fabrica", "bufferMachineTools", machineTool);
-		opcClient.setValue("Fabrica", "rebootToolPointer", machineToolPointer);
-		opcClient.setValue("Fabrica", "pecainput.pathX", path_x);
-		opcClient.setValue("Fabrica", "pecainput.pathY", path_y);
-		opcClient.setValue("Fabrica", "pecainput.pathLength", path[49][0]);
-
-		testeOPC++;
-		
-		long startTime = System.currentTimeMillis();
-		do {
-			in = opcClient.getValueBool("Fabrica", "sentOutput");
-		}while(!in);
-		opcClient.setValue("Fabrica", "pecainput.pathLength", (short) 0);
-		opcClient.setValue("Fabrica", "tipoPecaInput", (short) 0);
-		opcClient.setValue("Fabrica", "syncWarOut", true);
 
 	}
 
@@ -284,12 +692,12 @@ public class ControlaPlc {
 		departure[1] = 1;
 
 		int min_index = 0;
-		
+
 		// Update TemposExtras
 		for (int x = 0; x < 7; x++) {
 			for (int y = 0; y < 16; y++) {
-				for(int k = 0; k < 3; k++) {
-					for(int j = 0; j < 3; j++) {
+				for (int k = 0; k < 3; k++) {
+					for (int j = 0; j < 3; j++) {
 						temposExtras[k][j][x][y] -= time_since_last_piece * 0.9;
 						// 0.75 funciona bem - 0.65
 						if (temposExtras[k][j][x][y] < 0)
@@ -318,11 +726,15 @@ public class ControlaPlc {
 				// Preenche Ferramentas Maquina
 				int m_x = departure[0] / 2;
 				int m_y = departure[1] - 3;
+				System.out.println("---1g----");
+				System.out.println("m_x= " + m_x + "m_y= " + m_y);
+				System.out.println("pointer " + machineToolPointer[m_x][m_y]);
+				System.out.println("tool " + tool);
 				machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
 					machineToolPointer[m_x][m_y] = 0;
-				
+
 				// Atualiza Tempos Extras c/ mudanca Ferramenta: 20s
 				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += (tempo + 20000);
 
@@ -331,23 +743,10 @@ public class ControlaPlc {
 				min_tempo = 999999999;
 				arrival[1] = ((int) (maquina.charAt(0)) - 62);
 				local_path = new int[3][50][2];
-				
+
 				for (int j = 0; j < 3; j++) {
 					arrival[0] = (j * 2) + 1;
 
-					// adicionar tempos extras do mapa original
-					/* for (int x = 0; x < 7; x++) {
-						for (int y = 0; y < 16; y++) {
-							temposExtras[arrival[1] - 3][j][x][y] -= time_since_last_piece * 1;
-							// 0.75 funciona bem - 0.65
-							if (temposExtras[arrival[1] - 3][j][x][y] < 0)
-								temposExtras[arrival[1] - 3][j][x][y] = 0;
-							if (temposExtras[arrival[1] - 3][j][x][y] > 0)
-								originalMap[x][y] += temposExtras[arrival[1] - 3][j][x][y];
-
-						}
-					} */
-					
 					for (int x = 0; x < 7; x++) {
 						for (int y = 0; y < 16; y++) {
 							if (temposExtras[arrival[1] - 3][j][x][y] > 0)
@@ -356,22 +755,20 @@ public class ControlaPlc {
 						}
 					}
 
-					
-					if( j == 0) {
-						for(int x=0; x<7; x++) {
-							for(int y=0; y<16; y++) { 
-								int aux = 0; 
-								for(int theta = 0; theta < 3; theta++) { 
-									for(int omega = 0; omega < 3; omega++) { 
-										aux = aux+ temposExtras[theta][omega][x][y]; 
-										} 
-									} 
+					if (j == 0) {
+						for (int x = 0; x < 7; x++) {
+							for (int y = 0; y < 16; y++) {
+								int aux = 0;
+								for (int theta = 0; theta < 3; theta++) {
+									for (int omega = 0; omega < 3; omega++) {
+										aux = aux + temposExtras[theta][omega][x][y];
+									}
+								}
 							}
-						} 
+						}
 
 					}
-					 
-					
+
 					// parte que funciona!!
 					local_path[j] = findPath(arrival[0], arrival[1], departure[0], departure[1]);
 					// if ((local_path[j][49][1] + 1500) < min_tempo) {
@@ -393,23 +790,10 @@ public class ControlaPlc {
 
 				int local_path_size = local_path[min_index][49][0];
 
-				// calculo dos tempos extras
-				/* for (int k = 0; k < local_path_size; k++) {
-					// if Posição passagem
-					if ((local_path[min_index][k][1] == arrival[1])
-							&& ((Math.abs(arrival[0] - local_path[min_index][k][0]) == 1))) {
-						// (min_tempo-2500) aproximação do tempo que a proxima peca vai demorar a chegar
-						// lá
-						temposExtras[arrival[1] - 3][min_index][local_path[min_index][k][0]][local_path[min_index][k][1]
-								* 2] += tempo;// - (local_path[min_index][49][1]-10000);
-					}
-
-				}*/
-
 				// (min_tempo-2500) aproximação do tempo que a proxima peca vai demorar a chegar
 				// lá
 				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += (tempo + 6500); // -
-																								// (local_path[min_index][49][1]-10000);
+				// (local_path[min_index][49][1]-10000);
 
 				for (int j = total_path_size; j < total_path_size + local_path_size; j++) {
 					total_path[j][0] = local_path[min_index][j - total_path_size][0];
@@ -428,6 +812,11 @@ public class ControlaPlc {
 							// machineTool
 							int m_x = total_path[j][0] / 2;
 							int m_y = total_path[j][1] - 3;
+							System.out.println("---2----");
+							System.out.println("m_x= " + m_x + "m_y= " + m_y);
+							System.out.println("pointer " + machineToolPointer[m_x][m_y]);
+							System.out.println("tool " + tool);
+
 							machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 							machineToolPointer[m_x][m_y]++;
 							if (machineToolPointer[m_x][m_y] > 49)
@@ -446,10 +835,10 @@ public class ControlaPlc {
 			}
 			maquina_anterior = maquina;
 		}
-		
+
 		arrival[0] = 0;
 		arrival[1] = 7;
-		
+
 		// Add costs to warehouse
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
@@ -458,8 +847,6 @@ public class ControlaPlc {
 		}
 
 		int[][][] local_path = new int[3][50][2];
-
-
 
 		local_path[0] = findPath(arrival[0], arrival[1], departure[0], departure[1]);
 
@@ -603,20 +990,21 @@ public class ControlaPlc {
 		return path;
 	}
 
-	
 	public void test() {
+
 		int[][] path = new int[50][2];
 		Fabrica fabrica = Fabrica.getInstance();
 		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
-		ordem1.setPecasPendentes(5);
-		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A*/
-		List<String> transformations = ordem1.getReceita(0);
+		ordem1.setPecasPendentes(2);
+		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
 
-		System.out.println(transformations.toString());
-		System.out.println(ordem1.getListaPecas(0));
-		System.out.println("begin");
+		ArrayList<String> maquinas = new ArrayList<>();
+		maquinas.add("B");
+		maquinas.add("C");
 		runOrder(ordem1);
-		System.out.println("end");
+
+		// calculaRota(maquinas, 2, new short[0]);
+
 		/* enviar numero de ordem */
 	}
 

@@ -21,7 +21,7 @@ public class Fabrica {
 	private Fabrica() {
 		this.db = DataBase.getInstance();
 		criaHeap();
-		sincronizaOrdens();
+		//sincronizaOrdens();
 
 	}
 

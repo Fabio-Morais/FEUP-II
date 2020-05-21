@@ -354,9 +354,7 @@ public class ControlaPlc {
 		 * 
 		 * 
 		 */
-		System.out.println();
 		System.out.println("machineTool["+x+"]["+y+"]["+machineToolPointer[x][y]+"] = "+tool);
-		System.out.println();
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -386,8 +384,6 @@ public class ControlaPlc {
 			rota.remove(rota.size() - 1);
 			rotaMaquinas(rota, origem, "S");
 		}
-		System.out.println(rota);
-		System.out.println("\n\n");
 		return pathReturn(rota);
 
 	}
@@ -482,6 +478,8 @@ public class ControlaPlc {
 
 		System.out.println("tool "+Arrays.toString(tool));
 		System.out.println("time "+Arrays.toString(time));
+		System.out.println("length: "+path[49][0]+ "mac->"+ Arrays.toString(macProcessa));
+		System.out.println();
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
@@ -726,11 +724,10 @@ public class ControlaPlc {
 				// Preenche Ferramentas Maquina
 				int m_x = departure[0] / 2;
 				int m_y = departure[1] - 3;
-				System.out.println("---1g----");
-				System.out.println("m_x= " + m_x + "m_y= " + m_y);
-				System.out.println("pointer " + machineToolPointer[m_x][m_y]);
-				System.out.println("tool " + tool);
+				System.out.println("-----1----");
 				machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
+				System.out.println("machineTool["+m_x+"]["+m_y+"]["+machineToolPointer[m_x][m_y]+"] = "+tool);
+
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
 					machineToolPointer[m_x][m_y] = 0;
@@ -813,9 +810,8 @@ public class ControlaPlc {
 							int m_x = total_path[j][0] / 2;
 							int m_y = total_path[j][1] - 3;
 							System.out.println("---2----");
-							System.out.println("m_x= " + m_x + "m_y= " + m_y);
-							System.out.println("pointer " + machineToolPointer[m_x][m_y]);
-							System.out.println("tool " + tool);
+							System.out.println("machineTool["+m_x+"]["+m_y+"]["+machineToolPointer[m_x][m_y]+"] = "+tool);
+
 
 							machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 							machineToolPointer[m_x][m_y]++;

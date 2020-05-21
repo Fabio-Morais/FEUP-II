@@ -224,7 +224,7 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(20);
+		ordem1.setPecasPendentes(50);
 		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);

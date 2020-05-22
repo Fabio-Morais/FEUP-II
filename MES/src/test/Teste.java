@@ -204,7 +204,7 @@ public class Teste {
 
 	}
 	public void testar3() {
-
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

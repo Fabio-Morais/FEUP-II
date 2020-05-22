@@ -15,6 +15,7 @@ public class OrdensThread extends Thread {
 	private boolean pendente;
 	/** true se estiver a executar, false se estiver parada */
 	private boolean aExecutar;
+	
 
 	public OrdensThread(Ordens ordem, ControlaPlc controlaPlc, boolean pendente) {
 		super();
@@ -70,6 +71,11 @@ public class OrdensThread extends Thread {
 		} else if (this.option == 0) {
 			return false;
 		}
+		/*Se tivermos no modo speed apenas vemos se a primeira maquina está ativa*/
+		if(this.ordem.isSpeedMode()) {
+			return aux[0];
+		}
+		
 		return (aux[0] || aux[1] || aux[2]);
 
 	}
@@ -94,7 +100,7 @@ public class OrdensThread extends Thread {
 						limite--;
 					}
 					try {
-						Thread.sleep(250);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -163,5 +169,6 @@ public class OrdensThread extends Thread {
 	public String toString() {
 		return "OrdensThread [ordem=" + ordem.getNumeroOrdem() + ", aExecutar=" + aExecutar + "]";
 	}
+
 
 }

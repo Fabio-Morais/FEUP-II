@@ -1,7 +1,6 @@
 package fabrica;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +71,11 @@ public class SelecionaOrdens extends Thread {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					System.out.println("--------------------");
+					/*System.out.println("--------------------");
 					System.out.println(Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
 					System.out.println(Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
 					System.out.println(Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));
-					System.out.println("--------------------");
+					System.out.println("--------------------");*/
 				}
 
 			}
@@ -220,9 +219,29 @@ public class SelecionaOrdens extends Thread {
 			instance = new SelecionaOrdens(fabrica);
 		return instance;
 	}
-
+	private boolean isSpeedMode(Ordens ordem) {
+		List<String> aux = ordem.getReceita(0);
+		if(aux.size()/3 < 3)
+			return false;
+		for(int i=0; i< aux.size(); i+=3) {
+			String pre=aux.get(0);
+			String preFerra= aux.get(1);
+			if(pre.equals(aux.get(i))) {
+				if(!preFerra.equals(aux.get(+1))) {
+					return false;
+				}
+			}else
+				return false;
+		}
+		
+		return true;
+	}
 	private void executaOrdem(Ordens ordem) {
 		OrdensThread x = new OrdensThread(ordem, controlaPlc, ordem.pendente());// inicio thread
+		
+		if(isSpeedMode(ordem)) {
+			ordem.setSpeedMode(true);
+		}
 		x.setName("Thread " + ordem.getNumeroOrdem());
 		x.start();
 		x.setaExecutar(true);
@@ -262,7 +281,7 @@ public class SelecionaOrdens extends Thread {
 				}
 				ordensEmExecucao.get(i).setaExecutar(false);
 				executaOrdem(ordemAExecutar);
-				System.out.println("*********troca ordem: " + ordemATrocar + " por ordem: " + ordem.getNumeroOrdem());
+				//System.out.println("*********troca ordem: " + ordemATrocar + " por ordem: " + ordem.getNumeroOrdem());
 
 				break;
 			}

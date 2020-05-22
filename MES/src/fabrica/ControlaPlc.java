@@ -37,6 +37,8 @@ public class ControlaPlc {
 			{ 0, 0, 500, 0, 0, 0, 1500, 0, 1500, 0, 1500, 0, 0, 0, 500, 0 },
 			{ 0, 0, 1000, 1, 1500, 1, 1000, 1, 1000, 1, 1000, 1, 1500, 1, 1000, 0 }, };
 
+	private boolean speedMode;
+
 	public ControlaPlc() {
 		this.last_time = System.currentTimeMillis();
 		for (int i = 0; i < 3; i++)
@@ -341,8 +343,11 @@ public class ControlaPlc {
 				x = 2;
 			}
 		}
-		/*System.out.println("pendentes = " + pecasPendentes + " | " + origem + "->" + returnString + "-->"
-				+ maquinaLivre[0] + " . " + maquinaLivre[1] + " . " + maquinaLivre[2]);*/
+		/*
+		 * System.out.println("pendentes = " + pecasPendentes + " | " + origem + "->" +
+		 * returnString + "-->" + maquinaLivre[0] + " . " + maquinaLivre[1] + " . " +
+		 * maquinaLivre[2]);
+		 */
 
 		// [1,2,0,0....] [b c]
 		/*
@@ -354,9 +359,13 @@ public class ControlaPlc {
 		 * 
 		 * 
 		 */
+<<<<<<< Updated upstream
 		System.out.println();
 		System.out.println("machineTool["+x+"]["+y+"]["+machineToolPointer[x][y]+"] = "+tool);
 		System.out.println();
+=======
+		System.out.println("machineTool[" + x + "][" + y + "][" + machineToolPointer[x][y] + "] = " + tool);
+>>>>>>> Stashed changes
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -372,15 +381,20 @@ public class ControlaPlc {
 		String origem = "E";
 		String destino = "";
 
-		for (int i = 0; i < maquinas.size(); i++) {
-			destino = maquinas.get(i).toUpperCase();
-			origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
-			/* se houver seguinte */
-			if (rota.size() > 0 && (i + 1) < maquinas.size()) {
-				rota.remove(rota.size() - 1);
-			}
+		if(this.speedMode) {
+			
+		}else {
+			for (int i = 0; i < maquinas.size(); i++) {
+				destino = maquinas.get(i).toUpperCase();
+				origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
+				/* se houver seguinte */
+				if (rota.size() > 0 && (i + 1) < maquinas.size()) {
+					rota.remove(rota.size() - 1);
+				}
 
+			}
 		}
+		
 
 		if (!rota.isEmpty()) {
 			rota.remove(rota.size() - 1);
@@ -399,6 +413,7 @@ public class ControlaPlc {
 	 */
 	public synchronized boolean runOrder(Ordens ordem) {
 		int smallest = 0;
+		this.speedMode = ordem.isSpeedMode();
 		if (ordem.getTransform() != null) {
 			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
 				long[] auxTempo = GereOrdensThread.getTempoMC();
@@ -422,13 +437,20 @@ public class ControlaPlc {
 		for (int i = 0; i < macProcessa.length; i++) {
 			macProcessa[i] = 0;
 		}
-		for (int i = 0; i < transformations.size(); i += 3) {
-			maquinas.add(transformations.get(i));
-			if (!transformations.get(i).equals(pre)) {
+		if (!ordem.isSpeedMode()) {
+			for (int i = 0; i < transformations.size(); i += 3) {
+				maquinas.add(transformations.get(i));
+				if (!transformations.get(i).equals(pre)) {
+					macProcessa[++auxIndice]++;
+					pre = transformations.get(i);
+				} else {
+					macProcessa[auxIndice]++;
+				}
+			}
+		} else {
+			for (int i = 0; i < transformations.size(); i += 3) {
+				maquinas.add(transformations.get(i));
 				macProcessa[++auxIndice]++;
-				pre = transformations.get(i);
-			} else {
-				macProcessa[auxIndice]++;
 			}
 		}
 
@@ -480,8 +502,16 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
 		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
 
+<<<<<<< Updated upstream
 		System.out.println("tool "+Arrays.toString(tool));
 		System.out.println("time "+Arrays.toString(time));
+=======
+		// System.out.println("tool "+Arrays.toString(tool));
+		// System.out.println("time "+Arrays.toString(time));
+		// System.out.println("length: "+path[49][0]+ "mac->"+
+		// Arrays.toString(macProcessa));
+		// System.out.println();
+>>>>>>> Stashed changes
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
@@ -731,6 +761,12 @@ public class ControlaPlc {
 				System.out.println("pointer " + machineToolPointer[m_x][m_y]);
 				System.out.println("tool " + tool);
 				machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
+<<<<<<< Updated upstream
+=======
+				System.out.println(
+						"machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y] + "] = " + tool);
+
+>>>>>>> Stashed changes
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
 					machineToolPointer[m_x][m_y] = 0;
@@ -813,9 +849,14 @@ public class ControlaPlc {
 							int m_x = total_path[j][0] / 2;
 							int m_y = total_path[j][1] - 3;
 							System.out.println("---2----");
+<<<<<<< Updated upstream
 							System.out.println("m_x= " + m_x + "m_y= " + m_y);
 							System.out.println("pointer " + machineToolPointer[m_x][m_y]);
 							System.out.println("tool " + tool);
+=======
+							System.out.println("machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y]
+									+ "] = " + tool);
+>>>>>>> Stashed changes
 
 							machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 							machineToolPointer[m_x][m_y]++;

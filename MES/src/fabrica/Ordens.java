@@ -27,6 +27,9 @@ public class Ordens {
 	/**false se for uma ordem pendente, true se ja tiver sido executada anteriormente*/
 	private boolean pendente=true;
 	
+	/**True-> entra o CR7 das ordens*/
+	private boolean speedMode;
+	
 	public class Transform {
 		private String from;
 		private String to;
@@ -350,6 +353,14 @@ public class Ordens {
 				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
 				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + semExecucao + ", fabrica="
 				+ fabrica + ", db=" + db + ", transform=" + transform + ", unload=" + unload + "]";
+	}
+
+	public boolean isSpeedMode() {
+		return speedMode;
+	}
+
+	public void setSpeedMode(boolean speedMode) {
+		this.speedMode = speedMode;
 	}
 
 }

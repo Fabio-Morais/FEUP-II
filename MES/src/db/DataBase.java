@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.concurrent.Semaphore;
 
-import org.postgresql.util.PSQLException;
-
 import fabrica.Ordens;
 
 public class DataBase {
@@ -28,9 +26,12 @@ public class DataBase {
 	private Semaphore sem;
 
 	private DataBase() {
-		this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
-		this.user = "postgres";
-		this.password = "projetoII";
+		//this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
+		//this.user = "postgres";
+		//this.password = "projetoII";
+		this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
+		this.user = "up201504257";
+		this.password = "hFj8JWsg9";
 		this.c = null;
 		DriverManager.setLoginTimeout(3);
 		this.zonaDescarga = new ZonaDescarga();
@@ -135,11 +136,9 @@ public class DataBase {
 			try{
 				Statement stmt = getC().createStatement();
 				stmt.executeUpdate("SET search_path to fabrica;" + sql);
-			}catch(PSQLException e) {
+			}catch(Exception e) {
 				sem.release();
-				connect();
-				Statement stmt = getC().createStatement();
-				stmt.executeUpdate("SET search_path to fabrica;" + sql);
+
 			}
 			
 		} catch (Exception e) {

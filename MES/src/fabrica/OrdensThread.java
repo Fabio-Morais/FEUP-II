@@ -76,8 +76,13 @@ public class OrdensThread extends Thread {
 
 	@Override
 	public void run() {
-		if (this.pendente)
-			this.ordem.executaOrdem();
+		if (this.pendente) {
+			try {
+				this.ordem.executaOrdem();
+			}catch(Exception e) {
+			}
+		}
+			
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
 			int limite = 1;

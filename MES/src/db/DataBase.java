@@ -31,12 +31,9 @@ public class DataBase {
 		this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
 		this.user = "postgres";
 		this.password = "projetoII";
-<<<<<<< Updated upstream
-=======
 		//this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
 		//this.user = "up201504257";
 		//this.password = "hFj8JWsg9";
->>>>>>> Stashed changes
 		this.c = null;
 		DriverManager.setLoginTimeout(3);
 		this.zonaDescarga = new ZonaDescarga();
@@ -143,13 +140,6 @@ public class DataBase {
 				stmt.executeUpdate("SET search_path to fabrica;" + sql);
 			}catch(PSQLException e) {
 				sem.release();
-<<<<<<< Updated upstream
-				connect();
-				Statement stmt = getC().createStatement();
-				stmt.executeUpdate("SET search_path to fabrica;" + sql);
-=======
-				e.printStackTrace();
->>>>>>> Stashed changes
 			}
 			
 		} catch (Exception e) {

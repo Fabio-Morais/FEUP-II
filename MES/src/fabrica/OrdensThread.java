@@ -58,7 +58,9 @@ public class OrdensThread extends Thread {
 			smallest = auxTempo[2] / 1000;
 		}
 		String receita = ordem.getReceita((int) smallest).get(0);// nao serve para A->B, pois so vai buscar o primeiro
-
+		if(this.ordem.isSpeedMode()) {
+			receita = ordem.getReceita((int) (auxTempo[0]/1000)).get(0);
+		}
 		if (receita.equals("A")) {
 			aux = GereOrdensThread.getmALivre();
 		} else if (receita.equals("B")) {

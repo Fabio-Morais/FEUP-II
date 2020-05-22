@@ -53,7 +53,7 @@ public abstract class Receitas {
 		addLane("B 3", 7, 9, 20);
 		
 		if((origem.equals("P1") || origem.equals("P3")) && destino.equals("P9"))
-			addLane("C 2", 4, 8, 10+x);//vai ter de esperar o tempo que ela termine, mais o resto
+			addLane("C 2", 4, 8, 20+x);//vai ter de esperar o tempo que ela termine, mais o resto
 		else
 			addLane("C 2", 4, 8, 10);//vai ter de esperar o tempo que ela termine, mais o resto
 

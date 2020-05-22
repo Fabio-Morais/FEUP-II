@@ -359,13 +359,11 @@ public class ControlaPlc {
 		 * 
 		 * 
 		 */
-<<<<<<< Updated upstream
-		System.out.println();
+		/*System.out.println();
 		System.out.println("machineTool["+x+"]["+y+"]["+machineToolPointer[x][y]+"] = "+tool);
 		System.out.println();
-=======
 		System.out.println("machineTool[" + x + "][" + y + "][" + machineToolPointer[x][y] + "] = " + tool);
->>>>>>> Stashed changes
+*/
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -502,16 +500,12 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
 		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
 
-<<<<<<< Updated upstream
-		System.out.println("tool "+Arrays.toString(tool));
-		System.out.println("time "+Arrays.toString(time));
-=======
+
 		// System.out.println("tool "+Arrays.toString(tool));
 		// System.out.println("time "+Arrays.toString(time));
 		// System.out.println("length: "+path[49][0]+ "mac->"+
 		// Arrays.toString(macProcessa));
 		// System.out.println();
->>>>>>> Stashed changes
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
@@ -761,12 +755,9 @@ public class ControlaPlc {
 				System.out.println("pointer " + machineToolPointer[m_x][m_y]);
 				System.out.println("tool " + tool);
 				machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
-<<<<<<< Updated upstream
-=======
 				System.out.println(
 						"machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y] + "] = " + tool);
 
->>>>>>> Stashed changes
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
 					machineToolPointer[m_x][m_y] = 0;
@@ -849,14 +840,11 @@ public class ControlaPlc {
 							int m_x = total_path[j][0] / 2;
 							int m_y = total_path[j][1] - 3;
 							System.out.println("---2----");
-<<<<<<< Updated upstream
 							System.out.println("m_x= " + m_x + "m_y= " + m_y);
 							System.out.println("pointer " + machineToolPointer[m_x][m_y]);
 							System.out.println("tool " + tool);
-=======
 							System.out.println("machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y]
 									+ "] = " + tool);
->>>>>>> Stashed changes
 
 							machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 							machineToolPointer[m_x][m_y]++;

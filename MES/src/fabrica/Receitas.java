@@ -24,7 +24,7 @@ public abstract class Receitas {
 	 * @param tempoRestanteMaquina - tempo que falta para acabar a maquina C ficar livre
 	 * @param option - 0 lista  (tipo maquina | tempo processametno | tipo ferramenta) <br> 1 lista (tipo peça)
 	 * */
-	public synchronized static  List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquina, int option) {
+	public synchronized static  List<String> rotaMaquinas(String origem, String destino, int tempoRestanteMaquinaC, int tempoRestanteMaquinaA, int option) {
 		List<String> rota = new ArrayList<String>();
 		List<String> pecas = new ArrayList<String>();
 
@@ -36,7 +36,6 @@ public abstract class Receitas {
 			Vertex location = new Vertex("P" + (i), "P" + (i));
 			nodes.add(location);
 		}
-		int x=tempoRestanteMaquina;
 
 
 		destino=destino.toUpperCase();
@@ -45,15 +44,18 @@ public abstract class Receitas {
 		addLane("A 1", 1, 2, 15);
 		addLane("A 1", 2, 3, 15);
 		addLane("A 2", 2, 6, 15);
-		addLane("A 3", 6, 9, 15);
-
+		if((origem.equals("P1") || origem.equals("P3")) && destino.equals("P9")) {
+			addLane("A 3", 6, 9, 25+tempoRestanteMaquinaA);	
+		}else {
+			addLane("A 3", 6, 9, 15);
+		}
 		addLane("B 1", 1, 3, 20);
 		addLane("B 1", 3, 4, 15);
 		addLane("B 2", 3, 7, 20);
 		addLane("B 3", 7, 9, 20);
 		
 		if((origem.equals("P1") || origem.equals("P3")) && destino.equals("P9"))
-			addLane("C 2", 4, 8, 20+x);//vai ter de esperar o tempo que ela termine, mais o resto
+			addLane("C 2", 4, 8, 25+tempoRestanteMaquinaC);//vai ter de esperar o tempo que ela termine, mais o resto
 		else
 			addLane("C 2", 4, 8, 10);//vai ter de esperar o tempo que ela termine, mais o resto
 
@@ -78,7 +80,10 @@ public abstract class Receitas {
 							if(edge.getSource().getName().equals("P4") && edge.getDestination().getName().equals("P8")) {
 								rota.add(""+10);
 
-							}else{
+							}else if(edge.getSource().getName().equals("P6") && edge.getDestination().getName().equals("P9")){
+								rota.add(""+15);
+
+							}else {
 								rota.add(""+edge.getWeight());
 
 							}

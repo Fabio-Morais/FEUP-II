@@ -99,7 +99,7 @@ public class SelecionaOrdens extends Thread {
 			smallest = auxTempo[2] / 1000;
 		}
 		for (int i = 0; i < ordensEmExecucao.size(); i++) {
-			String x = ordensEmExecucao.get(i).getOrdem().getReceita((int) smallest).get(0);
+			String x = ordensEmExecucao.get(i).getOrdem().getReceita((int) smallest,0).get(0);
 			if (!x.equals("D")) {
 				if (x.equals("A") && !(GereOrdensThread.getmALivre()[0] && GereOrdensThread.getmALivre()[1]
 						&& GereOrdensThread.getmALivre()[2])) {
@@ -133,8 +133,8 @@ public class SelecionaOrdens extends Thread {
 	 */
 	private boolean chooseOrder(Ordens ordem) {
 		boolean ok = false;
-		List<String> lista = ordem.getReceita(0);
-		List<String> lista2 = ordem.getReceita(1000);
+		List<String> lista = ordem.getReceita(0,0);
+		List<String> lista2 = ordem.getReceita(1000,0);
 		/* Se lista tiver um D entao é uma descarga */
 		if (lista.get(0).equals("D")) {
 			return true;
@@ -220,7 +220,7 @@ public class SelecionaOrdens extends Thread {
 		return instance;
 	}
 	private boolean isSpeedMode(Ordens ordem) {
-		List<String> aux = ordem.getReceita(0);
+		List<String> aux = ordem.getReceita(0,0);
 		if(aux.size()/3 < 3)
 			return false;
 		for(int i=0; i< aux.size(); i+=3) {
@@ -251,7 +251,7 @@ public class SelecionaOrdens extends Thread {
 	}
 
 	private String trocaOrdem(Ordens ordem) {
-		List<String> lista = ordem.getReceita(0);
+		List<String> lista = ordem.getReceita(0,0);
 		/* Se lista tiver um D entao é uma descarga */
 		if (lista.get(0).equals("D")) {
 			return "";

@@ -245,9 +245,9 @@ public class Ordens {
 	/**
 	 * Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
 	 */
-	public synchronized List<String> getListaPecas(int tempoRestanteMaquina) {
+	public synchronized List<String> getListaPecas(int tempoRestanteMaquinaC, int tempoRestanteMaquinaA) {
 		if (transform != null)
-			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquinaC, tempoRestanteMaquinaA, 1);
 		else
 			return new ArrayList<>();
 	}
@@ -256,11 +256,11 @@ public class Ordens {
 	 * Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo
 	 * ferramenta)
 	 */
-	public synchronized List<String> getReceita(int tempoRestanteMaquina) {
+	public synchronized List<String> getReceita(int tempoRestanteMaquinaC, int tempoRestanteMaquinaA) {
 		List<String> x = new ArrayList<>();
 		x.add("D");
 		if (transform != null)
-			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquinaC, tempoRestanteMaquinaA, 0);
 		else
 			return x;
 	}

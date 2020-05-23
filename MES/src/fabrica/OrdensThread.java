@@ -15,7 +15,6 @@ public class OrdensThread extends Thread {
 	private boolean pendente;
 	/** true se estiver a executar, false se estiver parada */
 	private boolean aExecutar;
-	
 
 	public OrdensThread(Ordens ordem, ControlaPlc controlaPlc, boolean pendente) {
 		super();
@@ -44,6 +43,34 @@ public class OrdensThread extends Thread {
 		return returnValue;
 	}
 
+	private boolean speed() {
+		System.out.println("entrou");
+		for (int i = 0; i < 23; i += 11) {
+			if(i == 22 && this.ordem.getPecasPendentes() < 6  ) {
+				break;
+			}
+			int c = (i == 22) ? 15 : 0;
+			int x= (i==22) ? 15 : i;
+			System.out.println(x+";"+c);
+			String receita = ordem.getReceita(x, c).get(0);
+			System.out.println(receita);
+			boolean[] aux = { false, false, false };
+			if (receita.equals("A")) {
+				aux = GereOrdensThread.getmALivre();
+			} else if (receita.equals("B")) {
+				aux = GereOrdensThread.getmBLivre();
+			} else if (receita.equals("C")) {
+				aux = GereOrdensThread.getmCLivre();
+			}
+			if (aux[0]) {
+				System.out.println(receita + "->" + aux[0]);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private boolean executaOrdem(int limite) {
 
 		boolean[] aux = { false, false, false };
@@ -57,27 +84,30 @@ public class OrdensThread extends Thread {
 		} else {
 			smallest = auxTempo[2] / 1000;
 		}
-		String receita = ordem.getReceita((int) smallest).get(0);// nao serve para A->B, pois so vai buscar o primeiro
-		if(this.ordem.isSpeedMode()) {
-			receita = ordem.getReceita((int) (auxTempo[0]/1000)).get(0);
+		String receita = ordem.getReceita((int) smallest,0).get(0);// nao serve para A->B, pois so vai buscar o primeiro
+		if (this.ordem.isSpeedMode()) {
+			aux[0] = speed();
+
+		} else {
+			if (receita.equals("A")) {
+				aux = GereOrdensThread.getmALivre();
+			} else if (receita.equals("B")) {
+				aux = GereOrdensThread.getmBLivre();
+			} else if (receita.equals("C")) {
+				aux = GereOrdensThread.getmCLivre();
+			}
 		}
-		if (receita.equals("A")) {
-			aux = GereOrdensThread.getmALivre();
-		} else if (receita.equals("B")) {
-			aux = GereOrdensThread.getmBLivre();
-		} else if (receita.equals("C")) {
-			aux = GereOrdensThread.getmCLivre();
-		}
+
 		if (this.option == 0 && GereOrdensThread.isMaquinasOcupadas() && limite > 0) {
 			return true;
 		} else if (this.option == 0) {
 			return false;
 		}
-		/*Se tivermos no modo speed apenas vemos se a primeira maquina está ativa*/
-		if(this.ordem.isSpeedMode()) {
+		/* Se tivermos no modo speed apenas vemos se a primeira maquina está ativa */
+		if (this.ordem.isSpeedMode()) {
 			return aux[0];
 		}
-		
+
 		return (aux[0] || aux[1] || aux[2]);
 
 	}
@@ -97,7 +127,7 @@ public class OrdensThread extends Thread {
 					e.printStackTrace();
 				}
 				while (executaOrdem(limite) && this.ordem.getPecasPendentes() > 0) {
-					if(selectRunOrder()) {
+					if (selectRunOrder()) {
 						this.ordem.pecaParaProducao();
 						limite--;
 					}
@@ -106,7 +136,7 @@ public class OrdensThread extends Thread {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					
+
 				}
 
 				GereOrdensThread.sem.release();
@@ -130,23 +160,24 @@ public class OrdensThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("*******SAIU DA ORDEM (ordensThread)******** numero de ordem:" + this.ordem.getNumeroOrdem());
+		System.out
+				.println("*******SAIU DA ORDEM (ordensThread)******** numero de ordem:" + this.ordem.getNumeroOrdem());
 		this.ordem.terminaOrdem();
 		GereOrdensThread.decrementNumberOfThreads();// para permitir entrar mais
 		return;
 	}
 
 	private void resetMaquinaSelect() {
-		for (int i = 0; i < ordem.getReceita(0).size(); i += 3) {
-			if (ordem.getReceita(0).get(i).equals("A")) {
+		for (int i = 0; i < ordem.getReceita(0,0).size(); i += 3) {
+			if (ordem.getReceita(0,0).get(i).equals("A")) {
 				for (int j = 0; j < 3; j++) {
 					GereOrdensThread.setmALivreSeleciona("", j);
 				}
-			} else if (ordem.getReceita(0).get(i).equals("B")) {
+			} else if (ordem.getReceita(0,0).get(i).equals("B")) {
 				for (int j = 0; j < 3; j++) {
 					GereOrdensThread.setmBLivreSeleciona("", j);
 				}
-			} else if (ordem.getReceita(0).get(i).equals("C")) {
+			} else if (ordem.getReceita(0,0).get(i).equals("C")) {
 				for (int j = 0; j < 3; j++) {
 					GereOrdensThread.setmCLivreSeleciona("", j);
 				}
@@ -171,6 +202,5 @@ public class OrdensThread extends Thread {
 	public String toString() {
 		return "OrdensThread [ordem=" + ordem.getNumeroOrdem() + ", aExecutar=" + aExecutar + "]";
 	}
-
 
 }

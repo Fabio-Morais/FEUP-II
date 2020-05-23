@@ -273,6 +273,24 @@ public class ControlaPlc {
 				x = 2;
 				returnString = "C3";
 				break;
+			case "B1":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 0;
+				returnString = "B1";
+				break;
+			case "B2":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 1;
+				returnString = "B2";
+				break;
+			case "B3":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 2;
+				returnString = "B3";
+				break;
 			case "A1":
 				rotaMaquinas(rota, origem, destino);
 				y = 0;
@@ -386,11 +404,12 @@ public class ControlaPlc {
 			}
 		}
 
-		System.out.println();
-		System.out.println("machineTool[" + x + "][" + y + "][" + machineToolPointer[x][y] + "] = " + tool);
-		System.out.println();
-		System.out.println("machineTool[" + x + "][" + y + "][" + machineToolPointer[x][y] + "] = " + tool);
-
+		/*
+		 * System.out.println(); System.out.println("machineTool[" + x + "][" + y + "]["
+		 * + machineToolPointer[x][y] + "] = " + tool); System.out.println();
+		 * System.out.println("machineTool[" + x + "][" + y + "][" +
+		 * machineToolPointer[x][y] + "] = " + tool);
+		 */
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -409,9 +428,9 @@ public class ControlaPlc {
 		if (this.speedMode) {
 			for (int i = 0; i < maquinas.size(); i++) {
 				destino = maquinas.get(i).toUpperCase() + (i + 1);
-				System.out.println(destino);
+				// System.out.println(destino);
 				origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
-				System.out.println(origem);
+				// System.out.println(origem);
 				/* se houver seguinte */
 				if (rota.size() > 0 && (i + 1) < maquinas.size()) {
 					rota.remove(rota.size() - 1);
@@ -434,11 +453,36 @@ public class ControlaPlc {
 			rota.remove(rota.size() - 1);
 			rotaMaquinas(rota, origem, "S");
 		}
-		System.out.println(rota);
-		System.out.println("\n\n");
+		// System.out.println("\n\n");
 		return pathReturn(rota);
 
 	}
+
+	private List<String> speed(Ordens ordem) {
+		for (int i = 0; i < 23; i += 11) {
+			int c = (i == 22) ? 15 : 0;
+			int x = (i == 22) ? 15 : i;
+			String receita = ordem.getReceita(x, c).get(0);
+			System.out.println("**********"+receita);
+			boolean[] aux = {false, false, false};
+			if (receita.equals("A")) {
+				aux = GereOrdensThread.getmALivre();
+			} else if (receita.equals("B")) {
+				aux = GereOrdensThread.getmBLivre();
+			} else if (receita.equals("C")) {
+				aux = GereOrdensThread.getmCLivre();
+			}
+			if (aux[0]) {
+				tempoC = x;
+				tempoA = c;
+				return ordem.getReceita(i, c);
+			}
+		}
+		return ordem.getReceita(0, 0);
+	}
+
+	private int tempoC;
+	private int tempoA;
 
 	/**
 	 * Corre apenas 1 vez
@@ -458,14 +502,17 @@ public class ControlaPlc {
 				} else {
 					smallest = (int) auxTempo[2] / 1000;
 				}
-				if(this.speedMode) {
+				if (this.speedMode) {
 					smallest = (int) auxTempo[0] / 1000;
 
 				}
 			}
 		}
-		
-		List<String> transformations = ordem.getReceita(smallest);// lista de transformaçoes
+
+		List<String> transformations = ordem.getReceita(smallest, 0);// lista de transformaçoes
+		if (this.speedMode) {
+			transformations = speed(ordem);
+		}
 		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));// peça inicial
 		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));// peça final
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem()); // numero de ordem
@@ -507,13 +554,13 @@ public class ControlaPlc {
 			return false;
 		}
 		i = 0;
-		short[] x = new short[31];
-		for (String aux : ordem.getListaPecas(0)) {
-			x[i++] = Short.parseShort("" + aux.charAt(1));
+		short[] pecas = new short[31];
+		for (String aux : ordem.getListaPecas(tempoC, tempoA)) {
+			pecas[i++] = Short.parseShort("" + aux.charAt(1));
 		}
+		System.out.println(Arrays.toString(pecas));
 		// recipeTool => lsita de ferramentas
-
-		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
+		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, pecas);
 		return true;
 
 	}
@@ -540,11 +587,12 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
 		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
 
-		// System.out.println("tool "+Arrays.toString(tool));
-		// System.out.println("time "+Arrays.toString(time));
-		// System.out.println("length: "+path[49][0]+ "mac->"+
-		// Arrays.toString(macProcessa));
-		// System.out.println();
+		/*
+		 * System.out.println("tool "+Arrays.toString(tool));
+		 * System.out.println("time "+Arrays.toString(time));
+		 * System.out.println("length: "+path[49][0]+ "mac->"+
+		 * Arrays.toString(macProcessa)); System.out.println();
+		 */
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
@@ -655,7 +703,7 @@ public class ControlaPlc {
 			}
 		}
 
-		List<String> transformations = ordem.getReceita(smallest);
+		List<String> transformations = ordem.getReceita(smallest, 0);
 		// int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));
 		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));
@@ -679,7 +727,7 @@ public class ControlaPlc {
 		}
 		short[] x = new short[31];
 		int i = 0;
-		for (String aux : ordem.getListaPecas(0)) {
+		for (String aux : ordem.getListaPecas(0, 0)) {
 			x[i++] = Short.parseShort("" + aux.charAt(1));
 		}
 		short[] tool = new short[31];

@@ -21,7 +21,7 @@ public class Fabrica {
 	private Fabrica() {
 		this.db = DataBase.getInstance();
 		criaHeap();
-		// sincronizaOrdens();
+		//sincronizaOrdens();
 
 	}
 
@@ -43,7 +43,6 @@ public class Fabrica {
 		try {
 			GeneralSemaphore.getSem().acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (!heapOrdemPendente.contains(ordens))
@@ -87,6 +86,7 @@ public class Fabrica {
 				ordem.setPecasPendentes(Integer.valueOf(desc.getString("pecaspendentes")));
 				ordem.setPecasEmProducao(Integer.valueOf(desc.getString("pecasproducao")));
 				ordem.setPecasProduzidas(Integer.valueOf(desc.getString("pecasproduzidas")));
+				
 				ordem.setPrioridade(Integer.valueOf(desc.getString("folgaexecucao")));
 				ordem.setUnload(ordem.new Unload(desc.getString("pecaDescarga"), desc.getString("destino")));
 				if (desc.getString("estadoOrdem").equals("0")) {
@@ -182,7 +182,16 @@ public class Fabrica {
 	}
 	
 	public synchronized void reorganizaHeap(Ordens ordem) {
-		 PriorityQueue<Ordens> aux = new PriorityQueue<Ordens>();
+		Comparator<Ordens> result = new Comparator<Ordens>() {
+
+			@Override
+			public int compare(Ordens arg0, Ordens arg1) {
+				Integer x = arg0.getPrioridade();
+				Integer y = arg1.getPrioridade();
+				return x.compareTo(y);
+			}
+		};
+		 PriorityQueue<Ordens> aux = new PriorityQueue<>(result);
 		 PriorityQueue<Ordens> original = heapOrdemPendente;
 		 int size = original.size();
 		 for(int i =0; i< size; i++) {

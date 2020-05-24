@@ -28,7 +28,10 @@ public class DataBase {
 	private Semaphore sem;
 
 	private DataBase() {
-		this.url = "jdbc:postgresql://db.fe.up.pt:5432/up201504257?currentSchema=fabrica";
+		//this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
+		//this.user = "postgres";
+		//this.password = "projetoII";
+		this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
 		this.user = "up201504257";
 		this.password = "hFj8JWsg9";
 		this.c = null;
@@ -86,7 +89,7 @@ public class DataBase {
 			Class.forName("org.postgresql.Driver");
 			this.c = DriverManager.getConnection(url, user, password);
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			//System.out.println(e.toString());
 
 			return false;
 		}
@@ -137,14 +140,10 @@ public class DataBase {
 				stmt.executeUpdate("SET search_path to fabrica;" + sql);
 			}catch(PSQLException e) {
 				sem.release();
-				connect();
-				Statement stmt = getC().createStatement();
-				stmt.executeUpdate("SET search_path to fabrica;" + sql);
 			}
 			
 		} catch (Exception e) {
-			//e.printStackTrace();
-			//System.out.println("UPS");
+			e.printStackTrace();
 			disconnect();
 			
 			return false;
@@ -239,8 +238,8 @@ public class DataBase {
 		return ordem.executaOrdem(this, numeroOrdem);
 	}
 
-	public boolean terminaOrdemProducao(String numeroOrdem) {
-		return ordem.terminaOrdem(this, numeroOrdem);
+	public boolean terminaOrdemProducao(String numeroOrdem, int prioridade) {
+		return ordem.terminaOrdem(this, numeroOrdem,prioridade);
 	}
 
 	public boolean insereDescarga(Descarga descarga) {
@@ -266,12 +265,12 @@ public class DataBase {
 		return ordem.updatePecasPendentes(this, numeroOrdem, pecas);
 	}
 
-	public boolean updatePecasProduzidas(String numeroOrdem, int pecas) {
-		return ordem.updatePecasProduzidas(this, numeroOrdem, pecas);
+	public boolean updatePecasProduzidas(String numeroOrdem, int pecas, int prioridade) {
+		return ordem.updatePecasProduzidas(this, numeroOrdem, pecas, prioridade);
 	}
 
-	public boolean updatePecasEmProducao(String numeroOrdem, int pecas) {
-		return ordem.updatePecasEmProducao(this, numeroOrdem, pecas);
+	public boolean updatePecasEmProducao(String numeroOrdem, int pecas, int prioridade) {
+		return ordem.updatePecasEmProducao(this, numeroOrdem, pecas, prioridade);
 	}
 
 	public boolean updateFolgaExecucao(Ordens ordem) {

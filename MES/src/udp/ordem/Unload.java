@@ -12,6 +12,7 @@ import fabrica.Ordens;
 public class Unload {
 	private NamedNodeMap node;
 	private String numeroOrdem;
+	private int numeroOrdemInt;
 	private String type;
 	private String destination;
 	private String quantity;
@@ -22,9 +23,11 @@ public class Unload {
 		this.db = DataBase.getInstance();
 		
 		this.numeroOrdem = eElement.getAttribute("Number");
+		this.numeroOrdemInt = Integer.valueOf(numeroOrdem);
 		this.node = eElement.getElementsByTagName("Unload").item(0).getAttributes();
 		this.type=node.getNamedItem("Type").getNodeValue();
-		this.destination=node.getNamedItem("Destination").getNodeValue();
+		this.destination=""+node.getNamedItem("Destination").getNodeValue().charAt(1);
+		this.destination = "PM"+this.destination;
 		this.quantity=node.getNamedItem("Quantity").getNodeValue();
 		//debug();
 		insereDb();
@@ -32,10 +35,11 @@ public class Unload {
 	
 	public void insereDb() {
 		/*so adiciona na heap caso adicione na DB com exito*/
-		if(db.insereDescarga(new Descarga(numeroOrdem, type, destination, Integer.valueOf(quantity)))) {
-			Ordens ordem = new Ordens(numeroOrdem, 0, Ordem.localDate(), -1, fabrica);
+		if(db.insereDescarga(new Descarga(""+numeroOrdemInt, type, destination, Integer.valueOf(quantity)))) {
+			Ordens ordem = new Ordens(""+numeroOrdemInt, 0, Ordem.localDate(), -1, fabrica);
 			ordem.setPecasPendentes(Integer.valueOf(quantity));
 			ordem.setUnload(ordem.new Unload(this.type,  this.destination));
+			System.out.println(ordem);
 			fabrica.addToHeap(ordem);
 		}
 

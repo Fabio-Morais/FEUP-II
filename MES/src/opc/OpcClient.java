@@ -45,8 +45,9 @@ public class OpcClient {
 	private int idNode = 4;
 	private String sfc = "|var|CODESYS Control Win V3 x64.Application.";
 	private String publicHostName;
-
+	private UaSubscription sub = null;
 	private final AtomicLong clientHandles = new AtomicLong(1L);
+	private EndpointDescription[] endpoints;
 
 	private OpcClient() {
 		super();
@@ -54,6 +55,7 @@ public class OpcClient {
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
 			connect();
+
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -73,8 +75,10 @@ public class OpcClient {
 	 * @return true se fez conexão corretamente, false caso contrario
 	 */
 	public synchronized boolean connect() {
-
-		EndpointDescription[] endpoints;
+		System.out.println(endpoints != null);
+		if(endpoints != null)
+			return true;
+		
 		try {
 			endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + publicHostName + ":4840").get();
 			OpcUaClientConfig config = OpcUaClientConfig.builder()
@@ -100,7 +104,10 @@ public class OpcClient {
 	/** Cria subscrição para as variaveis escritas num ficheiro .txt */
 	private void createSubscription() throws Exception {
 
-		UaSubscription sub = client.getSubscriptionManager().createSubscription(10.0).get();
+		if (sub != null) {
+			return;
+		}
+		sub = client.getSubscriptionManager().createSubscription(10.0).get();
 
 		BiConsumer<UaMonitoredItem, Integer> onItemCreated = (item, id) -> item
 				.setValueConsumer(this::onSubscriptionValue);
@@ -119,10 +126,8 @@ public class OpcClient {
 		if (node.substring(7, node.length()).equals("Livre")) {
 			organizaFree(node, (boolean) value.getValue().getValue());
 		} else if (node.substring(12, node.length()).equals("PodeLer")) {
-			System.out.println("leu no tapete de saida valor: "+ (boolean) value.getValue().getValue());
 			if ((boolean) value.getValue().getValue()) {
 				short numeroOrdem = getValue("Fabrica", "AT2.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
@@ -134,128 +139,114 @@ public class OpcClient {
 
 		} else if (node.substring(13, node.length()).equals("tempoReal")) {
 			organizaTempo(node, (long) value.getValue().getValue());
-		}else if(node.equals("Fabrica.Pusher1.podeLer")) {
-			if((boolean)value.getValue().getValue()) {
-				String pecaDescarga = ""+this.getValue("Fabrica","Pusher1.pecaNoTapete.tipoFinal")[0];
+		} else if (node.equals("Fabrica.Pusher1.podeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String pecaDescarga = "" + this.getValue("Fabrica", "Pusher1.pecaNoTapete.tipoFinal")[0];
 				String destino = "PM1";
-				fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
+				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
 				short numeroOrdem = getValue("Fabrica", "Pusher1.pecaNoTapete.numeroOrdem")[0];
-				System.out.println("numero : " + numeroOrdem);
 				try {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
 					System.out.println("erro no opc on subscription");
 				}
-				this.setValue("SFS","pusher_1Lido", true);
+				this.setValue("SFS", "pusher_1Lido", true);
 			}
-		}
-		else if(node.equals("Fabrica.Pusher2.podeLer")) {
-				if((boolean)value.getValue().getValue()) {
-					String pecaDescarga = ""+this.getValue("Fabrica","Pusher2.pecaNoTapete.tipoFinal")[0];
-					String destino = "PM2";
-					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
-					short numeroOrdem = getValue("Fabrica", "Pusher2.pecaNoTapete.numeroOrdem")[0];
-					System.out.println("numero : " + numeroOrdem);
-					try {
-						fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+		} else if (node.equals("Fabrica.Pusher2.podeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String pecaDescarga = "" + this.getValue("Fabrica", "Pusher2.pecaNoTapete.tipoFinal")[0];
+				String destino = "PM2";
+				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
+				short numeroOrdem = getValue("Fabrica", "Pusher2.pecaNoTapete.numeroOrdem")[0];
+				try {
+					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
-					} catch (Exception e) {
-						System.out.println("erro no opc on subscription");
-					}
-					this.setValue("SFS","pusher_2Lido", true);
+				} catch (Exception e) {
+					System.out.println("erro no opc on subscription");
 				}
+				this.setValue("SFS", "pusher_2Lido", true);
 			}
-		
-		else if(node.equals("Fabrica.Pusher3.podeLer")) {
-				if((boolean) value.getValue().getValue()) {
-					String pecaDescarga = ""+this.getValue("Fabrica","Pusher3.pecaNoTapete.tipoFinal")[0];
-					String destino = "PM3";
-					fabrica.mandarestatDescarga(new ZonaDescarga(destino,pecaDescarga));
-					short numeroOrdem = getValue("Fabrica", "Pusher3.pecaNoTapete.numeroOrdem")[0];
-					System.out.println("numero : " + numeroOrdem);
-					try {
-						fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+		}
 
-					} catch (Exception e) {
-						System.out.println("erro no opc on subscription");
-					}
-					this.setValue("SFS","pusher_3Lido", true);
+		else if (node.equals("Fabrica.Pusher3.podeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String pecaDescarga = "" + this.getValue("Fabrica", "Pusher3.pecaNoTapete.tipoFinal")[0];
+				String destino = "PM3";
+				fabrica.mandarestatDescarga(new ZonaDescarga(destino, pecaDescarga));
+				short numeroOrdem = getValue("Fabrica", "Pusher3.pecaNoTapete.numeroOrdem")[0];
+				try {
+					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
+
+				} catch (Exception e) {
+					System.out.println("erro no opc on subscription");
 				}
+				this.setValue("SFS", "pusher_3Lido", true);
 			}
-		else if(node.equals("Fabrica.C1T3.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T3.tipoPeca")[0];
-				long tempo = this.getValueLong("Fabrica","C1T3.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MA1",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMA1", true);
+		} else if (node.equals("Fabrica.C1T3.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C1T3.tipoPeca")[0];
+				long tempo = this.getValueLong("Fabrica", "C1T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA1", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMA1", true);
 			}
-		}
-		else if(node.equals("Fabrica.C1T4.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T4.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C1T4.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MB1",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMB1", true);
+		} else if (node.equals("Fabrica.C1T4.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C1T4.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C1T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB1", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMB1", true);
 			}
-		}
-		else if(node.equals("Fabrica.C1T5.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C1T5.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C1T5.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MC1",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMC1", true);
+		} else if (node.equals("Fabrica.C1T5.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C1T5.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C1T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC1", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMC1", true);
 			}
-		}
-		else if(node.equals("Fabrica.C3T3.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T3.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C3T3.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MA2",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMA2", true);
+		} else if (node.equals("Fabrica.C3T3.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C3T3.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C3T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA2", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMA2", true);
 			}
-		}
-		else if(node.equals("Fabrica.C3T4.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T4.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C3T4.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MB2",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMB2", true);
+		} else if (node.equals("Fabrica.C3T4.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C3T4.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C3T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB2", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMB2", true);
 			}
-		}
-		else if(node.equals("Fabrica.C3T5.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C3T5.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C3T5.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MC2",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMC2", true);
+		} else if (node.equals("Fabrica.C3T5.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C3T5.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C3T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC2", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMC2", true);
 			}
-		}
-		else if(node.equals("Fabrica.C5T3.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T3.tipoPeca")[0];
-				short tempo = (short)this.getValueLong("Fabrica","C5T3.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MA3",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMA3", true);
+		} else if (node.equals("Fabrica.C5T3.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C5T3.tipoPeca")[0];
+				short tempo = (short) this.getValueLong("Fabrica", "C5T3.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MA3", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMA3", true);
 			}
-		}
-		else if(node.equals("Fabrica.C5T4.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T4.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C5T4.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MB3",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMB3", true);
+		} else if (node.equals("Fabrica.C5T4.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C5T4.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C5T4.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MB3", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMB3", true);
 			}
-		}
-		else if(node.equals("Fabrica.C5T5.PodeLer")) {
-			if((boolean) value.getValue().getValue()) {
-				String tipoPecaOperada = "P"+this.getValue("Fabrica","C5T5.tipoPeca")[0];
-				long tempo = (long)this.getValueLong("Fabrica","C5T5.tempo")[0];
-				fabrica.mandarestatMaquina(new Maquina("MC3",tipoPecaOperada,(int)tempo));
-				this.setValue("SFS","LidoMC3", true);
+		} else if (node.equals("Fabrica.C5T5.PodeLer")) {
+			if ((boolean) value.getValue().getValue()) {
+				String tipoPecaOperada = "P" + this.getValue("Fabrica", "C5T5.tipoPeca")[0];
+				long tempo = (long) this.getValueLong("Fabrica", "C5T5.tempo")[0];
+				fabrica.mandarestatMaquina(new Maquina("MC3", tipoPecaOperada, (int) tempo));
+				this.setValue("SFS", "LidoMC3", true);
 			}
 		}
-		
 
 	}
 
@@ -279,7 +270,6 @@ public class OpcClient {
 		}
 		return MICR;
 	}
-
 
 	private void organizaTempo(String node, long tempo) {
 		String aux = node.substring(8, 12);
@@ -404,76 +394,7 @@ public class OpcClient {
 		return valueShort;
 
 	}
-	
-	/**
-	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY
-	 * (|var|CODESYS Control Win V3 x64.Application.)
-	 * 
-	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
-	 * @param nomeVariavel - contém o nome da variavel
-	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
-	 */
-	public synchronized short[][] getValueMatrix(String localizacao, String nomeVariavel) {
-		short[][] valueShort = new short[3][3];
 
-		String id = sfc + localizacao + "." + nomeVariavel;
-		NodeId nodeIdString = new NodeId(idNode, id);
-		DataValue value = null;
-
-		/* ler para array */
-		if (nomeVariavel.equals("rebootToolPointer")) {
-			return readToMatrix(id);
-		}else {
-			return null;
-		}
-		/*
-		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
-		try {
-			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new short[0];
-		}
-		valueShort[0] = (short) value.getValue().getValue();
-		return valueShort;*/
-
-	}
-	
-	/**
-	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY de ARRAY
-	 * (|var|CODESYS Control Win V3 x64.Application.)
-	 * 
-	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
-	 * @param nomeVariavel - contém o nome da variavel
-	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
-	 */
-	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
-		// short[][] valueShort = new short[3][3];
-		
-		String id = sfc + localizacao + "." + nomeVariavel;
-		NodeId nodeIdString = new NodeId(idNode, id);
-		DataValue value = null;
-
-		/* ler para array */
-		if (nomeVariavel.equals("bufferMachineTools")) {
-			return readToMatrix3(id);
-		}else {
-			return null;
-		}
-		/*
-		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
-		try {
-			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new short[0];
-		}
-		valueShort[0] = (short) value.getValue().getValue();
-		return valueShort;*/
-
-	}
-	
-	
 	public synchronized long[] getValueLong(String localizacao, String nomeVariavel) {
 		long[] valueShort = new long[1];
 
@@ -481,7 +402,6 @@ public class OpcClient {
 		NodeId nodeIdString = new NodeId(idNode, id);
 		DataValue value = null;
 
-		
 		client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 		try {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
@@ -489,7 +409,7 @@ public class OpcClient {
 			e.printStackTrace();
 			return new long[0];
 		}
-		valueShort[0] = (long) value.getValue().getValue()/1000;
+		valueShort[0] = (long) value.getValue().getValue() / 1000;
 		return valueShort;
 
 	}
@@ -537,48 +457,6 @@ public class OpcClient {
 		return valueShort;
 	}
 
-	private short[][] readToMatrix(String id) {
-		short[][] valueShort = new short[3][3];
-		for (int i = 0; i < 3; i++) {
-			for(int j=0; j<3; j++) {
-				String idArray = id + "[" + (i) + "," + (j) + "]";
-				NodeId nodeIdString = new NodeId(idNode, idArray);
-				client.readValue(0, TimestampsToReturn.Both, nodeIdString);
-				try {
-					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
-							.getValue();
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new short[0][0];
-				}
-		
-			}
-		}
-		return valueShort;
-	}
-		
-	private short[][][] readToMatrix3(String id) {
-		short[][][] valueShort = new short[3][3][50];
-		for (int i = 0; i < 3; i++) {
-			for(int j=0; j<3; j++) {
-				for(int k=0; k< 50; k++) {
-					String idArray = id + "[" + (i) + "," + (j) + "," + (k) + "]";
-					NodeId nodeIdString = new NodeId(idNode, idArray);
-					client.readValue(0, TimestampsToReturn.Both, nodeIdString);
-					try {
-						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
-								.getValue();
-					} catch (Exception e) {
-						e.printStackTrace();
-						return new short[0][0][0];
-					}
-				}
-			}
-		}
-
-		return valueShort;
-	}
-	
 	/**
 	 * Função para inserir valores booleanos (|var|CODESYS Control Win V3
 	 * x64.Application.)
@@ -603,4 +481,92 @@ public class OpcClient {
 		return true;
 	}
 
+	
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)sfc
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][] getValueMatrix(String localizacao, String nomeVariavel) {
+		short[][] valueShort = new short[3][3];
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+
+
+		/* ler para array */
+		if (nomeVariavel.equals("rebootToolPointer")) {
+			return readToMatrix(id);
+		}else {
+			return new short[0][0];
+		}
+
+
+	}
+
+	/**
+	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY de ARRAY
+	 * (|var|CODESYS Control Win V3 x64.Application.)
+	 * 
+	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
+	 * @param nomeVariavel - contém o nome da variavel
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 */
+	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
+
+		String id = sfc + localizacao + "." + nomeVariavel;
+
+
+		/* ler para array */
+		if (nomeVariavel.equals("bufferMachineTools")) {
+			return readToMatrix3(id);
+		}else {
+			return new short[0][0][0];
+		}
+
+
+	}
+	
+	private short[][] readToMatrix(String id) {
+		short[][] valueShort = new short[3][3];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				String idArray = id + "[" + (i) + "," + (j) + "]";
+				NodeId nodeIdString = new NodeId(idNode, idArray);
+				client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+				try {
+					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+							.getValue();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new short[0][0];
+				}
+
+			}
+		}
+		return valueShort;
+	}
+
+	private short[][][] readToMatrix3(String id) {
+		short[][][] valueShort = new short[3][3][50];
+		for (int i = 0; i < 3; i++) {
+			for(int j=0; j<3; j++) {
+				for(int k=0; k< 50; k++) {
+					String idArray = id + "[" + (i) + "," + (j) + "," + (k) + "]";
+					NodeId nodeIdString = new NodeId(idNode, idArray);
+					client.readValue(0, TimestampsToReturn.Both, nodeIdString);
+					try {
+						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
+								.getValue();
+					} catch (Exception e) {
+						e.printStackTrace();
+						return new short[0][0][0];
+					}
+				}
+			}
+		}
+
+		return valueShort;
+	}
 }

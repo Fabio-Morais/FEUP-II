@@ -230,8 +230,8 @@ public class Ordem {
 
 	}
 
-	protected boolean terminaOrdem(DataBase db, String numeroOrdem) {
-		String query = "UPDATE Ordem SET estadoOrdem= " + 2 + ", horaFimExecucao= '" + Ordem.localDate()
+	protected boolean terminaOrdem(DataBase db, String numeroOrdem, int prioridade) {
+		String query = "UPDATE Ordem SET estadoOrdem= " + 2 + ", folgaexecucao="+prioridade+", horaFimExecucao= '" + Ordem.localDate()
 				+ "' WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
@@ -248,13 +248,13 @@ public class Ordem {
 		return db.executeQuery(query);
 	}
 
-	public boolean updatePecasProduzidas(DataBase db, String numeroOrdem, int pecas) {
-		String query = "UPDATE Ordem SET pecasproduzidas=" + pecas + " WHERE numeroOrdem = '" + numeroOrdem + "'";
+	public boolean updatePecasProduzidas(DataBase db, String numeroOrdem, int pecas, int prioridade) {
+		String query = "UPDATE Ordem SET pecasproduzidas=" + pecas + ",folgaexecucao= "+prioridade+" WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
 
-	public boolean updatePecasEmProducao(DataBase db, String numeroOrdem, int pecas) {
-		String query = "UPDATE Ordem SET pecasproducao=" + pecas + " WHERE numeroOrdem = '" + numeroOrdem + "'";
+	public boolean updatePecasEmProducao(DataBase db, String numeroOrdem, int pecas, int prioridade) {
+		String query = "UPDATE Ordem SET pecasproducao=" + pecas + ", folgaexecucao="+prioridade+" WHERE numeroOrdem = '" + numeroOrdem + "'";
 		return db.executeQuery(query);
 	}
 

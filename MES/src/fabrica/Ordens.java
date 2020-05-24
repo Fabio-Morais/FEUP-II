@@ -24,50 +24,61 @@ public class Ordens {
 	private Transform transform;
 	private Unload unload;
 	private ControlaPlc enviaOrdem;
+	/**false se for uma ordem pendente, true se ja tiver sido executada anteriormente*/
+	private boolean pendente=true;
 	
-	public class  Transform{
+	/**True-> entra o CR7 das ordens*/
+	private boolean speedMode;
+	
+	public class Transform {
 		private String from;
 		private String to;
+
 		public Transform(String from, String to) {
 			super();
 			this.from = from;
 			this.to = to;
 		}
+
 		public String getFrom() {
 			return from;
 		}
+
 		public String getTo() {
 			return to;
 		}
+
 		@Override
 		public String toString() {
 			return "Transform [from=" + from + ", to=" + to + "]";
 		}
 
-		
 	};
-	public class  Unload{
+
+	public class Unload {
 		private String type;
 		private String destinantion;
+
 		public Unload(String type, String destinantion) {
 			super();
 			this.type = type;
 			this.destinantion = destinantion;
 		}
+
 		public String getType() {
 			return type;
 		}
+
 		public String getDestinantion() {
 			return destinantion;
 		}
+
 		@Override
 		public String toString() {
 			return "Unload [type=" + type + ", destinantion=" + destinantion + "]";
 		}
-		
-		
-	};
 
+	};
 
 	public String getNumeroOrdem() {
 		return numeroOrdem;
@@ -149,32 +160,31 @@ public class Ordens {
 	public synchronized void executaOrdem() {
 		try {
 			semExecucao.acquire();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
-		semExecucao.release();
-		try {
-			db.executaOrdemProducao(this.numeroOrdem);
-		} catch (Exception e) {
-
-		}
-
-		try {
 			semPendente.acquire();
+
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		
-		if(this.fabrica.getHeapOrdemPendente().peek().equals(this)){
+
+		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
+		if(pendente) {
+			try {
+				db.executaOrdemProducao(this.numeroOrdem);
+			} catch (Exception e) {
+
+			}
+		}
+
+
+		if (this.fabrica.getHeapOrdemPendente().peek().equals(this)) {
 			this.fabrica.getHeapOrdemPendente().poll();
-			System.out.println("removeu corretamente da heap");
-		}else {
-			System.out.println("errada, "+ this.fabrica.getHeapOrdemPendente().peek());
+		} else {
 			fabrica.reorganizaHeap(this);
 		}
-			semPendente.release();
-		System.out.println("acaba o metodo executaOrdem");
+		pendente=false;
+		semPendente.release();
+		semExecucao.release();
+
 	}
 
 	/**
@@ -183,79 +193,74 @@ public class Ordens {
 	 * @param numeroOrdem - numero da ordem
 	 */
 	public synchronized void terminaOrdem() {
-		db.terminaOrdemProducao(this.numeroOrdem);
-		System.out.println("entra em terminar");
-			try {
-				semExecucao.acquire();
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			System.out.println("passa a mutex");
-			fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
-			semExecucao.release();
-			System.out.println("finaliza");
-		
+		db.terminaOrdemProducao(this.numeroOrdem, this.prioridade);
+		try {
+			semExecucao.acquire();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
+		semExecucao.release();
+
 	}
 
 	/** Retira uma peça de "pendente" para "em produçao" */
-	public void pecaParaProducao() {
+	public synchronized void pecaParaProducao() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println(Thread.currentThread() + " antes : " + this.pecasPendentes);
-		this.pecasPendentes--;
-		this.pecasEmProducao++;
+
 		if (this.pecasPendentes > 0) {
-			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);//atualiza db e variaveis da classe
-			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
+			this.pecasPendentes--;
+			this.pecasEmProducao++;
+			db.updatePecasPendentes(this.numeroOrdem, this.pecasPendentes);// atualiza db e variaveis da classe
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao, this.prioridade);// atualiza db e variaveis da classe
 		}
-		System.out.println(Thread.currentThread() + " depois : " + this.pecasPendentes);
+
 		sem.release();
 
 	}
 
 	/** Retira uma peça de "em produçao" para "produzida" */
-	public void pecasProduzidas() {
+	public synchronized void pecasProduzidas() {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		System.out.println("---------------------------------");
-		System.out.println(this);
-		System.out.println(Thread.currentThread().getName() + " antes : "+ this.pecasProduzidas+":" + this.pecasEmProducao);
-		this.pecasEmProducao--;
-		this.pecasProduzidas++;
+
 		if (this.pecasEmProducao > 0) {
-			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao);//atualiza db e variaveis da classe
-			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas);//atualiza db e variaveis da classe
+			this.pecasEmProducao--;
+			this.pecasProduzidas++;
+			db.updatePecasEmProducao(this.numeroOrdem, this.pecasEmProducao, this.prioridade);// atualiza db e variaveis da classe
+			db.updatePecasProduzidas(this.numeroOrdem, this.pecasProduzidas, this.prioridade);// atualiza db e variaveis da classe
 		}
-		System.out.println(Thread.currentThread().getName() + " depois : " + this.pecasProduzidas+":" + this.pecasEmProducao);
-		System.out.println("---------------------------------");
 
 		sem.release();
 
-
 	}
-	
-	/**Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
-	 * */
-	public synchronized  List<String> getListaPecas(int tempoRestanteMaquina){
-		if(transform != null)
-			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 1);
+
+	/**
+	 * Retorna lista da tipo pecas ex: P1->P8 lista(p1,p4,p8)
+	 */
+	public synchronized List<String> getListaPecas(int tempoRestanteMaquinaC, int tempoRestanteMaquinaA) {
+		if (transform != null)
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquinaC, tempoRestanteMaquinaA, 1);
 		else
 			return new ArrayList<>();
 	}
-	
-	/**Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo ferramenta)
-	 * */
-	public synchronized List<String> getReceita(int tempoRestanteMaquina){
+
+	/**
+	 * Retorna lista da receita((0)->Maquina |(1)->tempo na maquina |(2)->tipo
+	 * ferramenta)
+	 */
+	public synchronized List<String> getReceita(int tempoRestanteMaquinaC, int tempoRestanteMaquinaA) {
 		List<String> x = new ArrayList<>();
 		x.add("D");
-		if(transform != null)
-			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquina, 0);
+		if (transform != null)
+			return Receitas.rotaMaquinas(transform.getFrom(), transform.getTo(), tempoRestanteMaquinaC, tempoRestanteMaquinaA, 0);
 		else
 			return x;
 	}
@@ -264,7 +269,8 @@ public class Ordens {
 	 * entradaData (dd/MM/yy HH:mm:ss)
 	 */
 	public int calculaPrioridade() {
-		return (int) Ordem.calculaTempoRestante(Ordem.converteData3(this.dataInicio), Integer.valueOf(this.atrasoMaximo));
+		return (int) Ordem.calculaTempoRestante(Ordem.converteData3(this.dataInicio),
+				Integer.valueOf(this.atrasoMaximo));
 	}
 
 	public int getPecasProduzidas() {
@@ -289,11 +295,8 @@ public class Ordens {
 
 	public synchronized void setPecasPendentes(int pecasPendentes) {
 		this.pecasPendentes = pecasPendentes;
-		this.quantidade=pecasPendentes;
+		this.quantidade = pecasPendentes;
 	}
-
-
-	
 
 	public int getQuantidade() {
 		return quantidade;
@@ -303,17 +306,20 @@ public class Ordens {
 		return transform;
 	}
 
-
 	public Unload getUnload() {
 		return unload;
 	}
-	
+
 	public void setTransform(Transform transform) {
 		this.transform = transform;
 	}
 
 	public void setUnload(Unload unload) {
 		this.unload = unload;
+	}
+
+	public boolean pendente() {
+		return pendente;
 	}
 
 	@Override
@@ -345,9 +351,16 @@ public class Ordens {
 	public String toString() {
 		return "Ordens [numeroOrdem=" + numeroOrdem + ", prioridade=" + prioridade + ", dataInicio=" + dataInicio
 				+ ", atrasoMaximo=" + atrasoMaximo + ", pecasProduzidas=" + pecasProduzidas + ", pecasEmProducao="
-				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + semExecucao + ", fabrica=" + fabrica + ", db=" + db + ", transform=" + transform
-				+ ", unload=" + unload + "]";
+				+ pecasEmProducao + ", pecasPendentes=" + pecasPendentes + ", sem=" + semExecucao + ", fabrica="
+				+ fabrica + ", db=" + db + ", transform=" + transform + ", unload=" + unload + "]";
 	}
 
+	public boolean isSpeedMode() {
+		return speedMode;
+	}
+
+	public void setSpeedMode(boolean speedMode) {
+		this.speedMode = speedMode;
+	}
 
 }

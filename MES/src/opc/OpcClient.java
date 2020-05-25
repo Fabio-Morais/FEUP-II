@@ -55,6 +55,7 @@ public class OpcClient {
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
 			connect();
+			tunningTimers();// mete os tempos nas maquinas para ela sinalizar como livre
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -76,9 +77,9 @@ public class OpcClient {
 	 */
 	public synchronized boolean connect() {
 		System.out.println(endpoints != null);
-		if(endpoints != null)
+		if (endpoints != null)
 			return true;
-		
+
 		try {
 			endpoints = UaTcpStackClient.getEndpoints("opc.tcp://" + publicHostName + ":4840").get();
 			OpcUaClientConfig config = OpcUaClientConfig.builder()
@@ -98,6 +99,19 @@ public class OpcClient {
 			e.printStackTrace();
 		}
 		return true;
+
+	}
+
+	private void tunningTimers() {
+		setValue("SFS", "tunnigMA1", (long) 1200);
+		setValue("SFS", "tunnigMA2", (long) 2200);
+		setValue("SFS", "tunnigMA3", (long) 5500);
+		setValue("SFS", "tunnigMB1", (long) 2500);
+		setValue("SFS", "tunnigMB2", (long) 2800);
+		setValue("SFS", "tunnigMB3", (long) 6100);
+		setValue("SFS", "tunnigMC1", (long) 4300);
+		setValue("SFS", "tunnigMC2", (long) 5700);
+		setValue("SFS", "tunnigMC3", (long) 7700);
 
 	}
 
@@ -245,6 +259,8 @@ public class OpcClient {
 				long tempo = (long) this.getValueLong("Fabrica", "C5T5.tempo")[0];
 				fabrica.mandarestatMaquina(new Maquina("MC3", tipoPecaOperada, (int) tempo));
 				this.setValue("SFS", "LidoMC3", true);
+			} else if (node.substring(13, node.length()).equals("Step30")) {
+				atualizaEstadoMaquina(node.substring(8, 12), (boolean) value.getValue().getValue());
 			}
 		}
 
@@ -269,6 +285,39 @@ public class OpcClient {
 			MICR.add(new MonitoredItemCreateRequest(ID, MonitoringMode.Reporting, parameters));
 		}
 		return MICR;
+	}
+
+	private void atualizaEstadoMaquina(String maquina, boolean valor) {
+
+		switch (maquina) {
+		case "C1T3":
+			GereOrdensThread.setmAEspera(valor, 0);
+			break;
+		case "C1T4":
+			GereOrdensThread.setmBEspera(valor, 0);
+			break;
+		case "C1T5":
+			GereOrdensThread.setmCEspera(valor, 0);
+			break;
+		case "C3T3":
+			GereOrdensThread.setmAEspera(valor, 1);
+			break;
+		case "C3T4":
+			GereOrdensThread.setmBEspera(valor, 1);
+			break;
+		case "C3T5":
+			GereOrdensThread.setmCEspera(valor, 1);
+			break;
+		case "C5T3":
+			GereOrdensThread.setmAEspera(valor, 2);
+			break;
+		case "C5T4":
+			GereOrdensThread.setmBEspera(valor, 2);
+			break;
+		case "C5T5":
+			GereOrdensThread.setmCEspera(valor, 2);
+			break;
+		}
 	}
 
 	private void organizaTempo(String node, long tempo) {
@@ -481,27 +530,25 @@ public class OpcClient {
 		return true;
 	}
 
-	
 	/**
 	 * Função para ler o valor de uma variavel em especifico ARRAY de ARRAY
 	 * (|var|CODESYS Control Win V3 x64.Application.)
 	 * 
-	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)sfc
-	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 * @param localizacao - localizaçao da variavel (SFS ou Fabrica)sfc
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um
+	 *         array
 	 */
 	public synchronized short[][] getValueMatrix(String localizacao, String nomeVariavel) {
 		short[][] valueShort = new short[3][3];
 
 		String id = sfc + localizacao + "." + nomeVariavel;
 
-
 		/* ler para array */
 		if (nomeVariavel.equals("rebootToolPointer")) {
 			return readToMatrix(id);
-		}else {
+		} else {
 			return new short[0][0];
 		}
-
 
 	}
 
@@ -511,33 +558,32 @@ public class OpcClient {
 	 * 
 	 * @param localizacao  - localizaçao da variavel (SFS ou Fabrica)
 	 * @param nomeVariavel - contém o nome da variavel
-	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um array
+	 * @return short[1][] caso retorne uma valor, ou um short[x] caso retorne um
+	 *         array
 	 */
 	public synchronized short[][][] getValueMatrix3(String localizacao, String nomeVariavel) {
 
 		String id = sfc + localizacao + "." + nomeVariavel;
 
-
 		/* ler para array */
 		if (nomeVariavel.equals("bufferMachineTools")) {
 			return readToMatrix3(id);
-		}else {
+		} else {
 			return new short[0][0][0];
 		}
 
-
 	}
-	
+
 	private short[][] readToMatrix(String id) {
 		short[][] valueShort = new short[3][3];
 		for (int i = 0; i < 3; i++) {
-			for(int j=0; j<3; j++) {
+			for (int j = 0; j < 3; j++) {
 				String idArray = id + "[" + (i) + "," + (j) + "]";
 				NodeId nodeIdString = new NodeId(idNode, idArray);
 				client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 				try {
-					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
-							.getValue();
+					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get()
+							.getValue().getValue();
 				} catch (Exception e) {
 					e.printStackTrace();
 					return new short[0][0];
@@ -551,14 +597,14 @@ public class OpcClient {
 	private short[][][] readToMatrix3(String id) {
 		short[][][] valueShort = new short[3][3][50];
 		for (int i = 0; i < 3; i++) {
-			for(int j=0; j<3; j++) {
-				for(int k=0; k< 50; k++) {
+			for (int j = 0; j < 3; j++) {
+				for (int k = 0; k < 50; k++) {
 					String idArray = id + "[" + (i) + "," + (j) + "," + (k) + "]";
 					NodeId nodeIdString = new NodeId(idNode, idArray);
 					client.readValue(0, TimestampsToReturn.Both, nodeIdString);
 					try {
-						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
-								.getValue();
+						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get()
+								.getValue().getValue();
 					} catch (Exception e) {
 						e.printStackTrace();
 						return new short[0][0][0];

@@ -49,7 +49,7 @@ public class Teste {
 		// command 2
 		Ordens ordem2 = new Ordens("2", 300, Ordem.localDate(), 300, fabrica);
 		ordem2.setPecasPendentes(7);
-		ordem2.setTransform(ordem2.new Transform("P3", "P5"));// maquina B
+		ordem2.setTransform(ordem2.new Transform("P3", "P5"));// maquina B e C
 
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
 		ordem3.setPecasPendentes(10);
@@ -198,13 +198,15 @@ public class Teste {
 		}
 		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
 		ordem2.setPecasPendentes(1);
-		ordem2.setTransform(ordem2.new Transform("P1", "P2"));// maquina A
+		ordem2.setTransform(ordem2.new Transform("P1", "P9"));// maquina A
 
 		fabrica.addToHeap(ordem2);
 
 	}
 	public void testar3() {
-		
+		/*GereOrdensThread.setmBLivreSeleciona("45", 0);
+		GereOrdensThread.setmBLivreSeleciona("45", 1);
+		GereOrdensThread.setmBLivreSeleciona("45", 2);*/
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -224,12 +226,12 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(20);
+		ordem1.setPecasPendentes(3);
 		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
-		ordem3.setPecasPendentes(10);
-		ordem3.setTransform(ordem3.new Transform("P1", "P9"));// maquina B
+		ordem3.setPecasPendentes(7);
+		ordem3.setTransform(ordem3.new Transform("P4", "P5"));// maquina B
 		
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(3);
@@ -248,14 +250,20 @@ public class Teste {
 
 		/** COMMAND 1 */
 		fabrica.addToHeap(ordem1);
-		//fabrica.addToHeap(ordem3);
 		//fabrica.addToHeap(ordem4);
 
+		/*10S*/
 		try {
-			Thread.sleep(9000);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("COMEÇAAAAAAAAAAA");
+		//GereOrdensThread.setmBLivreSeleciona("", 0);
+		//GereOrdensThread.setmBLivreSeleciona("", 1);
+		//GereOrdensThread.setmBLivreSeleciona("", 2);
+		fabrica.addToHeap(ordem3);
+
 		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
 		ordem2.setPecasPendentes(5);
 		ordem2.setTransform(ordem2.new Transform("P3", "P5"));// maquina A

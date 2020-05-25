@@ -51,6 +51,7 @@ public class ControlaPlc {
 
 		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
 		machineTool = opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
+		opcClient.setValue("Fabrica", "syncWarOut", true);
 
 		// Add costs to warehouse
 		/*
@@ -77,13 +78,12 @@ public class ControlaPlc {
 					addLane("maquina", i, (i + 1), 15);
 					addLane("maquina", (i + 1), i, 15);
 				} else {
-					addLane("maquina", i, (i + 1), 14);
+					addLane("maquina", i, (i + 1), 18);
 				}
 
 			}
 
 		}
-		System.out.println();
 		/* 1º linha */
 		addLane("tapete", 2, 7, 1);
 		addLane("tapete", 4, 8, 1);
@@ -375,7 +375,6 @@ public class ControlaPlc {
 				}
 
 			} else if (pecasPendentes >= 1) {
-				System.out.println(maquinaLivre[0] + " ; " + maquinaLivre[1] + " ; " + maquinaLivre[2]);
 				if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
 					rotaMaquinas(rota, origem, destino + "1");
 					returnString = destino + "1";
@@ -463,13 +462,15 @@ public class ControlaPlc {
 			int c = (i == 22) ? 15 : 0;
 			int x = (i == 22) ? 15 : i;
 			String receita = ordem.getReceita(x, c).get(0);
-			System.out.println("**********"+receita);
-			boolean[] aux = {false, false, false};
-			if (receita.equals("A")) {
+			// System.out.println("********** receita: "+receita);
+			boolean[] aux = { false, false, false };
+			if (receita.equals("A") && ordem.getNumeroOrdem().equals(GereOrdensThread.getmALivreSeleciona()[0])) {
 				aux = GereOrdensThread.getmALivre();
-			} else if (receita.equals("B")) {
+			} else if (receita.equals("B")
+					&& ordem.getNumeroOrdem().equals(GereOrdensThread.getmBLivreSeleciona()[0])) {
 				aux = GereOrdensThread.getmBLivre();
-			} else if (receita.equals("C")) {
+			} else if (receita.equals("C")
+					&& ordem.getNumeroOrdem().equals(GereOrdensThread.getmCLivreSeleciona()[0])) {
 				aux = GereOrdensThread.getmCLivre();
 			}
 			if (aux[0]) {
@@ -492,22 +493,6 @@ public class ControlaPlc {
 	public synchronized boolean runOrder(Ordens ordem) {
 		int smallest = 0;
 		this.speedMode = ordem.isSpeedMode();
-		if (ordem.getTransform() != null) {
-			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
-				long[] auxTempo = GereOrdensThread.getTempoMC();
-				if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
-					smallest = (int) auxTempo[0] / 1000;
-				} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
-					smallest = (int) auxTempo[1] / 1000;
-				} else {
-					smallest = (int) auxTempo[2] / 1000;
-				}
-				if (this.speedMode) {
-					smallest = (int) auxTempo[0] / 1000;
-
-				}
-			}
-		}
 
 		List<String> transformations = ordem.getReceita(smallest, 0);// lista de transformaçoes
 		if (this.speedMode) {
@@ -558,7 +543,7 @@ public class ControlaPlc {
 		for (String aux : ordem.getListaPecas(tempoC, tempoA)) {
 			pecas[i++] = Short.parseShort("" + aux.charAt(1));
 		}
-		System.out.println(Arrays.toString(pecas));
+		// System.out.println(Arrays.toString(pecas));
 		// recipeTool => lsita de ferramentas
 		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, pecas);
 		return true;
@@ -577,7 +562,7 @@ public class ControlaPlc {
 			}
 		} while (!in);
 
-		opcClient.setValue("Fabrica", "syncWarOut", "false");
+		opcClient.setValue("Fabrica", "syncWarOut", false);
 
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);

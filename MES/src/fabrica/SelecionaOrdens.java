@@ -1,6 +1,7 @@
 package fabrica;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +45,11 @@ public class SelecionaOrdens extends Thread {
 			}
 			maquinasOcupadas();
 			// Nao permite mais de 5 ordens ao mesmo temo
-			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 6) {
+			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 8) {
 				while (!heapOrdemPendente.isEmpty()) {
 					maquinasOcupadas();
 					Ordens ordem = heapOrdemPendente.poll();
-					boolean ok = false;
+					List<String> ok = null;
 					String troca = "";
 
 					if (GereOrdensThread.isVoltaInicio()) {
@@ -60,8 +61,8 @@ public class SelecionaOrdens extends Thread {
 						troca = trocaOrdem(ordem);
 					}
 
-					if (ok) {
-						executaOrdem(ordem);
+					if (ok != null && ok.size() > 0) {
+						executaOrdem(ordem, ok);
 						break;
 					} else if (!troca.equals("")) {
 						trocaOrdem(ordem, troca);
@@ -122,7 +123,17 @@ public class SelecionaOrdens extends Thread {
 
 		//System.out.println("--> Maquinas ocupadas: " + GereOrdensThread.isMaquinasOcupadas());
 	}
+	private boolean speed(Ordens ordem, boolean ok, List<String> select) {
+		
+		boolean returnValue = ok;
+		List<String> lista = ordem.getReceita(11,0);
+		List<String> lista2 = ordem.getReceita(15,15);
+		
+		returnValue |= valida(lista, select); 
+		returnValue |= valida(lista2, select); 
 
+		return returnValue;
+	}
 	/**
 	 * Se a ordem que chega quiser ir para a maquina X e esta tiver livre entao
 	 * retorna OK (executa ordem) Se ordem tiver que ir a 2 maquinas e so uma delas
@@ -131,13 +142,16 @@ public class SelecionaOrdens extends Thread {
 	 * @param lista - se lista tiver no indice 0 o D é descarga, caso contrario é
 	 *              carga
 	 */
-	private boolean chooseOrder(Ordens ordem) {
+	private List<String> chooseOrder(Ordens ordem) {
 		boolean ok = false;
 		List<String> lista = ordem.getReceita(0,0);
-		List<String> lista2 = ordem.getReceita(1000,0);
+		List<String> lista2 = ordem.getReceita(11,0);
+
 		/* Se lista tiver um D entao é uma descarga */
 		if (lista.get(0).equals("D")) {
-			return true;
+			List<String> x = new ArrayList<>();
+			x.add("D");
+			return x;
 		}
 
 		List<String> select = new ArrayList<>();
@@ -146,13 +160,13 @@ public class SelecionaOrdens extends Thread {
 		 * Se for maior que 3 entao pode usar mais que uma maquina, ex: (usar todas da C
 		 * e usar a A)
 		 */
-		if (ordem.getPecasPendentes() > 3 && !lista.equals(lista2)) {
-			ok = valida(lista2, select);
+		if (!lista.equals(lista2)) {
+			ok = speed(ordem, ok, select);
 		}
 
 		if (ok)
 			selectList(select, ordem.getNumeroOrdem());
-		return ok;
+		return select;
 	}
 
 	private boolean valida(List<String> lista2, List<String> select) {
@@ -192,6 +206,9 @@ public class SelecionaOrdens extends Thread {
 				}
 			}
 		}
+		System.out.println(Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
+		System.out.println(Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
+		System.out.println(Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));
 	}
 
 	private void sincronizaOrdens() {
@@ -203,7 +220,7 @@ public class SelecionaOrdens extends Thread {
 		HashMap<String, Ordens> aux = fabrica.getCopyHeapOrdemExecucao();
 		for (Map.Entry<String, Ordens> entry : aux.entrySet()) {
 			Ordens value = entry.getValue();
-			if (chooseOrder(value)) {
+			if (chooseOrder(value).size() > 0) {
 				OrdensThread x = new OrdensThread(value, controlaPlc, false);// inicio thread
 				x.setName("Thread " + value.getNumeroOrdem());
 				x.start();
@@ -236,16 +253,24 @@ public class SelecionaOrdens extends Thread {
 		
 		return true;
 	}
-	private void executaOrdem(Ordens ordem) {
+	private void executaOrdem(Ordens ordem, List<String> ok) {
 		OrdensThread x = new OrdensThread(ordem, controlaPlc, ordem.pendente());// inicio thread
 		
 		if(isSpeedMode(ordem)) {
 			ordem.setSpeedMode(true);
 		}
+		System.out.println("lista produzida: "+ok);
 		x.setName("Thread " + ordem.getNumeroOrdem());
 		x.start();
 		x.setaExecutar(true);
 		System.out.println("executou ordem : " + ordem.getNumeroOrdem());
+		if(ok.equals("X")) {
+			//trocou ordem
+		}
+		for(String maquinasAUsar : ok) {
+			x.setMaquinaAUsar(maquinasAUsar);
+		}
+		
 		GereOrdensThread.incrementNumberOfThreads();
 		ordensEmExecucao.add(x);
 	}
@@ -280,7 +305,9 @@ public class SelecionaOrdens extends Thread {
 					break;
 				}
 				ordensEmExecucao.get(i).setaExecutar(false);
-				executaOrdem(ordemAExecutar);
+				List<String> ok = new ArrayList<>();
+				ok.add("X");
+				executaOrdem(ordemAExecutar,ok);
 				//System.out.println("*********troca ordem: " + ordemATrocar + " por ordem: " + ordem.getNumeroOrdem());
 
 				break;
@@ -296,7 +323,7 @@ public class SelecionaOrdens extends Thread {
 			if (ordem.getPecasPendentes() <= 0) {
 				System.out.println("removeu " + ordensEmExecucao.get(i));
 				ordensEmExecucao.remove(i);
-			} else if (!ordensEmExecucao.get(i).isaExecutar() && chooseOrder(ordem)) {
+			} else if (!ordensEmExecucao.get(i).isaExecutar() && chooseOrder(ordem).size() > 0) {
 				ordensEmExecucao.get(i).setaExecutar(true);
 			}
 

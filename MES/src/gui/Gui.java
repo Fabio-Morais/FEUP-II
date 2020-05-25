@@ -45,6 +45,7 @@ import db.DataBase;
 import db.Ordem;
 import fabrica.Fabrica;
 import fabrica.Ordens;
+import fabrica.Stock;
 import opc.OpcClient;
 import udp.estatistica.Estatistica;
 
@@ -706,7 +707,7 @@ public class Gui {
 		for (int i = 0; i < stock.length; i++) {
 			modelStock.setValueAt("P" + (i + 1), i, 0);
 			modelStock.setValueAt("" + stock[i], i, 1);
-
+			Stock.setPecasStock((short) i, stock[i]);
 		}
 	}
 

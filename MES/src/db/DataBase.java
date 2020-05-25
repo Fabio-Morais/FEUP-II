@@ -144,8 +144,9 @@ public class DataBase {
 	 */
 	public synchronized boolean executeQuery(String sql) {
 		oldConnectionState = connectionState;
-		connectionState = checkConnection();
-		if(connectionState){
+		if(connect()){
+			//connect();
+			connectionState = true;
 			if(connectionState && !oldConnectionState) {
 				//Passar todos os queries do txt para a db
 				try {
@@ -172,15 +173,12 @@ public class DataBase {
 						}
 				        
 				      }
-				      disconnect();
 				      myReader.close();
 				      saveQueries.delete();
 				} catch (FileNotFoundException e) {
 				      e.printStackTrace();
 				    }
-				//APAGAR txt
 			}
-			connect();
 			try {
 				
 				try{
@@ -199,13 +197,14 @@ public class DataBase {
 			disconnect();
 			return true;
 			
-		} else {
+		} else {//catch (Exception e) {
+			connectionState = false;
 			try {
 				FileWriter saveQueries = new FileWriter("saveQueries.txt", true);
 				saveQueries.write(sql+"\n");
 				saveQueries.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
 			
 			return false;

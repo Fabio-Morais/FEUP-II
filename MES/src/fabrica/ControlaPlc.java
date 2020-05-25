@@ -15,7 +15,7 @@ import dijkstra.Vertex;
 import opc.OpcClient;
 
 public class ControlaPlc {
-	private final int sizeOfPath = 31;
+	private final int sizeOfPath = 41;
 	private int[][][][] temposExtras = new int[3][3][7][16];
 	private short[][][] machineTool = new short[3][3][50];
 	private short[][] machineToolPointer = new short[3][3];
@@ -37,6 +37,8 @@ public class ControlaPlc {
 			{ 0, 0, 500, 0, 0, 0, 1500, 0, 1500, 0, 1500, 0, 0, 0, 500, 0 },
 			{ 0, 0, 1000, 1, 1500, 1, 1000, 1, 1000, 1, 1000, 1, 1500, 1, 1000, 0 }, };
 
+	private boolean speedMode;
+
 	public ControlaPlc() {
 		this.last_time = System.currentTimeMillis();
 		for (int i = 0; i < 3; i++)
@@ -50,6 +52,7 @@ public class ControlaPlc {
 		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
 		machineTool = opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
 
+		opcClient.setValue("Fabrica", "syncWarOut", true);
 		// Add costs to warehouse
 		/*
 		 * for (int x = 0; x < 3; x++) { for (int y = 0; y < 3; y++) { originalMap[(x *
@@ -250,111 +253,164 @@ public class ControlaPlc {
 		if (origem.length() > 1)
 			coluna = Integer.valueOf(origem.substring(1, 2));
 
-		if (destino.equals("A")) {
-			maquinaLivre = GereOrdensThread.getmALivre();
-		} else if (destino.equals("B")) {
-			maquinaLivre = GereOrdensThread.getmBLivre();
-			y = 1;
-		} else if (destino.equals("C")) {
-			maquinaLivre = GereOrdensThread.getmCLivre();
-			y = 2;
+		if (this.speedMode) {
+
+			switch (destino) {
+			case "C1":
+				rotaMaquinas(rota, origem, destino);
+				y = 2;
+				x = 0;
+				returnString = "C1";
+				break;
+			case "C2":
+				rotaMaquinas(rota, origem, destino);
+				y = 2;
+				x = 1;
+				returnString = "C2";
+				break;
+			case "C3":
+				rotaMaquinas(rota, origem, destino);
+				y = 2;
+				x = 2;
+				returnString = "C3";
+				break;
+			case "B1":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 0;
+				returnString = "B1";
+				break;
+			case "B2":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 1;
+				returnString = "B2";
+				break;
+			case "B3":
+				rotaMaquinas(rota, origem, destino);
+				y = 1;
+				x = 2;
+				returnString = "B3";
+				break;
+			case "A1":
+				rotaMaquinas(rota, origem, destino);
+				y = 0;
+				x = 0;
+				returnString = "A1";
+				break;
+			case "A2":
+				rotaMaquinas(rota, origem, destino);
+				y = 0;
+				x = 1;
+				returnString = "A2";
+				break;
+			case "A3":
+				rotaMaquinas(rota, origem, destino);
+				y = 0;
+				x = 2;
+				returnString = "A3";
+				break;
+			}
+		} else {
+			if (destino.equals("A")) {
+				maquinaLivre = GereOrdensThread.getmALivre();
+			} else if (destino.equals("B")) {
+				maquinaLivre = GereOrdensThread.getmBLivre();
+				y = 1;
+			} else if (destino.equals("C")) {
+				maquinaLivre = GereOrdensThread.getmCLivre();
+				y = 2;
+			}
+
+			if (pecasPendentes >= 3) {
+				if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				} else if ((coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				} else if ((coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if ((coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				}
+			} else if (pecasPendentes >= 2) {
+				if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				} else if ((coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if ((coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				} else if ((coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				}
+
+			} else if (pecasPendentes >= 1) {
+				System.out.println(maquinaLivre[0] + " ; " + maquinaLivre[1] + " ; " + maquinaLivre[2]);
+				if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				} else if ((coluna == -1 || coluna == 1)) {
+					rotaMaquinas(rota, origem, destino + "1");
+					returnString = destino + "1";
+					x = 0;
+				} else if ((coluna == -1 || coluna == 2)) {
+					rotaMaquinas(rota, origem, destino + "2");
+					returnString = destino + "2";
+					x = 1;
+				} else if ((coluna == -1 || coluna == 3)) {
+					rotaMaquinas(rota, origem, destino + "3");
+					returnString = destino + "3";
+					x = 2;
+				}
+			}
 		}
 
-		if (pecasPendentes >= 3) {
-			if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			} else if ((coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			} else if ((coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if ((coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			}
-		} else if (pecasPendentes >= 2) {
-			if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			} else if ((coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if ((coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			} else if ((coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			}
-
-		} else if (pecasPendentes >= 1) {
-			System.out.println(maquinaLivre[0] + " ; " + maquinaLivre[1] + " ; " + maquinaLivre[2]);
-			if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			} else if ((coluna == -1 || coluna == 1)) {
-				rotaMaquinas(rota, origem, destino + "1");
-				returnString = destino + "1";
-				x = 0;
-			} else if ((coluna == -1 || coluna == 2)) {
-				rotaMaquinas(rota, origem, destino + "2");
-				returnString = destino + "2";
-				x = 1;
-			} else if ((coluna == -1 || coluna == 3)) {
-				rotaMaquinas(rota, origem, destino + "3");
-				returnString = destino + "3";
-				x = 2;
-			}
-		}
-		/*System.out.println("pendentes = " + pecasPendentes + " | " + origem + "->" + returnString + "-->"
-				+ maquinaLivre[0] + " . " + maquinaLivre[1] + " . " + maquinaLivre[2]);*/
-
-		// [1,2,0,0....] [b c]
 		/*
-		 * machineTool[x][B][0] = 1 machineTool[x][B][1] = 2 (c) machineTool[x][C][0] =
-		 * 1 machineTool[x][C][1] = 2
-		 * 
-		 * IDEALMENTE machineTool[x][B][0]=1 machineTool[x][c][0]=2
-		 * 
-		 * 
-		 * 
+		 * System.out.println(); System.out.println("machineTool[" + x + "][" + y + "]["
+		 * + machineToolPointer[x][y] + "] = " + tool); System.out.println();
+		 * System.out.println("machineTool[" + x + "][" + y + "][" +
+		 * machineToolPointer[x][y] + "] = " + tool);
 		 */
-		System.out.println("machineTool["+x+"]["+y+"]["+machineToolPointer[x][y]+"] = "+tool);
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -370,23 +426,64 @@ public class ControlaPlc {
 		String origem = "E";
 		String destino = "";
 
-		for (int i = 0; i < maquinas.size(); i++) {
-			destino = maquinas.get(i).toUpperCase();
-			origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
-			/* se houver seguinte */
-			if (rota.size() > 0 && (i + 1) < maquinas.size()) {
-				rota.remove(rota.size() - 1);
-			}
+		if (this.speedMode) {
+			for (int i = 0; i < maquinas.size(); i++) {
+				destino = maquinas.get(i).toUpperCase() + (i + 1);
+				// System.out.println(destino);
+				origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
+				// System.out.println(origem);
+				/* se houver seguinte */
+				if (rota.size() > 0 && (i + 1) < maquinas.size()) {
+					rota.remove(rota.size() - 1);
+				}
 
+			}
+		} else {
+			for (int i = 0; i < maquinas.size(); i++) {
+				destino = maquinas.get(i).toUpperCase();
+				origem = distribuiPecasParaMaquinas(rota, origem, destino, pecasPendentes, tool[i]);
+				/* se houver seguinte */
+				if (rota.size() > 0 && (i + 1) < maquinas.size()) {
+					rota.remove(rota.size() - 1);
+				}
+
+			}
 		}
 
 		if (!rota.isEmpty()) {
 			rota.remove(rota.size() - 1);
 			rotaMaquinas(rota, origem, "S");
 		}
+		// System.out.println("\n\n");
 		return pathReturn(rota);
 
 	}
+
+	private List<String> speed(Ordens ordem) {
+		for (int i = 0; i < 23; i += 11) {
+			int c = (i == 22) ? 15 : 0;
+			int x = (i == 22) ? 15 : i;
+			String receita = ordem.getReceita(x, c).get(0);
+			System.out.println("**********"+receita);
+			boolean[] aux = {false, false, false};
+			if (receita.equals("A")) {
+				aux = GereOrdensThread.getmALivre();
+			} else if (receita.equals("B")) {
+				aux = GereOrdensThread.getmBLivre();
+			} else if (receita.equals("C")) {
+				aux = GereOrdensThread.getmCLivre();
+			}
+			if (aux[0]) {
+				tempoC = x;
+				tempoA = c;
+				return ordem.getReceita(i, c);
+			}
+		}
+		return ordem.getReceita(0, 0);
+	}
+
+	private int tempoC;
+	private int tempoA;
 
 	/**
 	 * Corre apenas 1 vez
@@ -395,6 +492,7 @@ public class ControlaPlc {
 	 */
 	public synchronized boolean runOrder(Ordens ordem) {
 		int smallest = 0;
+		this.speedMode = ordem.isSpeedMode();
 		if (ordem.getTransform() != null) {
 			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
 				long[] auxTempo = GereOrdensThread.getTempoMC();
@@ -405,10 +503,17 @@ public class ControlaPlc {
 				} else {
 					smallest = (int) auxTempo[2] / 1000;
 				}
+				if (this.speedMode) {
+					smallest = (int) auxTempo[0] / 1000;
+
+				}
 			}
 		}
 
-		List<String> transformations = ordem.getReceita(smallest);// lista de transformaçoes
+		List<String> transformations = ordem.getReceita(smallest, 0);// lista de transformaçoes
+		if (this.speedMode) {
+			transformations = speed(ordem);
+		}
 		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));// peça inicial
 		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));// peça final
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem()); // numero de ordem
@@ -418,13 +523,20 @@ public class ControlaPlc {
 		for (int i = 0; i < macProcessa.length; i++) {
 			macProcessa[i] = 0;
 		}
-		for (int i = 0; i < transformations.size(); i += 3) {
-			maquinas.add(transformations.get(i));
-			if (!transformations.get(i).equals(pre)) {
+		if (!ordem.isSpeedMode()) {
+			for (int i = 0; i < transformations.size(); i += 3) {
+				maquinas.add(transformations.get(i));
+				if (!transformations.get(i).equals(pre)) {
+					macProcessa[++auxIndice]++;
+					pre = transformations.get(i);
+				} else {
+					macProcessa[auxIndice]++;
+				}
+			}
+		} else {
+			for (int i = 0; i < transformations.size(); i += 3) {
+				maquinas.add(transformations.get(i));
 				macProcessa[++auxIndice]++;
-				pre = transformations.get(i);
-			} else {
-				macProcessa[auxIndice]++;
 			}
 		}
 
@@ -443,19 +555,21 @@ public class ControlaPlc {
 			return false;
 		}
 		i = 0;
-		short[] x = new short[31];
-		for (String aux : ordem.getListaPecas(0)) {
-			x[i++] = Short.parseShort("" + aux.charAt(1));
+		short[] pecas = new short[31];
+		for (String aux : ordem.getListaPecas(tempoC, tempoA)) {
+			pecas[i++] = Short.parseShort("" + aux.charAt(1));
 		}
+		System.out.println(Arrays.toString(pecas));
 		// recipeTool => lsita de ferramentas
-
-		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, x);
+		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, pecas);
 		return true;
 
 	}
 
 	private synchronized void sendPath(short[][] path, short[] tool, long[] time, short tipo, short tipoFinal,
 			short numeroOrdem, short[] listaPecas) {
+		
+		//opcClient.setValue("Fabrica", "syncWarOut", false);
 		boolean in;
 		do {
 			in = opcClient.getValueBool("Fabrica", "freeOutput");
@@ -466,7 +580,8 @@ public class ControlaPlc {
 			}
 		} while (!in);
 
-		opcClient.setValue("Fabrica", "syncWarOut", "false");
+		opcClient.setValue("Fabrica", "syncWarOut", false);
+		
 
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
@@ -476,10 +591,12 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.numeroOrdem", (short) numeroOrdem);
 		opcClient.setValue("Fabrica", "pecainput.pecasEtapas", listaPecas);
 
-		System.out.println("tool "+Arrays.toString(tool));
-		System.out.println("time "+Arrays.toString(time));
-		System.out.println("length: "+path[49][0]+ "mac->"+ Arrays.toString(macProcessa));
-		System.out.println();
+		/*
+		 * System.out.println("tool "+Arrays.toString(tool));
+		 * System.out.println("time "+Arrays.toString(time));
+		 * System.out.println("length: "+path[49][0]+ "mac->"+
+		 * Arrays.toString(macProcessa)); System.out.println();
+		 */
 		if (path[49][0] > 0)
 			opcClient.setValue("Fabrica", "pecainput.MacProcessa", macProcessa);
 
@@ -495,9 +612,10 @@ public class ControlaPlc {
 		opcClient.setValue("Fabrica", "pecainput.pathX", path_x);
 		opcClient.setValue("Fabrica", "pecainput.pathY", path_y);
 		opcClient.setValue("Fabrica", "pecainput.pathLength", path[49][0]);
-
+		
 		testeOPC++;
 
+		
 		do {
 			in = opcClient.getValueBool("Fabrica", "sentOutput");
 		} while (!in);
@@ -590,7 +708,7 @@ public class ControlaPlc {
 			}
 		}
 
-		List<String> transformations = ordem.getReceita(smallest);
+		List<String> transformations = ordem.getReceita(smallest, 0);
 		// int numerOfPieces = ordem.getPecasPendentes();
 		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));
 		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));
@@ -614,7 +732,7 @@ public class ControlaPlc {
 		}
 		short[] x = new short[31];
 		int i = 0;
-		for (String aux : ordem.getListaPecas(0)) {
+		for (String aux : ordem.getListaPecas(0, 0)) {
 			x[i++] = Short.parseShort("" + aux.charAt(1));
 		}
 		short[] tool = new short[31];
@@ -724,9 +842,13 @@ public class ControlaPlc {
 				// Preenche Ferramentas Maquina
 				int m_x = departure[0] / 2;
 				int m_y = departure[1] - 3;
-				System.out.println("-----1----");
+				System.out.println("---1g----");
+				System.out.println("m_x= " + m_x + "m_y= " + m_y);
+				System.out.println("pointer " + machineToolPointer[m_x][m_y]);
+				System.out.println("tool " + tool);
 				machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
-				System.out.println("machineTool["+m_x+"]["+m_y+"]["+machineToolPointer[m_x][m_y]+"] = "+tool);
+				System.out.println(
+						"machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y] + "] = " + tool);
 
 				machineToolPointer[m_x][m_y]++;
 				if (machineToolPointer[m_x][m_y] > 49)
@@ -810,8 +932,11 @@ public class ControlaPlc {
 							int m_x = total_path[j][0] / 2;
 							int m_y = total_path[j][1] - 3;
 							System.out.println("---2----");
-							System.out.println("machineTool["+m_x+"]["+m_y+"]["+machineToolPointer[m_x][m_y]+"] = "+tool);
-
+							System.out.println("m_x= " + m_x + "m_y= " + m_y);
+							System.out.println("pointer " + machineToolPointer[m_x][m_y]);
+							System.out.println("tool " + tool);
+							System.out.println("machineTool[" + m_x + "][" + m_y + "][" + machineToolPointer[m_x][m_y]
+									+ "] = " + tool);
 
 							machineTool[m_x][m_y][machineToolPointer[m_x][m_y]] = tool;
 							machineToolPointer[m_x][m_y]++;
@@ -993,13 +1118,14 @@ public class ControlaPlc {
 		Ordens ordem1 = new Ordens("1", 500, Ordem.localDate(), 500, fabrica);
 		ordem1.setPecasPendentes(2);
 		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
-
+		this.speedMode = true;
 		ArrayList<String> maquinas = new ArrayList<>();
-		maquinas.add("B");
 		maquinas.add("C");
-		runOrder(ordem1);
+		maquinas.add("C");
+		maquinas.add("C");
+		// runOrder(ordem1);
 
-		// calculaRota(maquinas, 2, new short[0]);
+		calculaRota(maquinas, 2, new short[] { 1, 2, 3 });
 
 		/* enviar numero de ordem */
 	}

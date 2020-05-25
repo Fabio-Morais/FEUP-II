@@ -1,10 +1,18 @@
 package db;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.postgresql.util.PSQLException;
 
 import fabrica.Ordens;
 
@@ -24,6 +32,9 @@ public class DataBase {
 	private Descarga descarga;
 	private Ordem ordem;
 	private Semaphore sem;
+	
+	private Boolean connectionState;
+	private Boolean oldConnectionState;
 
 	private DataBase() {
 		//this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
@@ -41,6 +52,9 @@ public class DataBase {
 		this.ordem = new Ordem();
 		this.sem = ConnectSemaphore.getSem();
 
+		this.connectionState = false;
+		this.oldConnectionState = false;
+		
 	}
 
 	public static DataBase getInstance() {
@@ -129,26 +143,73 @@ public class DataBase {
 	 * @return boolean - true se executar corretamente / false caso contrario
 	 */
 	public synchronized boolean executeQuery(String sql) {
-
-		connect();
-		try {
-			
-			try{
-				Statement stmt = getC().createStatement();
-				stmt.executeUpdate("SET search_path to fabrica;" + sql);
-			}catch(Exception e) {
-				sem.release();
-
+		oldConnectionState = connectionState;
+		connectionState = checkConnection();
+		if(connectionState){
+			if(connectionState && !oldConnectionState) {
+				//Passar todos os queries do txt para a db
+				try {
+				      File saveQueries = new File("saveQueries.txt");
+				      Scanner myReader = new Scanner(saveQueries);
+				      connect();
+				      while (myReader.hasNextLine()) {
+				        String line = myReader.nextLine();
+				        System.out.println(line);
+				        
+				        try {
+							
+							try{
+								Statement stmt = getC().createStatement();
+								stmt.executeUpdate("SET search_path to fabrica;" + line);
+							}catch(PSQLException e) {
+								sem.release();
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							disconnect();
+							
+							return false;
+						}
+				        
+				      }
+				      disconnect();
+				      myReader.close();
+				      saveQueries.delete();
+				} catch (FileNotFoundException e) {
+				      e.printStackTrace();
+				    }
+				//APAGAR txt
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+			connect();
+			try {
+				
+				try{
+					Statement stmt = getC().createStatement();
+					stmt.executeUpdate("SET search_path to fabrica;" + sql);
+				}catch(PSQLException e) {
+					sem.release();
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				disconnect();
+				
+				return false;
+			}
 			disconnect();
+			return true;
+			
+		} else {
+			try {
+				FileWriter saveQueries = new FileWriter("saveQueries.txt", true);
+				saveQueries.write(sql+"\n");
+				saveQueries.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 			return false;
 		}
-		disconnect();
-		return true;
 	}
 
 	/**

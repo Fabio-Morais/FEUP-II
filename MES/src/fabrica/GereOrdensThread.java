@@ -34,6 +34,7 @@ public class GereOrdensThread {
 
 	/*Colocamos o numero da peça que falta o stock*/
 	private static short stock=-1;
+	private static boolean stockFlag=true;
 	
 	public static synchronized  boolean[] getmALivre() {
 		return mALivre;
@@ -145,6 +146,12 @@ public class GereOrdensThread {
 	}
 	public static void setStock(short stock) {
 		GereOrdensThread.stock = stock;
+	}
+	public static boolean isStockFlag() {
+		return stockFlag;
+	}
+	public static void setStockFlag(boolean stockFlag) {
+		GereOrdensThread.stockFlag = stockFlag;
 	}
 	
 }

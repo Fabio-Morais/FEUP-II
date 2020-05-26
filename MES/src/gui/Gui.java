@@ -44,6 +44,7 @@ import javax.swing.table.DefaultTableModel;
 import db.DataBase;
 import db.Ordem;
 import fabrica.Fabrica;
+import fabrica.GereOrdensThread;
 import fabrica.Ordens;
 import fabrica.Stock;
 import opc.OpcClient;
@@ -189,61 +190,66 @@ public class Gui {
 		Color colorText = Color.decode("#364f6b");
 		lblInf.setForeground(colorText);
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_1
-				.createSequentialGroup()
-				.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_1.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED, 185, Short.MAX_VALUE)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel_1.createSequentialGroup()
-										.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(74))
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup().addGap(50).addGroup(gl_panel_1
-								.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671,
-										Short.MAX_VALUE)
-								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671,
-										Short.MAX_VALUE)
-								.addGroup(gl_panel_1.createSequentialGroup()
-										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-												.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235,
-														Short.MAX_VALUE)
-												.addComponent(lblNewLabel_1, Alignment.TRAILING,
-														GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
-										.addGap(99)
-										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-												.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE).addComponent(label,
-														GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))))
-				.addGap(37)));
-		gl_panel_1.setVerticalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_1
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup().addGap(21)
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
-								.addGap(28).addComponent(separator, GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-								.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
+		gl_panel_1.setHorizontalGroup(
+			gl_panel_1.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_1.createSequentialGroup()
-								.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(scrollPane_2, 0, 171, Short.MAX_VALUE))
+							.addContainerGap()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(separator, GroupLayout.PREFERRED_SIZE, 1, GroupLayout.PREFERRED_SIZE)
+									.addGap(74))
+								.addGroup(Alignment.LEADING, gl_panel_1.createSequentialGroup()
+									.addComponent(logo, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 381, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+									.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE))))
 						.addGroup(gl_panel_1.createSequentialGroup()
-								.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
-				.addPreferredGap(ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-				.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE).addGap(32)));
+							.addGap(50)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+										.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+										.addComponent(lblNewLabel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+									.addGap(99)
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+										.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)
+										.addComponent(label, GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))))))
+					.addGap(37))
+		);
+		gl_panel_1.setVerticalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(21)
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+							.addGap(28)
+							.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
+							.addComponent(lblInf, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+							.addComponent(logo, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_2, 0, 171, Short.MAX_VALUE))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addComponent(label, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_1, 0, 0, Short.MAX_VALUE)))
+					.addGap(59)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+					.addGap(32))
+		);
 
 		JLabel lblP = new JLabel("Pe\u00E7as na f\u00E1brica");
 		DefaultDesign.styleLabel(lblP);
@@ -253,17 +259,24 @@ public class Gui {
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setForeground(Color.BLACK);
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4.setHorizontalGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_4.createSequentialGroup().addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE).addGap(2)));
-		gl_panel_4.setVerticalGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_4.createSequentialGroup().addGap(2)
-						.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-								.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap()));
+		gl_panel_4.setHorizontalGroup(
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addContainerGap(26, Short.MAX_VALUE)
+					.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+					.addGap(2))
+		);
+		gl_panel_4.setVerticalGroup(
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addGap(2)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblP, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
 		panel_4.setLayout(gl_panel_4);
 		panel_1.setLayout(gl_panel_1);
 
@@ -708,6 +721,11 @@ public class Gui {
 			modelStock.setValueAt("P" + (i + 1), i, 0);
 			modelStock.setValueAt("" + stock[i], i, 1);
 			Stock.setPecasStock((short) i, stock[i]);
+		}
+		if(GereOrdensThread.getStock() != -1 && GereOrdensThread.isStockFlag()) {
+			/*show */
+			JOptionPane.showMessageDialog(null, "Falta stock de peças "+"P"+GereOrdensThread.getStock(), "Falta de peças!", JOptionPane.ERROR_MESSAGE);
+			GereOrdensThread.setStockFlag(false);
 		}
 	}
 

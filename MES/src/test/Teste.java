@@ -164,8 +164,8 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(7);
-		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
+		ordem1.setPecasPendentes(30);
+		ordem1.setTransform(ordem1.new Transform("P1", "P2"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
 		ordem3.setPecasPendentes(6);
@@ -188,8 +188,8 @@ public class Teste {
 
 		/** COMMAND 1 */
 		fabrica.addToHeap(ordem1);
-		fabrica.addToHeap(ordem3);
-		fabrica.addToHeap(ordem4);
+		//fabrica.addToHeap(ordem3);
+		//fabrica.addToHeap(ordem4);
 
 		try {
 			Thread.sleep(9000);
@@ -226,8 +226,8 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(7);
-		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
+		ordem1.setPecasPendentes(15);
+		ordem1.setTransform(ordem1.new Transform("P2", "P3"));// maquina A
 
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
@@ -259,7 +259,7 @@ public class Teste {
 		//GereOrdensThread.setmBLivreSeleciona("", 0);
 		//GereOrdensThread.setmBLivreSeleciona("", 1);
 		//GereOrdensThread.setmBLivreSeleciona("", 2);
-		fabrica.addToHeap(ordem3);
+		//fabrica.addToHeap(ordem3);
 
 		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
 		ordem2.setPecasPendentes(5);

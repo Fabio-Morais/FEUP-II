@@ -50,7 +50,6 @@ public class OrdensThread extends Thread {
 		} else if (option == 0) {
 			controlaPlc.runOrdemDescarga(this.ordem);
 		}
-		System.out.println("\tenvia plc, ordem: " + ordem.getNumeroOrdem());
 		GeneralSemaphore.getSem5().release();
 		return returnValue;
 	}
@@ -123,7 +122,6 @@ public class OrdensThread extends Thread {
 				aux = GereOrdensThread.getmCLivre();
 			}
 			if (aux[0]) {
-				System.out.println(receita + "->" + aux[0]);
 				return true;
 			}
 		}
@@ -142,6 +140,9 @@ public class OrdensThread extends Thread {
 			if (stock <= 0) {
 				GereOrdensThread.setStock(posPeca);
 				return false;
+			}else {
+				GereOrdensThread.setStock((short)-1);
+				GereOrdensThread.setStockFlag(true);
 			}
 		} else if (this.ordem.getUnload() != null) {
 			Ordens.Unload x = this.ordem.getUnload();
@@ -150,11 +151,13 @@ public class OrdensThread extends Thread {
 			if (stock <= 0) {
 				GereOrdensThread.setStock(posPeca);
 				return false;
+			}else {
+				GereOrdensThread.setStock((short)-1);
+				GereOrdensThread.setStockFlag(true);
 			}
 		}
 
 		boolean[] aux = { false, false, false };
-		boolean[] espera = { false, false, false };
 		short[] countMaq = { 0, 0, 0 };
 		long[] auxTempo = GereOrdensThread.getTempoMC();
 
@@ -183,19 +186,16 @@ public class OrdensThread extends Thread {
 		} else {
 			if (receita.equals("A")) {
 				aux = GereOrdensThread.getmALivre();
-				espera = GereOrdensThread.getmAEspera();
 				countMaq[0] = opc.getValue("SFS", "mB1Cont")[0];
 				countMaq[1] = opc.getValue("SFS", "mB2Cont")[0];
 				countMaq[2] = opc.getValue("SFS", "mB3Cont")[0];
 			} else if (receita.equals("B")) {
 				aux = GereOrdensThread.getmBLivre();
-				espera = GereOrdensThread.getmBEspera();
 				countMaq[0] = opc.getValue("SFS", "mC1Cont")[0];
 				countMaq[1] = opc.getValue("SFS", "mC2Cont")[0];
 				countMaq[2] = opc.getValue("SFS", "mC3Cont")[0];
 			} else if (receita.equals("C")) {
 				aux = GereOrdensThread.getmCLivre();
-				espera = GereOrdensThread.getmCEspera();
 			}
 		}
 		/*Descarga */
@@ -222,17 +222,12 @@ public class OrdensThread extends Thread {
 
 	@Override
 	public void run() {
-		for (String x : maquinasAUsar)
-			System.out.println("maquinas a usar: " + x);
 		if (this.pendente)
 			this.ordem.executaOrdem();
 
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
 			int limite = 3;
-			/*System.out.println(Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
-			System.out.println(Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
-			System.out.println(Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));*/
 			if (aExecutar) {
 				reservaMaquinas();// Se estiver a usar a maquina A e a B estiver livre coloca tambem a usar
 				try {
@@ -250,7 +245,6 @@ public class OrdensThread extends Thread {
 							}
 						}
 						this.ordem.pecaParaProducao();
-						System.out.println(ordem.getNumeroOrdem() + " -> "+ limite);
 						limite--;
 					}
 					try {
@@ -281,7 +275,6 @@ public class OrdensThread extends Thread {
 			}
 
 		}
-		System.out.println("A SAIRR.... numero de ordem: " + this.ordem.getNumeroOrdem());
 		resetMaquinaSelect();
 		GereOrdensThread.setVoltaInicio(true);
 		/* Espera para terminar ordem */
@@ -292,8 +285,7 @@ public class OrdensThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.out
-				.println("*******SAIU DA ORDEM (ordensThread)******** numero de ordem:" + this.ordem.getNumeroOrdem());
+		
 		this.ordem.terminaOrdem();
 		GereOrdensThread.decrementNumberOfThreads();// para permitir entrar mais
 		return;

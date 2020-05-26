@@ -117,14 +117,14 @@ public class Teste {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		//fabrica.addToHeap(ordem5);
+		fabrica.addToHeap(ordem5);
 
 		try {
 			Thread.sleep(20);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		//fabrica.addToHeap(ordem6);
+		fabrica.addToHeap(ordem6);
 
 		/** COMMAND 3 */
 		try {
@@ -164,12 +164,12 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(10);
-		ordem1.setTransform(ordem1.new Transform("P2", "P6"));// maquina A
+		ordem1.setPecasPendentes(7);
+		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
 		ordem3.setPecasPendentes(6);
-		ordem3.setTransform(ordem3.new Transform("P1", "P3"));// maquina B
+		ordem3.setTransform(ordem3.new Transform("P7", "P9"));// maquina B
 		
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(5);
@@ -226,18 +226,17 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(30);
-		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
+		ordem1.setPecasPendentes(7);
+		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
 		ordem3.setPecasPendentes(7);
-		ordem3.setTransform(ordem3.new Transform("P4", "P5"));// maquina B
+		ordem3.setTransform(ordem3.new Transform("P3", "P7"));// maquina B
 		
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(3);
 		ordem4.setTransform(ordem4.new Transform("P4", "P5"));// maquina C
 
-		
 		fabrica.atualizaHeap();
 		fabrica.gereOrdens();
 		try {
@@ -249,7 +248,6 @@ public class Teste {
 		System.out.println("***COMEÇA***");
 
 		/** COMMAND 1 */
-		fabrica.addToHeap(ordem4);
 
 		fabrica.addToHeap(ordem1);
 		//fabrica.addToHeap(ordem4);

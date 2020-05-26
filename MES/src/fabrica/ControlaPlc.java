@@ -321,86 +321,33 @@ public class ControlaPlc {
 				y = 2;
 			}
 
-			if (pecasPendentes >= 3) {
-				if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				}
-			} else if (pecasPendentes >= 2) {
-				if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				}
 
-			} else if (pecasPendentes >= 1) {
-				if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				}
+			if (maquinaLivre[2]&& (coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if ((coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if ((coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if ((coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
 			}
+
 		}
 
 		/*
@@ -469,7 +416,8 @@ public class ControlaPlc {
 			String mBLivre = GereOrdensThread.getmBLivreSeleciona()[0];
 			String mCLivre = GereOrdensThread.getmCLivreSeleciona()[0];
 
-			if (receita.equals("A") && mALivre.length()>1 && ordem.getNumeroOrdem().equals(mALivre.substring(1,mALivre.length()))) {
+			if (receita.equals("A") && mALivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mALivre.substring(1, mALivre.length()))) {
 				aux = GereOrdensThread.getmALivre();
 			} else if (receita.equals("B") && mBLivre.length() > 1
 					&& ordem.getNumeroOrdem().equals(mBLivre.substring(1, mBLivre.length()))) {

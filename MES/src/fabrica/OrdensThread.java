@@ -95,6 +95,7 @@ public class OrdensThread extends Thread {
 						|| ((maqA[2] && tempoB[2] < 4900)
 								|| (maqA[2] && (tempoB[2] >= (Long.valueOf(rect.get(4)) * 1000 - 20))));
 			} else if (maquinas.get(0).equals("B")) {
+
 				return ((maqB[0] && tempoC[0] < 4100)
 						|| (maqB[0] && (tempoC[0] >= (Long.valueOf(rect.get(4)) * 1000 - 20))))
 						|| ((maqB[1] && tempoC[1] < 4500)
@@ -131,7 +132,8 @@ public class OrdensThread extends Thread {
 	}
 
 	private boolean executaOrdem(int limite) {
-	
+		if(limite <= 0)
+			return false;
 		/* SERVE PARA NAO DEIXAR SAIR PEÇAS SEM STOCK */
 		if (this.ordem.getTransform() != null) {
 			Ordens.Transform x = this.ordem.getTransform();
@@ -148,15 +150,7 @@ public class OrdensThread extends Thread {
 				return false;
 			}
 		}
-		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA1Livre"), 0);
-		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA2Livre"), 1);
-		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA3Livre"), 2);
-		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB1Livre"), 0);
-		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB2Livre"), 1);
-		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB3Livre"), 2);
-		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC1Livre"), 0);
-		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC2Livre"), 1);
-		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC3Livre"), 2);
+
 		boolean[] aux = { false, false, false };
 		boolean[] espera = { false, false, false };
 		short[] countMaq = { 0, 0, 0 };
@@ -172,6 +166,15 @@ public class OrdensThread extends Thread {
 		}
 		String receita = ordem.getReceita((int) smallest, 0).get(0);// nao serve para A->B, pois so vai buscar o
 																	// primeiro
+		GereOrdensThread.setmALivre(opc.getValueBool("SFS", "mA1Livre"), 0);
+		GereOrdensThread.setmALivre(opc.getValueBool("SFS", "mA2Livre"), 1);
+		GereOrdensThread.setmALivre(opc.getValueBool("SFS", "mA3Livre"), 2);
+		GereOrdensThread.setmBLivre(opc.getValueBool("SFS", "mB1Livre"), 0);
+		GereOrdensThread.setmBLivre(opc.getValueBool("SFS", "mB2Livre"), 1);
+		GereOrdensThread.setmBLivre(opc.getValueBool("SFS", "mB3Livre"), 2);
+		GereOrdensThread.setmCLivre(opc.getValueBool("SFS", "mC1Livre"), 0);
+		GereOrdensThread.setmCLivre(opc.getValueBool("SFS", "mC2Livre"), 1);
+		GereOrdensThread.setmCLivre(opc.getValueBool("SFS", "mC3Livre"), 2);
 		if (this.ordem.isSpeedMode()) {
 			return speed();
 
@@ -193,10 +196,8 @@ public class OrdensThread extends Thread {
 				espera = GereOrdensThread.getmCEspera();
 			}
 		}
-
+		/*Descarga */
 		if (this.option == 0 && limite > 2) {
-			// faz algo
-			// return descarga();
 			return GereOrdensThread.isMaquinasOcupadas();
 		} else if (this.option == 0) {
 			return false;
@@ -211,19 +212,11 @@ public class OrdensThread extends Thread {
 		if (rect.size() > 3 && !rect.get(0).equals(rect.get(3))) {
 			return manyOrders(rect);
 		}
-		if (rect.size() > 3 && (countMaq[0] > 1 || countMaq[1] > 1 || countMaq[2] > 1)) {
-			String maq = rect.get(0);
-			if (maq.equals("A")) {
-				long[] tempoB = GereOrdensThread.getTempoMB();
-				return (aux[0] && tempoB[0] < 3600) || (aux[1] && tempoB[1] < 4500) || (aux[2] && tempoB[2] < 4900);
-			} else if (maq.equals("B")) {
-				long[] tempoC = GereOrdensThread.getTempoMC();
-				return (aux[0] && tempoC[0] < 4100) || (aux[1] && tempoC[1] < 4500) || (aux[2] && tempoC[2] < 4900);
-			}
-		}
+		
 		return (aux[0] || (aux[1]) || (aux[2]));
 		// so manda descarga quando < x tempo
 	}
+
 
 	@Override
 	public void run() {
@@ -254,10 +247,11 @@ public class OrdensThread extends Thread {
 							}
 						}
 						this.ordem.pecaParaProducao();
+						System.out.println(ordem.getNumeroOrdem() + " -> "+ limite);
 						limite--;
 					}
 					try {
-						Thread.sleep(50);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

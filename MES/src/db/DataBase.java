@@ -5,11 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.postgresql.util.PSQLException;
 
@@ -51,6 +56,9 @@ public class DataBase {
 		this.connectionState = false;
 		this.oldConnectionState = false;
 
+		this.connectionState = false;
+		this.oldConnectionState = false;
+		
 	}
 
 	public static DataBase getInstance() {
@@ -87,9 +95,9 @@ public class DataBase {
 	}
 
 	/**
-	 * FunÁ„o para conectar ‡ base de dados
+	 * Fun√ß√£o para conectar √† base de dados
 	 * 
-	 * @return boolean true se conex„o com exito / false caso contrario
+	 * @return boolean true se conex√£o com exito / false caso contrario
 	 */
 	public synchronized boolean connect() {
 		
@@ -105,9 +113,9 @@ public class DataBase {
 	}
 
 	/**
-	 * FunÁ„o para testar conex„o ‡ base de dados
+	 * Fun√ß√£o para testar conex√£o √† base de dados
 	 * 
-	 * @return boolean true se conex„o com exito / false caso contrario
+	 * @return boolean true se conex√£o com exito / false caso contrario
 	 */
 	public synchronized boolean checkConnection() {
 		if (connect()) {
@@ -118,9 +126,9 @@ public class DataBase {
 	}
 
 	/**
-	 * FunÁ„o para disconectar da base de dados
+	 * Fun√ß√£o para disconectar da base de dados
 	 * 
-	 * @return boolean true se conex„o terminada com exito / false caso contrario
+	 * @return boolean true se conex√£o terminada com exito / false caso contrario
 	 */
 	public synchronized boolean disconnect() {
 		
@@ -139,7 +147,6 @@ public class DataBase {
 	 * @return boolean - true se executar corretamente / false caso contrario
 	 */
 	public synchronized boolean executeQuery(String sql) {
-
 		oldConnectionState = connectionState;
 		if(connect()){
 			//connect();
@@ -232,9 +239,9 @@ public class DataBase {
 	}
 
 	/**
-	 * Retorna a conex„o com a base de dados
+	 * Retorna a conex√£o com a base de dados
 	 * 
-	 * @return Conex„o Conex„o com base de dados
+	 * @return Conex√£o Conex√£o com base de dados
 	 */
 	public Connection getC() {
 		return c;
@@ -243,7 +250,7 @@ public class DataBase {
 	/**
 	 * Define a conexao com a base de dados
 	 * 
-	 * @param conexao Conex„o com a base de dados
+	 * @param conexao Conex√£o com a base de dados
 	 */
 	public void setC(Connection conexao) {
 		this.c = conexao;
@@ -303,12 +310,12 @@ public class DataBase {
 				&& this.descarga.insere(this, descarga);
 	}
 
-	/** Retorna as ordens pendentes e em execuÁao */
+	/** Retorna as ordens pendentes e em execu√ßao */
 	public ResultSet selectProducao() {
 		return producao.selectOrdensPendentes(this);
 	}
 
-	/** Retorna as ordens pendentes e em execuÁao */
+	/** Retorna as ordens pendentes e em execu√ßao */
 	public ResultSet selectDescarga() {
 		return descarga.selectOrdensPendentes(this);
 	}

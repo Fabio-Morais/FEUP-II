@@ -134,7 +134,7 @@ public class OrdensThread extends Thread {
 	private boolean executaOrdem(int limite) {
 		if(limite <= 0)
 			return false;
-		/* SERVE PARA NAO DEIXAR SAIR PEÇAS SEM STOCK */
+		/* SERVE PARA NAO DEIXAR SAIR PEï¿½AS SEM STOCK */
 		if (this.ordem.getTransform() != null) {
 			Ordens.Transform x = this.ordem.getTransform();
 			short posPeca = Short.valueOf(x.getFrom().substring(1, 2));
@@ -202,7 +202,7 @@ public class OrdensThread extends Thread {
 		} else if (this.option == 0) {
 			return false;
 		}
-		/* é o modo cr7, ex: c1->c2->c3 */
+		/* ï¿½ o modo cr7, ex: c1->c2->c3 */
 		if (this.ordem.isSpeedMode()) {
 			return aux[0];
 		}
@@ -224,6 +224,7 @@ public class OrdensThread extends Thread {
 			System.out.println("maquinas a usar: " + x);
 		if (this.pendente)
 			this.ordem.executaOrdem();
+
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
 			int limite = 3;

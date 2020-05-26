@@ -85,7 +85,7 @@ public class Teste {
 			e.printStackTrace();
 		}
 
-		System.out.println("***COMEÇA***");
+		System.out.println("***COMEÃ‡A***");
 
 		/** COMMAND 1 */
 		fabrica.addToHeap(ordem1);
@@ -184,7 +184,7 @@ public class Teste {
 			e.printStackTrace();
 		}
 
-		System.out.println("***COMEÇA***");
+		System.out.println("***COMEÃ‡A***");
 
 		/** COMMAND 1 */
 		fabrica.addToHeap(ordem1);
@@ -228,6 +228,7 @@ public class Teste {
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
 		ordem1.setPecasPendentes(7);
 		ordem1.setTransform(ordem1.new Transform("P3", "P5"));// maquina A
+
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
 		ordem3.setPecasPendentes(7);
@@ -245,7 +246,7 @@ public class Teste {
 			e.printStackTrace();
 		}
 
-		System.out.println("***COMEÇA***");
+		System.out.println("***COMEÃ‡A***");
 
 		/** COMMAND 1 */
 
@@ -254,7 +255,7 @@ public class Teste {
 
 		/*10S*/
 
-		System.out.println("COMEÇAAAAAAAAAAA");
+		System.out.println("COMEÃ‡AAAAAAAAAAA");
 		//GereOrdensThread.setmBLivreSeleciona("", 0);
 		//GereOrdensThread.setmBLivreSeleciona("", 1);
 		//GereOrdensThread.setmBLivreSeleciona("", 2);

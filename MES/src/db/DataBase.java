@@ -5,16 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 import java.util.concurrent.Semaphore;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import org.postgresql.util.PSQLException;
 
@@ -38,13 +33,14 @@ public class DataBase {
 	private Semaphore sem;
 	private Boolean connectionState;
 	private Boolean oldConnectionState;
+
 	private DataBase() {
 		this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
 		this.user = "postgres";
 		this.password = "projetoII";
-		//this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
-		//this.user = "up201504257";
-		//this.password = "hFj8JWsg9";
+		// this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
+		// this.user = "up201504257";
+		// this.password = "hFj8JWsg9";
 		this.c = null;
 		DriverManager.setLoginTimeout(3);
 		this.zonaDescarga = new ZonaDescarga();
@@ -58,7 +54,7 @@ public class DataBase {
 
 		this.connectionState = false;
 		this.oldConnectionState = false;
-		
+
 	}
 
 	public static DataBase getInstance() {
@@ -100,12 +96,12 @@ public class DataBase {
 	 * @return boolean true se conexão com exito / false caso contrario
 	 */
 	public synchronized boolean connect() {
-		
+
 		try {
 			Class.forName("org.postgresql.Driver");
 			this.c = DriverManager.getConnection(url, user, password);
 		} catch (Exception e) {
-			//System.out.println(e.toString());
+			// System.out.println(e.toString());
 
 			return false;
 		}
@@ -131,7 +127,7 @@ public class DataBase {
 	 * @return boolean true se conexão terminada com exito / false caso contrario
 	 */
 	public synchronized boolean disconnect() {
-		
+
 		try {
 			this.c.close();
 		} catch (Exception e) {
@@ -148,69 +144,69 @@ public class DataBase {
 	 */
 	public synchronized boolean executeQuery(String sql) {
 		oldConnectionState = connectionState;
-		if(connect()){
-			//connect();
+		if (connect()) {
+			// connect();
 			connectionState = true;
-			if(connectionState && !oldConnectionState) {
-				//Passar todos os queries do txt para a db
+			if (connectionState && !oldConnectionState) {
+				// Passar todos os queries do txt para a db
 				try {
-				      File saveQueries = new File("saveQueries.txt");
-				      Scanner myReader = new Scanner(saveQueries);
-				      connect();
-				      while (myReader.hasNextLine()) {
-				        String line = myReader.nextLine();
-				        System.out.println(line);
-				        
-				        try {
-							
-							try{
+					File saveQueries = new File("saveQueries.txt");
+					Scanner myReader = new Scanner(saveQueries);
+					connect();
+					while (myReader.hasNextLine()) {
+						String line = myReader.nextLine();
+						System.out.println(line);
+
+						try {
+
+							try {
 								Statement stmt = getC().createStatement();
 								stmt.executeUpdate("SET search_path to fabrica;" + line);
-							}catch(PSQLException e) {
+							} catch (PSQLException e) {
 								sem.release();
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
 							disconnect();
-							
+							myReader.close();
 							return false;
 						}
-				        
-				      }
-				      myReader.close();
-				      saveQueries.delete();
+
+					}
+					myReader.close();
+					saveQueries.delete();
 				} catch (FileNotFoundException e) {
-				      e.printStackTrace();
-				    }
+					e.printStackTrace();
+				}
 			}
 			try {
-				
-				try{
+
+				try {
 					Statement stmt = getC().createStatement();
 					stmt.executeUpdate("SET search_path to fabrica;" + sql);
-				}catch(PSQLException e) {
+				} catch (PSQLException e) {
 					sem.release();
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				disconnect();
-				
+
 				return false;
 			}
 			disconnect();
 			return true;
-			
-		} else {//catch (Exception e) {
+
+		} else {// catch (Exception e) {
 			connectionState = false;
 			try {
 				FileWriter saveQueries = new FileWriter("saveQueries.txt", true);
-				saveQueries.write(sql+"\n");
+				saveQueries.write(sql + "\n");
 				saveQueries.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			
+
 			return false;
 		}
 	}
@@ -227,7 +223,7 @@ public class DataBase {
 		ResultSet rs = null;
 
 		try {
-			
+
 			Statement stmt = getC().createStatement();
 			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
@@ -293,7 +289,8 @@ public class DataBase {
 	}
 
 	public boolean insereProducao(Producao producao) {
-		return this.ordem.insert(this, new Ordem(producao.getNumeroOrdem(), producao.getQuantidadeProduzir(), producao.getAtrasoMaximo()))
+		return this.ordem.insert(this,
+				new Ordem(producao.getNumeroOrdem(), producao.getQuantidadeProduzir(), producao.getAtrasoMaximo()))
 				&& this.producao.insere(this, producao);
 	}
 
@@ -302,7 +299,7 @@ public class DataBase {
 	}
 
 	public boolean terminaOrdemProducao(String numeroOrdem, int prioridade) {
-		return ordem.terminaOrdem(this, numeroOrdem,prioridade);
+		return ordem.terminaOrdem(this, numeroOrdem, prioridade);
 	}
 
 	public boolean insereDescarga(Descarga descarga) {

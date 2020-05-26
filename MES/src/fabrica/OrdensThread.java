@@ -140,6 +140,7 @@ public class OrdensThread extends Thread {
 			short posPeca = Short.valueOf(x.getFrom().substring(1, 2));
 			short stock = Stock.getPecaStock((short) (posPeca - 1));
 			if (stock <= 0) {
+				GereOrdensThread.setStock(posPeca);
 				return false;
 			}
 		} else if (this.ordem.getUnload() != null) {
@@ -147,6 +148,7 @@ public class OrdensThread extends Thread {
 			short posPeca = Short.valueOf(x.getType().substring(1, 2));
 			short stock = Stock.getPecaStock((short) (posPeca - 1));
 			if (stock <= 0) {
+				GereOrdensThread.setStock(posPeca);
 				return false;
 			}
 		}

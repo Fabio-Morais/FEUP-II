@@ -32,6 +32,9 @@ public class GereOrdensThread {
 	/**Nao deixa mandar 2 descargas ao mesmo tempo*/
 	protected static Semaphore sem2 = GeneralSemaphore.getSem6();
 
+	/*Colocamos o numero da peça que falta o stock*/
+	private static short stock=-1;
+	
 	public static synchronized  boolean[] getmALivre() {
 		return mALivre;
 	}
@@ -136,6 +139,12 @@ public class GereOrdensThread {
 	}
 	public static boolean[] getmCEspera() {
 		return mCEspera;
+	}
+	public static short getStock() {
+		return stock;
+	}
+	public static void setStock(short stock) {
+		GereOrdensThread.stock = stock;
 	}
 	
 }

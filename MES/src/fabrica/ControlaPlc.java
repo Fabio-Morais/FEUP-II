@@ -51,6 +51,7 @@ public class ControlaPlc {
 
 		machineToolPointer = opcClient.getValueMatrix("Fabrica", "rebootToolPointer");
 		machineTool = opcClient.getValueMatrix3("Fabrica", "bufferMachineTools");
+		opcClient.setValue("Fabrica", "syncWarOut", true);
 
 		opcClient.setValue("Fabrica", "syncWarOut", true);
 		// Add costs to warehouse
@@ -78,36 +79,35 @@ public class ControlaPlc {
 					addLane("maquina", i, (i + 1), 15);
 					addLane("maquina", (i + 1), i, 15);
 				} else {
-					addLane("maquina", i, (i + 1), 14);
+					addLane("maquina", i, (i + 1), 18);
 				}
 
 			}
 
 		}
-		System.out.println();
-		/* 1∫ linha */
+		/* 1¬∫ linha */
 		addLane("tapete", 2, 7, 1);
 		addLane("tapete", 4, 8, 1);
 		addLane("tapete", 6, 9, 1);
 
-		/* 5∫ linha */
+		/* 5¬∫ linha */
 		addLane("tapete", 28, 33, 1);
 		addLane("tapete", 29, 35, 1);
 		addLane("tapete", 30, 37, 1);
 
-		/* 1∫ coluna */
+		/* 1¬∫ coluna */
 		addLane("tapete", 7, 11, 1);
 		addLane("tapete", 11, 17, 1);
 		addLane("tapete", 17, 23, 1);
 		addLane("tapete", 23, 28, 1);
 
-		/* 2∫ coluna */
+		/* 2¬∫ coluna */
 		addLane("tapete", 8, 13, 1);
 		addLane("tapete", 13, 19, 1);
 		addLane("tapete", 19, 25, 1);
 		addLane("tapete", 25, 29, 1);
 
-		/* 3∫ coluna */
+		/* 3¬∫ coluna */
 		addLane("tapete", 9, 15, 1);
 		addLane("tapete", 15, 21, 1);
 		addLane("tapete", 21, 27, 1);
@@ -139,7 +139,7 @@ public class ControlaPlc {
 		}
 	}
 
-	/** Escolhe o nÛ de acordo com a string enviada */
+	/** Escolhe o n√≥ de acordo com a string enviada */
 	private int converteString(String string) {
 		String aux = string.toUpperCase();
 		switch (aux) {
@@ -322,87 +322,34 @@ public class ControlaPlc {
 				y = 2;
 			}
 
-			if (pecasPendentes >= 3) {
-				if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				}
-			} else if (pecasPendentes >= 2) {
-				if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				}
 
-			} else if (pecasPendentes >= 1) {
-				System.out.println(maquinaLivre[0] + " ; " + maquinaLivre[1] + " ; " + maquinaLivre[2]);
-				if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				} else if ((coluna == -1 || coluna == 1)) {
-					rotaMaquinas(rota, origem, destino + "1");
-					returnString = destino + "1";
-					x = 0;
-				} else if ((coluna == -1 || coluna == 2)) {
-					rotaMaquinas(rota, origem, destino + "2");
-					returnString = destino + "2";
-					x = 1;
-				} else if ((coluna == -1 || coluna == 3)) {
-					rotaMaquinas(rota, origem, destino + "3");
-					returnString = destino + "3";
-					x = 2;
-				}
+			if (maquinaLivre[2]&& (coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if (maquinaLivre[1] && (coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if (maquinaLivre[0] && (coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+			} else if ((coluna == -1 || coluna == 3)) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			} else if ((coluna == -1 || coluna == 2)) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			} else if ((coluna == -1 || coluna == 1)) {
+				rotaMaquinas(rota, origem, destino + "1");
+				returnString = destino + "1";
+				x = 0;
+
 			}
+
 		}
 
 		/*
@@ -411,6 +358,7 @@ public class ControlaPlc {
 		 * System.out.println("machineTool[" + x + "][" + y + "][" +
 		 * machineToolPointer[x][y] + "] = " + tool);
 		 */
+
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -464,13 +412,20 @@ public class ControlaPlc {
 			int c = (i == 22) ? 15 : 0;
 			int x = (i == 22) ? 15 : i;
 			String receita = ordem.getReceita(x, c).get(0);
-			System.out.println("**********"+receita);
-			boolean[] aux = {false, false, false};
-			if (receita.equals("A")) {
+			// System.out.println("********** receita: "+receita);
+			boolean[] aux = { false, false, false };
+			String mALivre = GereOrdensThread.getmALivreSeleciona()[0];
+			String mBLivre = GereOrdensThread.getmBLivreSeleciona()[0];
+			String mCLivre = GereOrdensThread.getmCLivreSeleciona()[0];
+
+			if (receita.equals("A") && mALivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mALivre.substring(1, mALivre.length()))) {
 				aux = GereOrdensThread.getmALivre();
-			} else if (receita.equals("B")) {
+			} else if (receita.equals("B") && mBLivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mBLivre.substring(1, mBLivre.length()))) {
 				aux = GereOrdensThread.getmBLivre();
-			} else if (receita.equals("C")) {
+			} else if (receita.equals("C") && mCLivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mCLivre.substring(1, mCLivre.length()))) {
 				aux = GereOrdensThread.getmCLivre();
 			}
 			if (aux[0]) {
@@ -493,29 +448,12 @@ public class ControlaPlc {
 	public synchronized boolean runOrder(Ordens ordem) {
 		int smallest = 0;
 		this.speedMode = ordem.isSpeedMode();
-		if (ordem.getTransform() != null) {
-			if (ordem.getTransform().getFrom().equals("P1") && ordem.getTransform().getTo().equals("P9")) {
-				long[] auxTempo = GereOrdensThread.getTempoMC();
-				if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
-					smallest = (int) auxTempo[0] / 1000;
-				} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
-					smallest = (int) auxTempo[1] / 1000;
-				} else {
-					smallest = (int) auxTempo[2] / 1000;
-				}
-				if (this.speedMode) {
-					smallest = (int) auxTempo[0] / 1000;
-
-				}
-			}
-		}
-
-		List<String> transformations = ordem.getReceita(smallest, 0);// lista de transformaÁoes
+		List<String> transformations = ordem.getReceita(smallest, 0);// lista de transforma√ßoes
 		if (this.speedMode) {
 			transformations = speed(ordem);
 		}
-		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));// peÁa inicial
-		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));// peÁa final
+		short tipo = Short.parseShort("" + ordem.getTransform().getFrom().charAt(1));// pe√ßa inicial
+		short tipoFinal = Short.parseShort("" + ordem.getTransform().getTo().charAt(1));// pe√ßa final
 		short numeroOrdem = Short.parseShort(ordem.getNumeroOrdem()); // numero de ordem
 		List<String> maquinas = new ArrayList<>();
 		int auxIndice = -1;
@@ -559,7 +497,7 @@ public class ControlaPlc {
 		for (String aux : ordem.getListaPecas(tempoC, tempoA)) {
 			pecas[i++] = Short.parseShort("" + aux.charAt(1));
 		}
-		System.out.println(Arrays.toString(pecas));
+
 		// recipeTool => lsita de ferramentas
 		sendPath(path, tool, recipeTime, tipo, tipoFinal, numeroOrdem, pecas);
 		return true;
@@ -581,7 +519,6 @@ public class ControlaPlc {
 		} while (!in);
 
 		opcClient.setValue("Fabrica", "syncWarOut", false);
-		
 
 		opcClient.setValue("Fabrica", "tipoPecaInput", tipo);
 		opcClient.setValue("Fabrica", "pecainput.recipeTool", tool);
@@ -909,8 +846,8 @@ public class ControlaPlc {
 
 				int local_path_size = local_path[min_index][49][0];
 
-				// (min_tempo-2500) aproximaÁ„o do tempo que a proxima peca vai demorar a chegar
-				// l·
+				// (min_tempo-2500) aproxima√ß√£o do tempo que a proxima peca vai demorar a chegar
+				// l√°
 				temposExtras[arrival[1] - 3][min_index][arrival[0]][arrival[1] * 2] += (tempo + 6500); // -
 				// (local_path[min_index][49][1]-10000);
 
@@ -989,7 +926,7 @@ public class ControlaPlc {
 	}
 
 	private int[][] findPath(int arrival_x, int arrival_y, int departure_x, int departure_y) {
-		// usar esta funcao para ter o mapa como na f·brica
+		// usar esta funcao para ter o mapa como na f√°brica
 		int[][] original_path = new int[50][2];
 		int[][] path = new int[50][2];
 		int path_len = 0;
@@ -1053,7 +990,7 @@ public class ControlaPlc {
 					if (map[nn[i][0]][nn[i][1]] != 0) {
 						current_map[nn[i][0]][nn[i][1]] = map[nn[i][0]][nn[i][1]]
 								+ current_map[explore_node[0]][explore_node[1]];
-						// Adiciona ‡ heap
+						// Adiciona √† heap
 						addToHeap(nn[i][0], nn[i][1], current_map[nn[i][0]][nn[i][1]]);
 						if ((nn[i][0] == departure_x) && (nn[i][1] == departure_y)) {
 							stay_in_loop = false;

@@ -14,6 +14,11 @@ public class GereOrdensThread {
 	private static String[] mALivreSeleciona = {"", "", ""};
 	private static String[] mBLivreSeleciona = {"", "", ""};
 	private static String[] mCLivreSeleciona = {"", "", ""};
+	
+	private static boolean[] mAEspera= {false,false,false};
+	private static boolean[] mBEspera= {false,false,false};
+	private static boolean[] mCEspera= {false,false,false};
+	
 	private static long[] tempoMA = {0,0,0};
 	private static long[] tempoMB = {0,0,0};
 	private static long[] tempoMC = {0,0,0};
@@ -24,7 +29,9 @@ public class GereOrdensThread {
 	
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
-	
+	/**Nao deixa mandar 2 descargas ao mesmo tempo*/
+	protected static Semaphore sem2 = GeneralSemaphore.getSem6();
+
 	public static synchronized  boolean[] getmALivre() {
 		return mALivre;
 	}
@@ -111,4 +118,24 @@ public class GereOrdensThread {
 	public static void setMaquinasOcupadas(boolean maquinasOcupadas) {
 		GereOrdensThread.maquinasOcupadas = maquinasOcupadas;
 	}
+	
+	public static synchronized void setmAEspera(boolean mALivre, int pos) {
+		GereOrdensThread.mAEspera[pos] = mALivre;
+	}
+	public static synchronized void setmBEspera(boolean mBEspera, int pos) {
+		GereOrdensThread.mBEspera[pos] = mBEspera;
+	}
+	public static synchronized void setmCEspera(boolean mCEspera, int pos) {
+		GereOrdensThread.mCEspera[pos] = mCEspera;
+	}
+	public static boolean[] getmAEspera() {
+		return mAEspera;
+	}
+	public static boolean[] getmBEspera() {
+		return mBEspera;
+	}
+	public static boolean[] getmCEspera() {
+		return mCEspera;
+	}
+	
 }

@@ -71,7 +71,7 @@ public class Teste {
 		// command 4
 		Ordens ordem7 = new Ordens("7", 900, Ordem.localDate(), 900, fabrica);
 		ordem7.setPecasPendentes(20);
-		ordem7.setTransform(ordem7.new Transform("P1", "P9"));//maquina A OU C
+		ordem7.setTransform(ordem7.new Transform("P1", "P9"));//maquina A OU C OU B
 
 		Ordens ordem8 = new Ordens("101", 900, Ordem.localDate(), 900, fabrica);
 		ordem8.setPecasPendentes(6);
@@ -117,14 +117,14 @@ public class Teste {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem5);
+		//fabrica.addToHeap(ordem5);
 
 		try {
 			Thread.sleep(20);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		fabrica.addToHeap(ordem6);
+		//fabrica.addToHeap(ordem6);
 
 		/** COMMAND 3 */
 		try {
@@ -226,7 +226,7 @@ public class Teste {
 		Fabrica fabrica = Fabrica.getInstance();
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
-		ordem1.setPecasPendentes(3);
+		ordem1.setPecasPendentes(30);
 		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
 		
 		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
@@ -235,7 +235,7 @@ public class Teste {
 		
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(3);
-		ordem4.setTransform(ordem4.new Transform("P4", "P8"));// maquina C
+		ordem4.setTransform(ordem4.new Transform("P4", "P5"));// maquina C
 
 		
 		fabrica.atualizaHeap();
@@ -249,15 +249,13 @@ public class Teste {
 		System.out.println("***COMEÇA***");
 
 		/** COMMAND 1 */
+		fabrica.addToHeap(ordem4);
+
 		fabrica.addToHeap(ordem1);
 		//fabrica.addToHeap(ordem4);
 
 		/*10S*/
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
 		System.out.println("COMEÇAAAAAAAAAAA");
 		//GereOrdensThread.setmBLivreSeleciona("", 0);
 		//GereOrdensThread.setmBLivreSeleciona("", 1);

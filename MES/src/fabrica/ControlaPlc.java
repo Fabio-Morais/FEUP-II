@@ -409,6 +409,7 @@ public class ControlaPlc {
 		 * System.out.println("machineTool[" + x + "][" + y + "][" +
 		 * machineToolPointer[x][y] + "] = " + tool);
 		 */
+
 		machineTool[x][y][machineToolPointer[x][y]] = tool;// pointer = 0-> 1, pointer = 1 -> 2
 		machineToolPointer[x][y]++;
 		if (machineToolPointer[x][y] > 49) {
@@ -464,13 +465,17 @@ public class ControlaPlc {
 			String receita = ordem.getReceita(x, c).get(0);
 			// System.out.println("********** receita: "+receita);
 			boolean[] aux = { false, false, false };
-			if (receita.equals("A") && ordem.getNumeroOrdem().equals(GereOrdensThread.getmALivreSeleciona()[0])) {
+			String mALivre = GereOrdensThread.getmALivreSeleciona()[0];
+			String mBLivre = GereOrdensThread.getmBLivreSeleciona()[0];
+			String mCLivre = GereOrdensThread.getmCLivreSeleciona()[0];
+
+			if (receita.equals("A") && mALivre.length()>1 && ordem.getNumeroOrdem().equals(mALivre.substring(1,mALivre.length()))) {
 				aux = GereOrdensThread.getmALivre();
-			} else if (receita.equals("B")
-					&& ordem.getNumeroOrdem().equals(GereOrdensThread.getmBLivreSeleciona()[0])) {
+			} else if (receita.equals("B") && mBLivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mBLivre.substring(1, mBLivre.length()))) {
 				aux = GereOrdensThread.getmBLivre();
-			} else if (receita.equals("C")
-					&& ordem.getNumeroOrdem().equals(GereOrdensThread.getmCLivreSeleciona()[0])) {
+			} else if (receita.equals("C") && mCLivre.length() > 1
+					&& ordem.getNumeroOrdem().equals(mCLivre.substring(1, mCLivre.length()))) {
 				aux = GereOrdensThread.getmCLivre();
 			}
 			if (aux[0]) {

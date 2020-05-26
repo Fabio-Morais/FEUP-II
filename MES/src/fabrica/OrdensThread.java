@@ -62,15 +62,15 @@ public class OrdensThread extends Thread {
 		if (GereOrdensThread.getmALivreSeleciona()[0].equals("") && !this.maquinasAUsar[0].equals("A")) {
 			this.maquinasAUsar[0] = "A";
 			for (int i = 0; i < 3; i++)
-				GereOrdensThread.setmALivreSeleciona(this.ordem.getNumeroOrdem(), i);
+				GereOrdensThread.setmALivreSeleciona("S" + this.ordem.getNumeroOrdem(), i);
 		} else if (GereOrdensThread.getmBLivreSeleciona()[0].equals("") && !this.maquinasAUsar[0].equals("B")) {
 			this.maquinasAUsar[1] = "B";
 			for (int i = 0; i < 3; i++)
-				GereOrdensThread.setmBLivreSeleciona(this.ordem.getNumeroOrdem(), i);
+				GereOrdensThread.setmBLivreSeleciona("S" + this.ordem.getNumeroOrdem(), i);
 		} else if (GereOrdensThread.getmCLivreSeleciona()[0].equals("") && !this.maquinasAUsar[0].equals("C")) {
 			this.maquinasAUsar[2] = "C";
 			for (int i = 0; i < 3; i++)
-				GereOrdensThread.setmCLivreSeleciona(this.ordem.getNumeroOrdem(), i);
+				GereOrdensThread.setmCLivreSeleciona("S" + this.ordem.getNumeroOrdem(), i);
 		}
 	}
 
@@ -114,7 +114,6 @@ public class OrdensThread extends Thread {
 			int x = (i == 22) ? 15 : i;
 			String receita = ordem.getReceita(x, c).get(0);
 			boolean[] aux = { false, false, false };
-			System.out.println("receita: " + receita + "->" + this.maquinasAUsar[1]);
 			if (receita.equals("A") && this.maquinasAUsar[0].equals("A")) {
 				aux = GereOrdensThread.getmALivre();
 			} else if (receita.equals("B") && this.ordem.getPecasPendentes() > 2 && this.maquinasAUsar[1].equals("B")) {
@@ -131,67 +130,8 @@ public class OrdensThread extends Thread {
 		return false;
 	}
 
-	private boolean descarga() {
-		boolean maqOcupadas = GereOrdensThread.isMaquinasOcupadas();
-		if (!maqOcupadas) {
-			return false;
-		}
-		long smaller=Long.MAX_VALUE;
-		String maqA = GereOrdensThread.getmALivreSeleciona()[0];
-		String maqB = GereOrdensThread.getmBLivreSeleciona()[0];
-		String maqC = GereOrdensThread.getmCLivreSeleciona()[0];
-		boolean flag1=true;
-		boolean flag2=true;
-		if (!maqA.equals("")) {
-			if(maqA.equals(maqB)) {
-				flag1=false;
-			}
-			if(maqA.equals(maqC)) {
-				flag2=false;
-			}
-			long[] auxTempo = GereOrdensThread.getTempoMA();
-			if(auxTempo[0] < smaller) {
-				smaller = auxTempo[0];
-			}
-			if(auxTempo[1] < smaller) {
-				smaller = auxTempo[1];
-			}
-			if(auxTempo[2] < smaller) {
-				smaller = auxTempo[2];
-			}
-		}
-		if (!maqB.equals("") && flag1) {
-			if(maqB.equals(maqC)) {
-				flag2=false;
-			}
-			long[] auxTempo = GereOrdensThread.getTempoMB();
-			if(auxTempo[0] < smaller) {
-				smaller = auxTempo[0];
-			}
-			if(auxTempo[1] < smaller) {
-				smaller = auxTempo[1];
-			}
-			if(auxTempo[2] < smaller) {
-				smaller = auxTempo[2];
-			}
-		}
-		if (!maqC.equals("") && flag2) {
-			long[] auxTempo = GereOrdensThread.getTempoMC();
-			if(auxTempo[0] < smaller) {
-				smaller = auxTempo[0];
-			}
-			if(auxTempo[1] < smaller) {
-				smaller = auxTempo[1];
-			}
-			if(auxTempo[2] < smaller) {
-				smaller = auxTempo[2];
-			}
-		}
-		System.out.println(smaller);
-		return smaller > 2000;
-	}
-
 	private boolean executaOrdem(int limite) {
+	
 		/* SERVE PARA NAO DEIXAR SAIR PEÇAS SEM STOCK */
 		if (this.ordem.getTransform() != null) {
 			Ordens.Transform x = this.ordem.getTransform();
@@ -208,6 +148,15 @@ public class OrdensThread extends Thread {
 				return false;
 			}
 		}
+		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA1Livre"), 0);
+		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA2Livre"), 1);
+		GereOrdensThread.setmAEspera(opc.getValueBool("SFS", "mA3Livre"), 2);
+		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB1Livre"), 0);
+		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB2Livre"), 1);
+		GereOrdensThread.setmBEspera(opc.getValueBool("SFS", "mB3Livre"), 2);
+		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC1Livre"), 0);
+		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC2Livre"), 1);
+		GereOrdensThread.setmCEspera(opc.getValueBool("SFS", "mC3Livre"), 2);
 		boolean[] aux = { false, false, false };
 		boolean[] espera = { false, false, false };
 		short[] countMaq = { 0, 0, 0 };
@@ -245,9 +194,9 @@ public class OrdensThread extends Thread {
 			}
 		}
 
-		if (this.option == 0 && limite > 0) {
+		if (this.option == 0 && limite > 2) {
 			// faz algo
-			//return descarga();
+			// return descarga();
 			return GereOrdensThread.isMaquinasOcupadas();
 		} else if (this.option == 0) {
 			return false;
@@ -262,7 +211,7 @@ public class OrdensThread extends Thread {
 		if (rect.size() > 3 && !rect.get(0).equals(rect.get(3))) {
 			return manyOrders(rect);
 		}
-		if (countMaq[0] > 1 || countMaq[1] > 1 || countMaq[2] > 1) {
+		if (rect.size() > 3 && (countMaq[0] > 1 || countMaq[1] > 1 || countMaq[2] > 1)) {
 			String maq = rect.get(0);
 			if (maq.equals("A")) {
 				long[] tempoB = GereOrdensThread.getTempoMB();
@@ -284,8 +233,10 @@ public class OrdensThread extends Thread {
 			this.ordem.executaOrdem();
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
-			int limite = 1;
-
+			int limite = 3;
+			/*System.out.println(Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
+			System.out.println(Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
+			System.out.println(Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));*/
 			if (aExecutar) {
 				reservaMaquinas();// Se estiver a usar a maquina A e a B estiver livre coloca tambem a usar
 				try {
@@ -295,7 +246,7 @@ public class OrdensThread extends Thread {
 				}
 				while (executaOrdem(limite) && this.ordem.getPecasPendentes() > 0) {
 					if (selectRunOrder()) {
-						if(this.ordem.getUnload() != null) {
+						if (this.ordem.getUnload() != null) {
 							try {
 								GereOrdensThread.sem2.acquire();
 							} catch (InterruptedException e1) {
@@ -316,7 +267,7 @@ public class OrdensThread extends Thread {
 				GereOrdensThread.sem.release();
 			}
 			if (this.ordem.getUnload() != null) {
-				
+
 				try {
 					Thread.sleep(4500);
 				} catch (InterruptedException e) {
@@ -394,11 +345,22 @@ public class OrdensThread extends Thread {
 	public void setMaquinaAUsar(String maquinasAUsar) {
 		if (maquinasAUsar.equals("A")) {
 			this.maquinasAUsar[0] = maquinasAUsar;
+			if (this.ordem.isSpeedMode()) {
+				for(int i = 0; i < 3; i++)
+					GereOrdensThread.setmALivreSeleciona("S"+ordem.getNumeroOrdem(), i);
+			}
 		} else if (maquinasAUsar.equals("B")) {
 			this.maquinasAUsar[1] = maquinasAUsar;
-
+			if (this.ordem.isSpeedMode()) {
+				for(int i = 0; i < 3; i++)
+					GereOrdensThread.setmBLivreSeleciona("S"+ordem.getNumeroOrdem(), i);
+			}
 		} else if (maquinasAUsar.equals("C")) {
 			this.maquinasAUsar[2] = maquinasAUsar;
+			if (this.ordem.isSpeedMode()) {
+				for(int i = 0; i < 3; i++)
+					GereOrdensThread.setmCLivreSeleciona("S"+ordem.getNumeroOrdem(), i);
+			}
 		}
 	}
 

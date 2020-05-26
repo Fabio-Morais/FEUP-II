@@ -43,7 +43,6 @@ public class OrdensThread extends Thread {
 		try {
 			GeneralSemaphore.getSem5().acquire();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		if (option == 1) {
 			returnValue = controlaPlc.runOrder(this.ordem);
@@ -233,7 +232,6 @@ public class OrdensThread extends Thread {
 				try {
 					GereOrdensThread.sem.acquire();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 				while (executaOrdem(limite) && this.ordem.getPecasPendentes() > 0) {
 					if (selectRunOrder()) {
@@ -241,7 +239,6 @@ public class OrdensThread extends Thread {
 							try {
 								GereOrdensThread.sem2.acquire();
 							} catch (InterruptedException e1) {
-								e1.printStackTrace();
 							}
 						}
 						this.ordem.pecaParaProducao();
@@ -250,7 +247,6 @@ public class OrdensThread extends Thread {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
 
 				}
@@ -262,7 +258,6 @@ public class OrdensThread extends Thread {
 				try {
 					Thread.sleep(4500);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 				GereOrdensThread.sem2.release();
 
@@ -270,7 +265,6 @@ public class OrdensThread extends Thread {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
 			}
 
@@ -282,7 +276,6 @@ public class OrdensThread extends Thread {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 		

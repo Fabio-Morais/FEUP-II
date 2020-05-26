@@ -3,7 +3,6 @@ package fabrica;
 import java.sql.ResultSet;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 import db.DataBase;
@@ -21,7 +20,7 @@ public class Fabrica {
 	private Fabrica() {
 		this.db = DataBase.getInstance();
 		criaHeap();
-		//sincronizaOrdens();
+		sincronizaOrdens();
 
 	}
 
@@ -43,7 +42,6 @@ public class Fabrica {
 		try {
 			GeneralSemaphore.getSem().acquire();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		if (!heapOrdemPendente.contains(ordens))
 			heapOrdemPendente.add(ordens);
@@ -113,7 +111,6 @@ public class Fabrica {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		/*
 		 * FALTA METER AS ORDENS EM EXECUÇAO
@@ -151,28 +148,6 @@ public class Fabrica {
 	 */
 	public synchronized void setHeapOrdemPendente(PriorityQueue<Ordens> heapOrdemPendente) {
 		this.heapOrdemPendente = heapOrdemPendente;
-	}
-
-	/** Imprime todas as heaps */
-	public void imprimeHeap() {
-
-		PriorityQueue<Ordens> aux = getCopyHeapOrdemPendente();
-
-		int size = aux.size();
-		System.out.println("\n\nORDENS PENDENTES");
-		for (int i = 0; i < size; i++) {
-			System.out.println(aux.poll());
-		}
-		System.out.println("----------------------------");
-		HashMap<String, Ordens> aux2 = getCopyHeapOrdemExecucao();
-		System.out.println("ORDENS EM EXECUÇAO");
-		for (Map.Entry<String, Ordens> entry : aux2.entrySet()) {
-			String key = entry.getKey();
-			Ordens value = entry.getValue();
-			System.out.println(value);
-
-		}
-
 	}
 
 	public void gereOrdens() {

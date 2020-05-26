@@ -443,9 +443,7 @@ public class Gui {
 								opcRunning = false;
 							}
 						} catch (InterruptedException e) {
-							e.printStackTrace();
 						} catch (ExecutionException e) {
-							e.printStackTrace();
 						}
 					}
 				};
@@ -758,9 +756,7 @@ public class Gui {
 
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				} catch (ExecutionException e) {
-					e.printStackTrace();
 				}
 			}
 		};
@@ -790,9 +786,7 @@ public class Gui {
 						opcRunning = false;
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
 				} catch (ExecutionException e) {
-					e.printStackTrace();
 				}
 			}
 		};

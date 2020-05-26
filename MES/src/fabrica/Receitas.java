@@ -12,7 +12,6 @@ import dijkstra.Vertex;
 public abstract class Receitas {
 
 	public Receitas() {
-		// TODO Auto-generated constructor stub
 	}
 
 	static List<Vertex> nodes;

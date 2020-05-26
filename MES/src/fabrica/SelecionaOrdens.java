@@ -5,17 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.Semaphore;
 
 public class SelecionaOrdens extends Thread {
 	private static SelecionaOrdens instance = null;
 	private Fabrica fabrica;
-	private Semaphore sem;
 	private ArrayList<OrdensThread> ordensEmExecucao;
 	private ControlaPlc controlaPlc;
 
 	private SelecionaOrdens(Fabrica fabrica) {
-		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = fabrica;
 		this.ordensEmExecucao = new ArrayList<>();
 		this.controlaPlc = new ControlaPlc();
@@ -32,7 +29,6 @@ public class SelecionaOrdens extends Thread {
 			int aux = GereOrdensThread.getNumberOfThreads();
 
 			if (aux != auxPre) {
-				System.out.println("Numero de threads " + aux);
 				auxPre = aux;
 			}
 
@@ -71,13 +67,7 @@ public class SelecionaOrdens extends Thread {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					/*
-					 * System.out.println("--------------------");
-					 * System.out.println(Arrays.toString(GereOrdensThread.getmALivreSeleciona()));
-					 * System.out.println(Arrays.toString(GereOrdensThread.getmBLivreSeleciona()));
-					 * System.out.println(Arrays.toString(GereOrdensThread.getmCLivreSeleciona()));
-					 * System.out.println("--------------------");
-					 */
+
 				}
 
 			}
@@ -122,8 +112,6 @@ public class SelecionaOrdens extends Thread {
 		else
 			GereOrdensThread.setMaquinasOcupadas(false);
 
-		// System.out.println("--> Maquinas ocupadas: " +
-		// GereOrdensThread.isMaquinasOcupadas());
 	}
 
 	private boolean speed(Ordens ordem, boolean ok, List<String> select) {
@@ -249,7 +237,6 @@ public class SelecionaOrdens extends Thread {
 	}
 
 	private void selectList(List<String> select, String numeroOrdem) {
-		System.out.println("entrou no select: " + select);
 		for (String maquina : select) {
 			if (maquina.equals("A")) {
 				for (int i = 0; i < 3; i++) {
@@ -316,11 +303,9 @@ public class SelecionaOrdens extends Thread {
 		OrdensThread x = new OrdensThread(ordem, controlaPlc, ordem.pendente());// inicio thread
 
 		
-		System.out.println("lista produzida: " + ok);
 		x.setName("Thread " + ordem.getNumeroOrdem());
 		x.start();
 		x.setaExecutar(true);
-		System.out.println("executou ordem : " + ordem.getNumeroOrdem());
 		if (ok.equals("X")) {
 			// trocou ordem
 		}
@@ -365,8 +350,7 @@ public class SelecionaOrdens extends Thread {
 				List<String> ok = new ArrayList<>();
 				ok.add("X");
 				executaOrdem(ordemAExecutar, ok);
-				// System.out.println("*********troca ordem: " + ordemATrocar + " por ordem: " +
-				// ordem.getNumeroOrdem());
+
 
 				break;
 			}
@@ -374,12 +358,9 @@ public class SelecionaOrdens extends Thread {
 	}
 
 	private void executaOrdensEspera() {
-		System.out.println(ordensEmExecucao);
 		for (int i = 0; i < ordensEmExecucao.size(); i++) {
 			Ordens ordem = ordensEmExecucao.get(i).getOrdem();
-			System.out.println(ordem.getNumeroOrdem() + " -> " + ordensEmExecucao.get(i).isaExecutar());
 			if (ordem.getPecasPendentes() <= 0) {
-				System.out.println("removeu " + ordensEmExecucao.get(i));
 				ordensEmExecucao.remove(i);
 			} else if (!ordensEmExecucao.get(i).isaExecutar() && chooseOrder(ordem).size() > 0) {
 				ordensEmExecucao.get(i).setaExecutar(true);

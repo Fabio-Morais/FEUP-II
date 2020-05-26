@@ -58,7 +58,6 @@ public class OpcClient {
 			tunningTimers();// mete os tempos nas maquinas para ela sinalizar como livre
 
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -76,7 +75,6 @@ public class OpcClient {
 	 * @return true se fez conexão corretamente, false caso contrario
 	 */
 	public synchronized boolean connect() {
-		System.out.println(endpoints != null);
 		if (endpoints != null)
 			return true;
 
@@ -90,13 +88,11 @@ public class OpcClient {
 			client = new OpcUaClient(config);
 			client.connect().get();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 		try {
 			this.createSubscription();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return true;
 
@@ -146,7 +142,6 @@ public class OpcClient {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
-					System.out.println("erro no opc on subscription");
 				}
 				setValue("SFS", "tapeteEntradaLido", true);
 			}
@@ -163,7 +158,6 @@ public class OpcClient {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
-					System.out.println("erro no opc on subscription");
 				}
 				this.setValue("SFS", "pusher_1Lido", true);
 			}
@@ -177,7 +171,6 @@ public class OpcClient {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
-					System.out.println("erro no opc on subscription");
 				}
 				this.setValue("SFS", "pusher_2Lido", true);
 			}
@@ -193,7 +186,6 @@ public class OpcClient {
 					fabrica.getHeapOrdemExecucao().get("" + numeroOrdem).pecasProduzidas();
 
 				} catch (Exception e) {
-					System.out.println("erro no opc on subscription");
 				}
 				this.setValue("SFS", "pusher_3Lido", true);
 			}
@@ -436,7 +428,6 @@ public class OpcClient {
 		try {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new short[0];
 		}
 		valueShort[0] = (short) value.getValue().getValue();
@@ -455,7 +446,6 @@ public class OpcClient {
 		try {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new long[0];
 		}
 		valueShort[0] = (long) value.getValue().getValue() / 1000;
@@ -481,7 +471,6 @@ public class OpcClient {
 		try {
 			value = client.readValue(0, TimestampsToReturn.Both, nodeIdString).get();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		return (boolean) value.getValue().getValue();
@@ -498,7 +487,6 @@ public class OpcClient {
 				valueShort[i] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get().getValue()
 						.getValue();
 			} catch (Exception e) {
-				e.printStackTrace();
 				return new short[0];
 			}
 		}
@@ -524,7 +512,6 @@ public class OpcClient {
 			client.writeValue(nodeIdString, dv).get();
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -585,7 +572,6 @@ public class OpcClient {
 					valueShort[i][j] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get()
 							.getValue().getValue();
 				} catch (Exception e) {
-					e.printStackTrace();
 					return new short[0][0];
 				}
 
@@ -606,7 +592,6 @@ public class OpcClient {
 						valueShort[i][j][k] = (short) client.readValue(0, TimestampsToReturn.Both, nodeIdString).get()
 								.getValue().getValue();
 					} catch (Exception e) {
-						e.printStackTrace();
 						return new short[0][0][0];
 					}
 				}

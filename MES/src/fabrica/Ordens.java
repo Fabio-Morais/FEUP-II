@@ -23,7 +23,6 @@ public class Ordens {
 	private DataBase db;
 	private Transform transform;
 	private Unload unload;
-	private ControlaPlc enviaOrdem;
 	/**false se for uma ordem pendente, true se ja tiver sido executada anteriormente*/
 	private boolean pendente=true;
 	
@@ -163,7 +162,6 @@ public class Ordens {
 			semPendente.acquire();
 
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 
 		fabrica.getHeapOrdemExecucao().put(this.numeroOrdem, this);
@@ -197,7 +195,6 @@ public class Ordens {
 		try {
 			semExecucao.acquire();
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 		fabrica.getHeapOrdemExecucao().remove(this.numeroOrdem);
 		semExecucao.release();
@@ -209,7 +206,6 @@ public class Ordens {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 
 		if (this.pecasPendentes > 0) {
@@ -228,7 +224,6 @@ public class Ordens {
 		try {
 			sem.acquire();
 		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 
 		if (this.pecasEmProducao > 0) {

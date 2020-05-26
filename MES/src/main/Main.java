@@ -17,8 +17,7 @@ public class Main {
 	}
 	public static void executaTeste() {
 		Teste teste = new Teste();
-		//teste.testar();
-		teste.testar3();
+		teste.testar();
 	}
 	public static void executaPrograma() {
 		EventQueue.invokeLater(new Runnable() {

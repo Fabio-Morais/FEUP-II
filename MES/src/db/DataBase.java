@@ -101,7 +101,6 @@ public class DataBase {
 			Class.forName("org.postgresql.Driver");
 			this.c = DriverManager.getConnection(url, user, password);
 		} catch (Exception e) {
-			// System.out.println(e.toString());
 
 			return false;
 		}
@@ -155,8 +154,6 @@ public class DataBase {
 					connect();
 					while (myReader.hasNextLine()) {
 						String line = myReader.nextLine();
-						System.out.println(line);
-
 						try {
 
 							try {

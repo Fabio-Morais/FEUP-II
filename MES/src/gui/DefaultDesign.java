@@ -38,7 +38,7 @@ public class DefaultDesign {
 		button.setHorizontalTextPosition(SwingConstants.CENTER);
 	}
 	public static void styleLabel(JLabel label) {
-		label.setFont(new Font("hP Simplified", Font.BOLD, 14));
+		label.setFont(new Font("hP Simplified", Font.BOLD, 17));
 		Color colorText = Color.decode("#030349");
 		label.setForeground(colorText);
 	}

@@ -33,7 +33,6 @@ public class AtualizaOrdensEspera extends Thread {
 			try {
 				sem.acquire();
 			} catch (InterruptedException e1) {
-				e1.printStackTrace();
 			}
 			PriorityQueue<Ordens> heap = fabrica.getHeapOrdemPendente();
 			PriorityQueue<Ordens> aux =  new PriorityQueue<>(result);
@@ -59,7 +58,6 @@ public class AtualizaOrdensEspera extends Thread {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 
 			

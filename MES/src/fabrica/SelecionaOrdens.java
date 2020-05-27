@@ -5,17 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.Semaphore;
 
 public class SelecionaOrdens extends Thread {
 	private static SelecionaOrdens instance = null;
 	private Fabrica fabrica;
-	private Semaphore sem;
 	private ArrayList<OrdensThread> ordensEmExecucao;
 	private ControlaPlc controlaPlc;
 
 	private SelecionaOrdens(Fabrica fabrica) {
-		this.sem = GeneralSemaphore.getSem();
 		this.fabrica = fabrica;
 		this.ordensEmExecucao = new ArrayList<>();
 		this.controlaPlc = new ControlaPlc();
@@ -32,46 +29,102 @@ public class SelecionaOrdens extends Thread {
 			int aux = GereOrdensThread.getNumberOfThreads();
 
 			if (aux != auxPre) {
-				System.out.println("Numero de threads " + aux);
 				auxPre = aux;
 			}
 
 			PriorityQueue<Ordens> heapOrdemPendente = fabrica.getCopyHeapOrdemPendente();
+			if (GereOrdensThread.isVoltaInicio()) {
+				GereOrdensThread.setVoltaInicio(false);
+				executaOrdensEspera();
 
-			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 5) {
+			}
+			maquinasOcupadas();
+			// Nao permite mais de 5 ordens ao mesmo temo
+			if (!heapOrdemPendente.isEmpty() && GereOrdensThread.getNumberOfThreads() < 8) {
 				while (!heapOrdemPendente.isEmpty()) {
+					maquinasOcupadas();
 					Ordens ordem = heapOrdemPendente.poll();
-					boolean ok = false;
+					List<String> ok = null;
+					String troca = "";
+
 					if (GereOrdensThread.isVoltaInicio()) {
 						GereOrdensThread.setVoltaInicio(false);
+						executaOrdensEspera();
 						break;
 					} else {
 						ok = chooseOrder(ordem);
+						if (ok.isEmpty())
+							troca = trocaOrdem(ordem);
 					}
-
-					if (ok) {
-						System.out.println(" executa ordem :" + ordem);
-						OrdensThread x = new OrdensThread(ordem, controlaPlc, true);// inicio thread
-						x.setName("Thread " + ordem.getNumeroOrdem());
-						x.start();
-						GereOrdensThread.incrementNumberOfThreads();
-						ordensEmExecucao.add(x);
+					/** Se tiver prioridade parecida entao mete em paralelo */
+					if (ok != null && !ok.isEmpty()) {
+						executaOrdem(ordem, ok);
 						break;
+					} else if (!troca.equals("")) {
+						trocaOrdem(ordem, troca);
 					}
 					try {
 						Thread.sleep(200);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+
 				}
 
 			}
 			try {
-				Thread.sleep(200);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void maquinasOcupadas() {
+		long[] auxTempo = GereOrdensThread.getTempoMC();
+		boolean bool = true;
+		float smallest = 0;
+		if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
+			smallest = auxTempo[0] / 1000;
+		} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
+			smallest = auxTempo[1] / 1000;
+		} else {
+			smallest = auxTempo[2] / 1000;
+		}
+		for (int i = 0; i < ordensEmExecucao.size(); i++) {
+			String x = ordensEmExecucao.get(i).getOrdem().getReceita((int) smallest, 0).get(0);
+			if (!x.equals("D")) {
+				if (x.equals("A") && !(GereOrdensThread.getmALivre()[0] && GereOrdensThread.getmALivre()[1]
+						&& GereOrdensThread.getmALivre()[2])) {
+					bool &= true;
+				} else if (x.equals("B") && !(GereOrdensThread.getmBLivre()[0] && GereOrdensThread.getmBLivre()[1]
+						&& GereOrdensThread.getmBLivre()[2])) {
+					bool &= true;
+				} else if (x.equals("C") && !(GereOrdensThread.getmCLivre()[0] && GereOrdensThread.getmCLivre()[1]
+						&& GereOrdensThread.getmCLivre()[2])) {
+					bool &= true;
+				} else {
+					bool &= false;
+				}
+			}
+		}
+		if (ordensEmExecucao.size() > 0)
+			GereOrdensThread.setMaquinasOcupadas(bool);
+		else
+			GereOrdensThread.setMaquinasOcupadas(false);
+
+	}
+
+	private boolean speed(Ordens ordem, boolean ok, List<String> select) {
+
+		boolean returnValue = ok;
+		List<String> lista = ordem.getReceita(11, 0);
+		List<String> lista2 = ordem.getReceita(15, 15);
+
+		returnValue |= valida(ordem, lista, select);
+		returnValue |= valida(ordem, lista2, select);
+
+		return returnValue;
 	}
 
 	/**
@@ -82,87 +135,148 @@ public class SelecionaOrdens extends Thread {
 	 * @param lista - se lista tiver no indice 0 o D é descarga, caso contrario é
 	 *              carga
 	 */
-	private boolean chooseOrder(Ordens ordem) {
+	private List<String> chooseOrder(Ordens ordem) {
 		boolean ok = false;
-		List<String> lista = ordem.getReceita(0);
-		List<String> lista2 = ordem.getReceita(1000);
+		List<String> lista = ordem.getReceita(0, 0);
+		List<String> lista2 = ordem.getReceita(11, 0);
+		if (isSpeedMode(ordem)) {
+			ordem.setSpeedMode(true);
+		}
 		/* Se lista tiver um D entao é uma descarga */
 		if (lista.get(0).equals("D")) {
-			return true;
+			List<String> x = new ArrayList<>();
+			x.add("D");
+			return x;
 		}
-
 		List<String> select = new ArrayList<>();
-		for (int i = 0; i < lista.size(); i += 3) {
-			String x = lista.get(i);
-			if (x.equals("A") && (GereOrdensThread.getmALivreSeleciona()[0] || GereOrdensThread.getmALivreSeleciona()[1]
-					|| GereOrdensThread.getmALivreSeleciona()[2])) {
-				ok = true;
-				select.add("A");
-			} else if (x.equals("B") && (GereOrdensThread.getmBLivreSeleciona()[0]
-					|| GereOrdensThread.getmBLivreSeleciona()[1] || GereOrdensThread.getmBLivreSeleciona()[2])) {
-				ok = true;
-				select.add("B");
-			} else if (x.equals("C") && (GereOrdensThread.getmCLivreSeleciona()[0]
-					|| GereOrdensThread.getmCLivreSeleciona()[1] || GereOrdensThread.getmCLivreSeleciona()[2])) {
-				ok = true;
-				select.add("C");
-			} else {
-				ok = false;
-			}
-		}
+		ok = valida(ordem, lista, select);
 		/**
 		 * Se for maior que 3 entao pode usar mais que uma maquina, ex: (usar todas da C
 		 * e usar a A)
 		 */
-		if (ordem.getPecasPendentes() > 3) {
-			if (!lista.equals(lista2)) {
-				for (int i = 0; i < lista2.size(); i += 3) {
-					String x = lista2.get(i);
-					if (x.equals("A")
-							&& (GereOrdensThread.getmALivreSeleciona()[0] || GereOrdensThread.getmALivreSeleciona()[1]
-									|| GereOrdensThread.getmALivreSeleciona()[2])) {
-						ok = true;
-						select.add("A");
-					} else if (x.equals("B")
-							&& (GereOrdensThread.getmBLivreSeleciona()[0] || GereOrdensThread.getmBLivreSeleciona()[1]
-									|| GereOrdensThread.getmBLivreSeleciona()[2])) {
-						ok = true;
-						select.add("B");
-					} else if (x.equals("C")
-							&& (GereOrdensThread.getmCLivreSeleciona()[0] || GereOrdensThread.getmCLivreSeleciona()[1]
-									|| GereOrdensThread.getmCLivreSeleciona()[2])) {
-						ok = true;
-						select.add("C");
-					} else {
-						ok = false;
+		if (!lista.equals(lista2)) {
+			ok = speed(ordem, ok, select);
+		}
+
+		if (ok)
+			selectList(select, ordem.getNumeroOrdem());
+
+		return select;
+	}
+
+	private boolean valida(Ordens ordem, List<String> lista2, List<String> select) {
+		boolean ok = false;
+		if (ordem.isSpeedMode()) {
+			for (int i = 0; i < lista2.size(); i += 3) {
+				String x = lista2.get(i);
+				if (x.equals("A") && (GereOrdensThread.mALivreSeleciona()) && GereOrdensThread.getmALivre()[0]) {
+					ok = true;
+					select.add("A");
+				} else if (x.equals("B") && (GereOrdensThread.mBLivreSeleciona()) && GereOrdensThread.getmBLivre()[0]) {
+					ok = true;
+					select.add("B");
+				} else if (x.equals("C") && (GereOrdensThread.mCLivreSeleciona()) && GereOrdensThread.getmCLivre()[0]) {
+					ok = true;
+					select.add("C");
+				} else {
+					ok = false;
+				}
+			}
+		} else {
+			for (int i = 0; i < lista2.size(); i += 3) {
+				String x = lista2.get(i);
+				if (x.equals("A") && (GereOrdensThread.mALivreSeleciona())) {
+					ok = true;
+					select.add("A");
+				} else if (x.equals("B") && (GereOrdensThread.mBLivreSeleciona())) {
+					ok = true;
+					select.add("B");
+				} else if (x.equals("C") && (GereOrdensThread.mCLivreSeleciona())) {
+					ok = true;
+					select.add("C");
+				} else {
+					ok = false;
+				}
+			}
+
+		}
+
+		/*
+		 * Caso especial, em que vai so para 1 maquina e está na fabrica 1 ordem
+		 * ESPECIAL a correr em 3 maquinas
+		 */
+		if (lista2.size() < 4) {
+			int count = 1;
+			String pre = GereOrdensThread.getmALivreSeleciona()[0];
+			String mB = GereOrdensThread.getmBLivreSeleciona()[0];
+			String mC = GereOrdensThread.getmCLivreSeleciona()[0];
+			if (pre.equals(mB) && mB.length() > 1 && mB.charAt(0) == 'S') {
+				pre = GereOrdensThread.getmBLivreSeleciona()[0];
+				count++;
+			}
+			if (pre.equals(mC) && mC.length() > 1 && mC.charAt(0) == 'S') {
+				count++;
+
+			}
+			/* METER NA MAQUINA QUE TEM O S */
+			if (count > 1) {
+				if (lista2.get(0).equals("A") && GereOrdensThread.getmALivreSeleciona()[0].length() > 1
+						&& (GereOrdensThread.getmALivreSeleciona()[0].charAt(0) == 'S')) {
+					ok = true;
+					select.add("A");
+					String numero = GereOrdensThread.getmALivreSeleciona()[0];
+					for (int i = 0; i < ordensEmExecucao.size(); i++) {
+						OrdensThread ordemExe = ordensEmExecucao.get(i);
+						if (ordemExe.getOrdem().getNumeroOrdem().equals(numero.substring(1, numero.length()))) {
+							ordemExe.removeMaquinaAUsar("A");
+						}
+					}
+				} else if (lista2.get(0).equals("B") && GereOrdensThread.getmBLivreSeleciona()[0].length() > 1
+						&& (GereOrdensThread.getmBLivreSeleciona()[0].charAt(0) == 'S')) {
+					ok = true;
+					select.add("B");
+					String numero = GereOrdensThread.getmALivreSeleciona()[0];
+					for (int i = 0; i < ordensEmExecucao.size(); i++) {
+						OrdensThread ordemExe = ordensEmExecucao.get(i);
+						if (ordemExe.getOrdem().getNumeroOrdem().equals(numero.substring(1, numero.length()))) {
+							ordemExe.removeMaquinaAUsar("B");
+						}
+					}
+				} else if (lista2.get(0).equals("C") && GereOrdensThread.getmCLivreSeleciona()[0].length() > 1
+						&& (GereOrdensThread.getmCLivreSeleciona()[0].charAt(0) == 'S')) {
+					ok = true;
+					select.add("C");
+					String numero = GereOrdensThread.getmALivreSeleciona()[0];
+					for (int i = 0; i < ordensEmExecucao.size(); i++) {
+						OrdensThread ordemExe = ordensEmExecucao.get(i);
+						if (ordemExe.getOrdem().getNumeroOrdem().equals(numero.substring(1, numero.length()))) {
+							ordemExe.removeMaquinaAUsar("C");
+						}
 					}
 				}
 			}
+
 		}
-		if (select.size() > 0)
-			System.out.println("***" + select);
-		if (ok)
-			selectList(select);
 		return ok;
 	}
 
-	private void selectList(List<String> select) {
-		System.out.println("entrou no select: " + select);
+	private void selectList(List<String> select, String numeroOrdem) {
 		for (String maquina : select) {
 			if (maquina.equals("A")) {
 				for (int i = 0; i < 3; i++) {
-					GereOrdensThread.setmALivreSeleciona(false, i);
+					GereOrdensThread.setmALivreSeleciona("X" + numeroOrdem, i);
 				}
 			} else if (maquina.equals("B")) {
 				for (int i = 0; i < 3; i++) {
-					GereOrdensThread.setmBLivreSeleciona(false, i);
+					GereOrdensThread.setmBLivreSeleciona("X" + numeroOrdem, i);
 				}
 			} else if (maquina.equals("C")) {
 				for (int i = 0; i < 3; i++) {
-					GereOrdensThread.setmCLivreSeleciona(false, i);
+					GereOrdensThread.setmCLivreSeleciona("X" + numeroOrdem, i);
 				}
 			}
 		}
+
 	}
 
 	private void sincronizaOrdens() {
@@ -174,7 +288,7 @@ public class SelecionaOrdens extends Thread {
 		HashMap<String, Ordens> aux = fabrica.getCopyHeapOrdemExecucao();
 		for (Map.Entry<String, Ordens> entry : aux.entrySet()) {
 			Ordens value = entry.getValue();
-			if (chooseOrder(value)) {
+			if (chooseOrder(value).size() > 0) {
 				OrdensThread x = new OrdensThread(value, controlaPlc, false);// inicio thread
 				x.setName("Thread " + value.getNumeroOrdem());
 				x.start();
@@ -189,5 +303,93 @@ public class SelecionaOrdens extends Thread {
 		if (instance == null)
 			instance = new SelecionaOrdens(fabrica);
 		return instance;
+	}
+
+	private boolean isSpeedMode(Ordens ordem) {
+		List<String> aux = ordem.getReceita(0, 0);
+		if (aux.size() / 3 < 3)
+			return false;
+		for (int i = 0; i < aux.size(); i += 3) {
+			String pre = aux.get(0);
+			String preFerra = aux.get(1);
+			if (pre.equals(aux.get(i))) {
+				if (!preFerra.equals(aux.get(+1))) {
+					return false;
+				}
+			} else
+				return false;
+		}
+
+		return true;
+	}
+
+	private void executaOrdem(Ordens ordem, List<String> ok) {
+		OrdensThread x = new OrdensThread(ordem, controlaPlc, ordem.pendente());// inicio thread
+
+		x.setName("Thread " + ordem.getNumeroOrdem());
+		x.start();
+		x.setaExecutar(true);
+
+		for (String maquinasAUsar : ok) {
+			x.setMaquinaAUsar(maquinasAUsar);
+		}
+
+		GereOrdensThread.incrementNumberOfThreads();
+		ordensEmExecucao.add(x);
+	}
+
+	private String trocaOrdem(Ordens ordem) {
+		List<String> lista = ordem.getReceita(0, 0);
+		/* Se lista tiver um D entao é uma descarga */
+		if (lista.get(0).equals("D")) {
+			return "";
+		}
+		System.out.println("entrou");
+		for (int i = 0; i < lista.size(); i += 3) {
+			String x = lista.get(i);
+			if (x.equals("A")) {
+				return GereOrdensThread.getmALivreSeleciona()[0];
+			} else if (x.equals("B")) {
+				return GereOrdensThread.getmBLivreSeleciona()[0];
+			} else if (x.equals("C")) {
+				return GereOrdensThread.getmCLivreSeleciona()[0];
+			}
+		}
+
+		return "";
+	}
+
+	private void trocaOrdem(Ordens ordemAExecutar, String ordemATrocar) {
+		for (int i = 0; i < ordensEmExecucao.size(); i++) {
+			Ordens ordem = ordensEmExecucao.get(i).getOrdem();
+			/* vai à heap e tira a ordem que vamos trocar */
+			if (ordem.getNumeroOrdem().equals(ordemATrocar.substring(1, ordemATrocar.length()))) {
+				if ((ordem.getPrioridade() - ordemAExecutar.getPrioridade()) < 50) {
+					break;
+				}
+				if (ordensEmExecucao.get(i).getOrdem().isSpeedMode()) {
+					ordensEmExecucao.get(i).removeMaquinaAUsar(ordemAExecutar.getReceita(0, 0).get(0));
+				} else {
+					ordensEmExecucao.get(i).setaExecutar(false);
+				}
+				List<String> ok = new ArrayList<>();
+				ok.add("X");
+				executaOrdem(ordemAExecutar, ok);
+
+				break;
+			}
+		}
+	}
+
+	private void executaOrdensEspera() {
+		for (int i = 0; i < ordensEmExecucao.size(); i++) {
+			Ordens ordem = ordensEmExecucao.get(i).getOrdem();
+			if (ordem.getPecasPendentes() <= 0) {
+				ordensEmExecucao.remove(i);
+			} else if (!ordensEmExecucao.get(i).isaExecutar() && chooseOrder(ordem).size() > 0) {
+				ordensEmExecucao.get(i).setaExecutar(true);
+			}
+
+		}
 	}
 }

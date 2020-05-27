@@ -36,7 +36,6 @@ public class ListaOrdens {
 		FileUtils.writeStringToFile(newHtmlFile, htmlString, x);
 		//first check if Desktop is supported by Platform or not
         if(!Desktop.isDesktopSupported()){
-            System.out.println("Desktop is not supported");
             return;
         }
         

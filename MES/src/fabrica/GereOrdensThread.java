@@ -11,17 +11,30 @@ public class GereOrdensThread {
 	private static boolean[] mBLivre= {true,true,true};
 	private static boolean[] mCLivre= {true,true,true};
 	
-	private static boolean[] mALivreSeleciona = {true, true, true};
-	private static boolean[] mBLivreSeleciona = {true, true, true};
-	private static boolean[] mCLivreSeleciona = {true, true, true};
+	private static String[] mALivreSeleciona = {"", "", ""};
+	private static String[] mBLivreSeleciona = {"", "", ""};
+	private static String[] mCLivreSeleciona = {"", "", ""};
+	
+	private static boolean[] mAEspera= {false,false,false};
+	private static boolean[] mBEspera= {false,false,false};
+	private static boolean[] mCEspera= {false,false,false};
+	
 	private static long[] tempoMA = {0,0,0};
 	private static long[] tempoMB = {0,0,0};
 	private static long[] tempoMC = {0,0,0};
 	private static int numberOfThreads =0;
 	private static boolean voltaInicio= false;
 	
+	private static boolean maquinasOcupadas;
+	
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
+	/**Nao deixa mandar 2 descargas ao mesmo tempo*/
+	protected static Semaphore sem2 = GeneralSemaphore.getSem6();
+
+	/*Colocamos o numero da peça que falta o stock*/
+	private static short stock=-1;
+	private static boolean stockFlag=true;
 	
 	public static synchronized  boolean[] getmALivre() {
 		return mALivre;
@@ -70,22 +83,31 @@ public class GereOrdensThread {
 	}
 
 	
-	public static boolean[] getmALivreSeleciona() {
+	public static String[] getmALivreSeleciona() {
 		return mALivreSeleciona;
 	}
-	public static boolean[] getmBLivreSeleciona() {
+	public static String[] getmBLivreSeleciona() {
 		return mBLivreSeleciona;
 	}
-	public static boolean[] getmCLivreSeleciona() {
+	public static String[] getmCLivreSeleciona() {
 		return mCLivreSeleciona;
 	}
-	public static synchronized void setmALivreSeleciona(boolean mALivre, int pos) {
-		GereOrdensThread.mALivreSeleciona[pos] = mALivre;
+	public static boolean mALivreSeleciona() {
+		return mALivreSeleciona[0].equals("") || mALivreSeleciona[1].equals("") || mALivreSeleciona[2].equals("") ;
 	}
-	public static synchronized void setmBLivreSeleciona(boolean mBLivre, int pos) {
-		GereOrdensThread.mBLivreSeleciona[pos] = mBLivre;
-	}public static synchronized void setmCLivreSeleciona(boolean mCLivre, int pos) {
-		GereOrdensThread.mCLivreSeleciona[pos] = mCLivre;
+	public static boolean mBLivreSeleciona() {
+		return mBLivreSeleciona[0].equals("") || mBLivreSeleciona[1].equals("") || mBLivreSeleciona[2].equals("") ;
+	}
+	public static boolean mCLivreSeleciona() {
+		return mCLivreSeleciona[0].equals("") || mCLivreSeleciona[1].equals("") || mCLivreSeleciona[2].equals("") ;
+	}
+	public static synchronized void setmALivreSeleciona(String numeroOrdem, int pos) {
+		GereOrdensThread.mALivreSeleciona[pos] = numeroOrdem;
+	}
+	public static synchronized void setmBLivreSeleciona(String numeroOrdem, int pos) {
+		GereOrdensThread.mBLivreSeleciona[pos] = numeroOrdem;
+	}public static synchronized void setmCLivreSeleciona(String numeroOrdem, int pos) {
+		GereOrdensThread.mCLivreSeleciona[pos] = numeroOrdem;
 	}
 	public static boolean isVoltaInicio() {
 		return voltaInicio;
@@ -93,4 +115,43 @@ public class GereOrdensThread {
 	public static void setVoltaInicio(boolean voltaInicio) {
 		GereOrdensThread.voltaInicio = voltaInicio;
 	}
+	
+	public static boolean isMaquinasOcupadas() {
+		return maquinasOcupadas;
+	}
+	public static void setMaquinasOcupadas(boolean maquinasOcupadas) {
+		GereOrdensThread.maquinasOcupadas = maquinasOcupadas;
+	}
+	
+	public static synchronized void setmAEspera(boolean mALivre, int pos) {
+		GereOrdensThread.mAEspera[pos] = mALivre;
+	}
+	public static synchronized void setmBEspera(boolean mBEspera, int pos) {
+		GereOrdensThread.mBEspera[pos] = mBEspera;
+	}
+	public static synchronized void setmCEspera(boolean mCEspera, int pos) {
+		GereOrdensThread.mCEspera[pos] = mCEspera;
+	}
+	public static boolean[] getmAEspera() {
+		return mAEspera;
+	}
+	public static boolean[] getmBEspera() {
+		return mBEspera;
+	}
+	public static boolean[] getmCEspera() {
+		return mCEspera;
+	}
+	public static short getStock() {
+		return stock;
+	}
+	public static void setStock(short stock) {
+		GereOrdensThread.stock = stock;
+	}
+	public static boolean isStockFlag() {
+		return stockFlag;
+	}
+	public static void setStockFlag(boolean stockFlag) {
+		GereOrdensThread.stockFlag = stockFlag;
+	}
+	
 }

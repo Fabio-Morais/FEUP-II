@@ -4,13 +4,22 @@ import java.awt.EventQueue;
 
 import fabrica.Fabrica;
 import gui.Gui;
+import test.Teste;
 import udp.ServerUdp;
 
 public class Main {
 
 	public static void main(String[] args) {
-
-	
+		executaTeste();
+	/*ControlaPlc x = new ControlaPlc();
+	x.test();*/
+		//executaPrograma();
+	}
+	public static void executaTeste() {
+		Teste teste = new Teste();
+		teste.testar();
+	}
+	public static void executaPrograma() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -39,5 +48,6 @@ public class Main {
 		ServerUdp udp = ServerUdp.getInstance();
 		udp.start();
 	}
+
 
 }

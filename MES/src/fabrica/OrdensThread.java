@@ -347,6 +347,7 @@ public class OrdensThread extends Thread {
 	}
 
 	public void removeMaquinaAUsar(String maquinasAUsar) {
+		System.out.println("removeu "+ maquinasAUsar);
 		if (maquinasAUsar.equals("A")) {
 			this.maquinasAUsar[0] = "";
 		} else if (maquinasAUsar.equals("B")) {

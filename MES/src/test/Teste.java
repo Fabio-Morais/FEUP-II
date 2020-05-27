@@ -227,12 +227,12 @@ public class Teste {
 
 		Ordens ordem1 = new Ordens("1", 300, Ordem.localDate(), 300, fabrica);
 		ordem1.setPecasPendentes(15);
-		ordem1.setTransform(ordem1.new Transform("P2", "P3"));// maquina A
+		ordem1.setTransform(ordem1.new Transform("P1", "P9"));// maquina A
 
 		
-		Ordens ordem3 = new Ordens("3", 300, Ordem.localDate(), 300, fabrica);
+		Ordens ordem3 = new Ordens("3", 200, Ordem.localDate(), 200, fabrica);
 		ordem3.setPecasPendentes(7);
-		ordem3.setTransform(ordem3.new Transform("P3", "P7"));// maquina B
+		ordem3.setTransform(ordem3.new Transform("P1", "P2"));// maquina B
 		
 		Ordens ordem4 = new Ordens("4", 300, Ordem.localDate(), 300, fabrica);
 		ordem4.setPecasPendentes(3);
@@ -259,7 +259,14 @@ public class Teste {
 		//GereOrdensThread.setmBLivreSeleciona("", 0);
 		//GereOrdensThread.setmBLivreSeleciona("", 1);
 		//GereOrdensThread.setmBLivreSeleciona("", 2);
-		//fabrica.addToHeap(ordem3);
+		
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+System.out.println("começa uiiii");
+		fabrica.addToHeap(ordem3);
 
 		Ordens ordem2 = new Ordens("2", 200, Ordem.localDate(), 200, fabrica);
 		ordem2.setPecasPendentes(5);

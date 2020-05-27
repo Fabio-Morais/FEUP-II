@@ -1,11 +1,15 @@
 package udp;
 
+import java.net.DatagramPacket;
+
 import opc.OpcClient;
 
 public class RequestStore {
 	private String address;
-	public RequestStore(String address) {
+	private  DatagramPacket packet;
+	public RequestStore(String address,  DatagramPacket packet) {
 		this.address=address;
+		this.packet = packet;
 		sendXml();
 	}
 	/**
@@ -28,9 +32,8 @@ public class RequestStore {
 			xml += "<WorkPiece type=\"" + px + "\" quantity=\"" + values[i] + "\"/>\r\n";
 		}
 		xml += "</Current_Stores>";
-		System.out.println(xml);
 
-		ClientUdp clientUdp = new ClientUdp(address);
+		ClientUdp clientUdp = new ClientUdp(address, packet);
 		clientUdp.sendEcho(xml);
 	}
 }

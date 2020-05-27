@@ -12,14 +12,15 @@ public class ClientUdp extends Thread {
 
 	private DatagramSocket socket;
 	private InetAddress address;
+	private DatagramPacket packet;
 
-	public ClientUdp(String address) {
+	public ClientUdp(String address, DatagramPacket packet) {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.packet = packet;
 		try {
 			this.address = InetAddress.getByName(address);
 		} catch (UnknownHostException e) {
@@ -29,7 +30,8 @@ public class ClientUdp extends Thread {
 
 	public void sendEcho(String msg) {
 		byte[] buf = msg.getBytes();
-		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, port);
+		//socket.getPort()
+		DatagramPacket packet = new DatagramPacket(buf, buf.length, address, this.packet.getPort());
 
 		try {
 			socket.send(packet);

@@ -163,7 +163,6 @@ public class DataBase {
 								sem.release();
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
 							disconnect();
 							myReader.close();
 							return false;
@@ -173,7 +172,6 @@ public class DataBase {
 					myReader.close();
 					saveQueries.delete();
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
 				}
 			}
 			try {
@@ -186,7 +184,6 @@ public class DataBase {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
 				disconnect();
 
 				return false;
@@ -201,7 +198,6 @@ public class DataBase {
 				saveQueries.write(sql + "\n");
 				saveQueries.close();
 			} catch (IOException e1) {
-				e1.printStackTrace();
 			}
 
 			return false;
@@ -225,7 +221,6 @@ public class DataBase {
 			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
 			disconnect();
-			e.printStackTrace();
 		}
 		disconnect();
 		return rs;

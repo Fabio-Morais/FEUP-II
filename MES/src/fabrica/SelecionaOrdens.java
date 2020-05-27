@@ -344,7 +344,6 @@ public class SelecionaOrdens extends Thread {
 		if (lista.get(0).equals("D")) {
 			return "";
 		}
-		System.out.println("entrou");
 		for (int i = 0; i < lista.size(); i += 3) {
 			String x = lista.get(i);
 			if (x.equals("A")) {

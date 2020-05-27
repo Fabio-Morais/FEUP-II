@@ -136,6 +136,7 @@ public class OrdensThread extends Thread {
 			Ordens.Transform x = this.ordem.getTransform();
 			short posPeca = Short.valueOf(x.getFrom().substring(1, 2));
 			short stock = Stock.getPecaStock((short) (posPeca - 1));
+			System.out.println(stock);
 			if (stock <= 0) {
 				GereOrdensThread.setStock(posPeca);
 				return false;

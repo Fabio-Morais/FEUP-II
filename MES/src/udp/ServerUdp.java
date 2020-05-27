@@ -41,7 +41,7 @@ public class ServerUdp extends Thread {
 		
 			try {
 				xml = new Message(InetAddress.getLocalHost().getHostAddress());
-				xml.read(realMessage);
+				xml.read(realMessage, packet);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

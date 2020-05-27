@@ -480,8 +480,8 @@ public class Gui {
 
 	private void tableStockJScrollPane(JScrollPane scrollPane_2) {
 		modelStock = new DefaultTableModel(
-				new Object[][] { { "P1", "2" }, { "P2", "3" }, { "P3", "2" }, { "P4", "1" }, { "P5", "5" },
-						{ "P6", "12" }, { "P7", "32" }, { "P8", "4" }, { "P9", "7" }, },
+				new Object[][] { { "P1", "" }, { "P2", "" }, { "P3", "" }, { "P4", "" }, { "P5", "" },
+						{ "P6", "" }, { "P7", "" }, { "P8", "" }, { "P9", "" }, },
 				new String[] { "Tipo pe\u00E7a", "Quantidade" }) {
 
 			private static final long serialVersionUID = 1880689174093893276L;

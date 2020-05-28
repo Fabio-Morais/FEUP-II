@@ -3,13 +3,16 @@ package opc;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
@@ -32,6 +35,7 @@ import org.eclipse.milo.opcua.stack.core.types.structured.EndpointDescription;
 import org.eclipse.milo.opcua.stack.core.types.structured.MonitoredItemCreateRequest;
 import org.eclipse.milo.opcua.stack.core.types.structured.MonitoringParameters;
 import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
+import org.postgresql.util.PSQLException;
 
 import db.Maquina;
 import db.ZonaDescarga;
@@ -54,10 +58,27 @@ public class OpcClient {
 		this.fabrica = Fabrica.getInstance();
 		try {
 			this.publicHostName = InetAddress.getLocalHost().getHostAddress();
+			try {
+				File config = new File("config.txt");
+				Scanner myReader = new Scanner(config);
+				while (myReader.hasNextLine()) {
+					String line = myReader.nextLine();
+					try {
+						this.publicHostName = line;
+						
+					} catch (Exception e) {
+						myReader.close();
+					}
+
+				}
+				myReader.close();
+			} catch (FileNotFoundException e) {
+			}
 			connect();
 			tunningTimers();// mete os tempos nas maquinas para ela sinalizar como livre
 
 		} catch (UnknownHostException e) {
+
 		}
 
 	}

@@ -24,7 +24,6 @@ public class RequestStore {
 		String xml = "<?xml version=\"1.0\"?>\r\n" + 
 				"<Current_Stores>\r\n";
 		String px = "P0";
-		int quant = 0;
 
 
 		for (int i = 0; i < 9; i++) {

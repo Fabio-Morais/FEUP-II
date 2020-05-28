@@ -35,12 +35,13 @@ public class DataBase {
 	private Boolean oldConnectionState;
 
 	private DataBase() {
-		//this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
-		//this.user = "postgres";
-		//this.password = "projetoII";
-		 this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
-		 this.user = "up201504257";
-		 this.password = "hFj8JWsg9";
+		/*
+		 * this.url = "jdbc:postgresql://127.0.0.1:5433/?currentSchema=fabrica";
+		 * this.user = "postgres"; this.password = "projetoII";
+		 */
+		this.url = "jdbc:postgresql://db.fe.up.pt:5432/?currentSchema=fabrica";
+		this.user = "up201504257";
+		this.password = "hFj8JWsg9";
 		this.c = null;
 		DriverManager.setLoginTimeout(3);
 		this.zonaDescarga = new ZonaDescarga();
@@ -142,6 +143,7 @@ public class DataBase {
 	 * @return boolean - true se executar corretamente / false caso contrario
 	 */
 	public synchronized boolean executeQuery(String sql) {
+
 		oldConnectionState = connectionState;
 		if (connect()) {
 			// connect();
@@ -150,6 +152,13 @@ public class DataBase {
 				// Passar todos os queries do txt para a db
 				try {
 					File saveQueries = new File("saveQueries.txt");
+					if (!saveQueries.exists()) {
+						try {
+							saveQueries.createNewFile();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 					Scanner myReader = new Scanner(saveQueries);
 					connect();
 					while (myReader.hasNextLine()) {
@@ -160,9 +169,12 @@ public class DataBase {
 								Statement stmt = getC().createStatement();
 								stmt.executeUpdate("SET search_path to fabrica;" + line);
 							} catch (PSQLException e) {
+								e.printStackTrace();
+
 								sem.release();
 							}
 						} catch (Exception e) {
+							e.printStackTrace();
 							disconnect();
 							myReader.close();
 							return false;
@@ -172,6 +184,7 @@ public class DataBase {
 					myReader.close();
 					saveQueries.delete();
 				} catch (FileNotFoundException e) {
+					e.printStackTrace();
 				}
 			}
 			try {
@@ -180,10 +193,13 @@ public class DataBase {
 					Statement stmt = getC().createStatement();
 					stmt.executeUpdate("SET search_path to fabrica;" + sql);
 				} catch (PSQLException e) {
+					e.printStackTrace();
+
 					sem.release();
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				disconnect();
 
 				return false;
@@ -198,10 +214,12 @@ public class DataBase {
 				saveQueries.write(sql + "\n");
 				saveQueries.close();
 			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
 
 			return false;
 		}
+
 	}
 
 	/**
@@ -221,6 +239,7 @@ public class DataBase {
 			rs = stmt.executeQuery(sql);
 		} catch (Exception e) {
 			disconnect();
+			e.printStackTrace();
 		}
 		disconnect();
 		return rs;

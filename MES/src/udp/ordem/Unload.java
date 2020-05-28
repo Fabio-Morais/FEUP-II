@@ -21,28 +21,28 @@ public class Unload {
 
 	public Unload(Element eElement) {
 		this.db = DataBase.getInstance();
-		
+
 		this.numeroOrdem = eElement.getAttribute("Number");
 		this.numeroOrdemInt = Integer.valueOf(numeroOrdem);
 		this.node = eElement.getElementsByTagName("Unload").item(0).getAttributes();
-		this.type=node.getNamedItem("Type").getNodeValue();
-		this.destination=""+node.getNamedItem("Destination").getNodeValue().charAt(1);
-		this.destination = "PM"+this.destination;
-		this.quantity=node.getNamedItem("Quantity").getNodeValue();
-		//debug();
+		this.type = node.getNamedItem("Type").getNodeValue();
+		this.destination = "" + node.getNamedItem("Destination").getNodeValue().charAt(1);
+		this.destination = "PM" + this.destination;
+		this.quantity = node.getNamedItem("Quantity").getNodeValue();
+		// debug();
 		insereDb();
 	}
-	
+
 	public void insereDb() {
-		/*so adiciona na heap caso adicione na DB com exito*/
-		Ordens ordem = new Ordens(""+numeroOrdemInt, 0, Ordem.localDate(), -1, fabrica);
+		/* so adiciona na heap caso adicione na DB com exito */
+		db.insereDescarga(new Descarga("" + numeroOrdemInt, type, destination, Integer.valueOf(quantity)));
+		Ordens ordem = new Ordens("" + numeroOrdemInt, 0, Ordem.localDate(), -1, fabrica);
 		ordem.setPecasPendentes(Integer.valueOf(quantity));
-		ordem.setUnload(ordem.new Unload(this.type,  this.destination));
-		System.out.println(ordem);
+		ordem.setUnload(ordem.new Unload(this.type, this.destination));
 		fabrica.addToHeap(ordem);
 
 	}
-	
+
 	public void debug() {
 		System.out.println("Type: " + node.getNamedItem("Type").getNodeValue());
 		System.out.println("Destination: " + node.getNamedItem("Destination").getNodeValue());

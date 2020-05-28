@@ -80,7 +80,7 @@ public class Gui {
 	private DataBase db;
 	private OpcClient opc;
 	private JPanel panel_2;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -254,7 +254,7 @@ public class Gui {
 		JLabel lblP = new JLabel("Pe\u00E7as na f\u00E1brica");
 		DefaultDesign.styleLabel(lblP);
 
-		label_1 = new JLabel("2");
+		label_1 = new JLabel("");
 		label_1.setFont(new Font("Consolas", Font.BOLD, 16));
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setForeground(Color.BLACK);
@@ -719,6 +719,9 @@ public class Gui {
 			modelStock.setValueAt("P" + (i + 1), i, 0);
 			modelStock.setValueAt("" + stock[i], i, 1);
 			Stock.setPecasStock((short) i, stock[i]);
+		}
+		if(GereOrdensThread.getCount() < 5) {
+			GereOrdensThread.count();
 		}
 		if(GereOrdensThread.getStock() != -1 && GereOrdensThread.isStockFlag()) {
 			/*show */

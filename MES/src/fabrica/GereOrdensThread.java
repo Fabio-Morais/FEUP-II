@@ -26,6 +26,7 @@ public class GereOrdensThread {
 	private static boolean voltaInicio= false;
 	
 	private static boolean maquinasOcupadas;
+	private static int count=0;
 	
 	/**Se mutex on nao deixa enviar as outras ordens*/
 	protected static Semaphore sem = GeneralSemaphore.getSem2();
@@ -152,6 +153,12 @@ public class GereOrdensThread {
 	}
 	public static void setStockFlag(boolean stockFlag) {
 		GereOrdensThread.stockFlag = stockFlag;
+	}
+	public static int getCount() {
+		return GereOrdensThread.count;
+	}
+	public static void count() {
+		GereOrdensThread.count++;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package fabrica;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import opc.OpcClient;
@@ -136,8 +137,8 @@ public class OrdensThread extends Thread {
 			Ordens.Transform x = this.ordem.getTransform();
 			short posPeca = Short.valueOf(x.getFrom().substring(1, 2));
 			short stock = Stock.getPecaStock((short) (posPeca - 1));
-			System.out.println(stock);
-			if (stock <= 0) {
+			System.out.println("count "+GereOrdensThread.getCount());
+			if (stock <= 0 && GereOrdensThread.getCount() > 4) {
 				GereOrdensThread.setStock(posPeca);
 				return false;
 			}else {
@@ -228,20 +229,23 @@ public class OrdensThread extends Thread {
 		/* Envia ordens */
 		while (this.ordem.getPecasPendentes() > 0) {
 			int limite = 3;
+			System.out.println("-----------");
+			System.out.println(ordem.getNumeroOrdem()+"-> a executar: "+ aExecutar);
+			System.out.println(Arrays.toString(maquinasAUsar));
+			System.out.println("-----------");
+
 			if (aExecutar) {
 				reservaMaquinas();// Se estiver a usar a maquina A e a B estiver livre coloca tambem a usar
 				try {
+					if (this.ordem.getUnload() != null) {
+						GereOrdensThread.sem2.acquire();	
+					}
 					GereOrdensThread.sem.acquire();
 				} catch (InterruptedException e) {
 				}
 				while (executaOrdem(limite) && this.ordem.getPecasPendentes() > 0) {
 					if (selectRunOrder()) {
-						if (this.ordem.getUnload() != null) {
-							try {
-								GereOrdensThread.sem2.acquire();
-							} catch (InterruptedException e1) {
-							}
-						}
+						
 						this.ordem.pecaParaProducao();
 						limite--;
 					}
@@ -256,10 +260,18 @@ public class OrdensThread extends Thread {
 			}
 			if (this.ordem.getUnload() != null) {
 
-				try {
-					Thread.sleep(4500);
-				} catch (InterruptedException e) {
+				if(GereOrdensThread.getNumberOfThreads() < 3) {
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+					}
+				}else {
+					try {
+						Thread.sleep(5500);
+					} catch (InterruptedException e) {
+					}
 				}
+				
 				GereOrdensThread.sem2.release();
 
 			} else {
@@ -358,5 +370,4 @@ public class OrdensThread extends Thread {
 			this.maquinasAUsar[2] = "";
 		}
 	}
-	
 }

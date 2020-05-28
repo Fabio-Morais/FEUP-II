@@ -81,18 +81,10 @@ public class SelecionaOrdens extends Thread {
 	}
 
 	private void maquinasOcupadas() {
-		long[] auxTempo = GereOrdensThread.getTempoMC();
 		boolean bool = true;
-		float smallest = 0;
-		if (auxTempo[0] <= auxTempo[1] && auxTempo[0] <= auxTempo[2]) {
-			smallest = auxTempo[0] / 1000;
-		} else if (auxTempo[1] <= auxTempo[2] && auxTempo[1] <= auxTempo[0]) {
-			smallest = auxTempo[1] / 1000;
-		} else {
-			smallest = auxTempo[2] / 1000;
-		}
+	
 		for (int i = 0; i < ordensEmExecucao.size(); i++) {
-			String x = ordensEmExecucao.get(i).getOrdem().getReceita((int) smallest, 0).get(0);
+			String x = ordensEmExecucao.get(i).getOrdem().getReceita((int) 0, 0).get(0);
 			if (!x.equals("D")) {
 				if (x.equals("A") && !(GereOrdensThread.getmALivre()[0] && GereOrdensThread.getmALivre()[1]
 						&& GereOrdensThread.getmALivre()[2])) {
@@ -344,7 +336,6 @@ public class SelecionaOrdens extends Thread {
 		if (lista.get(0).equals("D")) {
 			return "";
 		}
-		System.out.println("entrou");
 		for (int i = 0; i < lista.size(); i += 3) {
 			String x = lista.get(i);
 			if (x.equals("A")) {
@@ -364,13 +355,28 @@ public class SelecionaOrdens extends Thread {
 			Ordens ordem = ordensEmExecucao.get(i).getOrdem();
 			/* vai à heap e tira a ordem que vamos trocar */
 			if (ordem.getNumeroOrdem().equals(ordemATrocar.substring(1, ordemATrocar.length()))) {
-				if ((ordem.getPrioridade() - ordemAExecutar.getPrioridade()) < 50) {
+				if (((ordem.getPrioridade() - ordemAExecutar.getPrioridade()) < 50) || ordemAExecutar.isSpeedMode()) {
 					break;
 				}
+				System.out.println("trocou ->"+ordemATrocar +" por: "+ordemAExecutar);
 				if (ordensEmExecucao.get(i).getOrdem().isSpeedMode()) {
 					ordensEmExecucao.get(i).removeMaquinaAUsar(ordemAExecutar.getReceita(0, 0).get(0));
 				} else {
 					ordensEmExecucao.get(i).setaExecutar(false);
+					List<String> auxiliar = ordensEmExecucao.get(i).getOrdem().getReceita(0, 0);
+					for(int z = 0; z < auxiliar.size(); z+=3) {
+						String maq = ordensEmExecucao.get(i).getOrdem().getReceita(0, 0).get(z);
+						if(maq.equals("A")) {
+							GereOrdensThread.setmALivreSeleciona("", 0);
+						}else if(maq.equals("B")) {
+							GereOrdensThread.setmBLivreSeleciona("", 0);
+
+						}else if(maq.equals("B")) {
+							GereOrdensThread.setmCLivreSeleciona("", 0);
+
+						}
+					}
+						
 				}
 				List<String> ok = new ArrayList<>();
 				ok.add("X");

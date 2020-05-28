@@ -3,6 +3,7 @@ package udp;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.DatagramPacket;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,7 +38,7 @@ public class Message {
 	 * @param message -  Mensagem a ser lida
 	 * @return true - Se leu um formato XML correto<br> false - caso contrario
 	 * */
-	protected boolean read(String message) {
+	protected boolean read(String message, DatagramPacket packet) {
 		String xmlString = message;
 
 		try {
@@ -62,7 +63,7 @@ public class Message {
 			if (nList.getLength() > 0) {
 				Node nNode = nList.item(0);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					new RequestStore(address);
+					new RequestStore(address, packet);
 				}
 			}
 			

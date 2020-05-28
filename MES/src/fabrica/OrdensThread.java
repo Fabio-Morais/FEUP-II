@@ -358,4 +358,5 @@ public class OrdensThread extends Thread {
 			this.maquinasAUsar[2] = "";
 		}
 	}
+	
 }

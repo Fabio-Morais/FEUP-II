@@ -35,12 +35,11 @@ public class Transform {
 	public void insereDb() {
 		System.out.println(numeroOrdem);
 		/*so adiciona na heap caso adicione na DB com exito*/
-		if(db.insereProducao(new Producao(""+numeroOrdemInt, pecaOrigem, pecaFinal, Integer.valueOf(quantidadeProduzir), Integer.valueOf(atrasoMaximo)))) {
-			Ordens ordem = new Ordens(""+numeroOrdemInt, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo), fabrica);
-			ordem.setPecasPendentes(Integer.valueOf(quantidadeProduzir));
-			ordem.setTransform(ordem.new Transform(this.pecaOrigem,  this.pecaFinal));
-			fabrica.addToHeap(ordem);
-		}
+		Ordens ordem = new Ordens(""+numeroOrdemInt, Integer.valueOf(atrasoMaximo),  Ordem.localDate(), Integer.valueOf(atrasoMaximo), fabrica);
+		ordem.setPecasPendentes(Integer.valueOf(quantidadeProduzir));
+		ordem.setTransform(ordem.new Transform(this.pecaOrigem,  this.pecaFinal));
+		fabrica.addToHeap(ordem);
+		
 	}
 	
 	public void debug() {

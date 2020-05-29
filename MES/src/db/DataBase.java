@@ -211,6 +211,7 @@ public class DataBase {
 			connectionState = false;
 			try {
 				FileWriter saveQueries = new FileWriter("saveQueries.txt", true);
+			
 				saveQueries.write(sql + "\n");
 				saveQueries.close();
 			} catch (IOException e1) {

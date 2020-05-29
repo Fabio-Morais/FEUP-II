@@ -286,7 +286,7 @@ public class OpcClient {
 
 	/** Vai buscar os Nodes ID no ficheiro de texto */
 	private List<MonitoredItemCreateRequest> createMonitoredItemCreateRequests() throws IOException {
-		File yourFile = new File("NodeIDs.txt");
+		File yourFile = new File("Nodes/NodeIDs.txt");
 		yourFile.createNewFile(); // if file already exists will do nothing
 
 		List<String> ids = Files.readAllLines(Paths.get("Nodes/NodeIDs.txt"));

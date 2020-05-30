@@ -1781,3 +1781,1621 @@ INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P6', 1
 INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
 INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
 INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P1', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('1', '05/30/2020 13:53:19',30,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:53:20' WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=29WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=298 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('2', '05/30/2020 13:53:22',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('3', '05/30/2020 13:53:22',10,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:53:22' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=28WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=295 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('4', '05/30/2020 13:53:25',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('5', '05/30/2020 13:53:25',8,0)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('6', '05/30/2020 13:53:25',6,0)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:53:25' WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:53:25' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=27WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=293 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=294 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=291 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=289 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=269 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=26WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=264 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=265 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=263 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=25WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=258 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=24WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=254 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=241 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 241 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=239 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 239 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=237 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 237 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=23WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=234 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=22WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=231 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=21WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=229 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=230 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:54:33' WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:54:33' WHERE numeroOrdem = '4'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=224 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=219 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 219 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=222 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=20WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=212 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('7', '05/30/2020 13:54:48',20,900)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('101', '05/30/2020 13:54:48',6,1000)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=210 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 210 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=209 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 209 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=206 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=204 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=204 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=188 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 188 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=193 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=191 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=183 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=179 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=177 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=178 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=177 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 177 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=174 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=173 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 173 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=164 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=11,folgaexecucao= 164 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=163 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 163 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=161 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 161 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=156 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 13:55:44' WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=155 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=12,folgaexecucao= 155 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=154 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=12WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=152 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=156 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=152 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=150 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=13,folgaexecucao= 142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=139 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=14,folgaexecucao= 139 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=139 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=138 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=139 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 139 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=15,folgaexecucao= 132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=11WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=131 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=132 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 132 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=132, horaFimExecucao= '05/30/2020 13:56:11' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=10WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=129 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=127 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=129 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 129 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=131 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=127 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 127 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=127 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=124 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 124 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:56:19' WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=807 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=116 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=16,folgaexecucao= 116 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=114 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=17,folgaexecucao= 114 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=113 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=115 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 115 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=111 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=113 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 113 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=105 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=18,folgaexecucao= 104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=102 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=787 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=97 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 97 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=95 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 95 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=96 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 96 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=778 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=86 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=19,folgaexecucao= 86 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=90 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 90 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=85 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 85 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=78 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=20,folgaexecucao= 78 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=77 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=76 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=21,folgaexecucao= 76 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=74 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=80 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 80 WHERE numeroOrdem = '4'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=79, horaFimExecucao= '05/30/2020 13:57:06' WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=72 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=759 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=64 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=22,folgaexecucao= 64 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=749 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=58 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=23,folgaexecucao= 58 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=59 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 59 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=53 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=55 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 55 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=55, horaFimExecucao= '05/30/2020 13:57:28' WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=51 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=24,folgaexecucao= 51 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=739 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=48 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=43 WHERE numeroOrdem = '1'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 13:57:37' WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=39 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=25,folgaexecucao= 39 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=726 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 726 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=35 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=26,folgaexecucao= 35 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=720 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=29 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=27,folgaexecucao= 29 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=817 WHERE numeroOrdem = '101'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecaspendentes=12WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=714 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=712 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 712 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=805 WHERE numeroOrdem = '101'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=5 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=28,folgaexecucao= 5 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=792 WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=692 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 692 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=29,folgaexecucao= 0 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=30,folgaexecucao= 0 WHERE numeroOrdem = '1'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 13:58:23' WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P1', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P6', 15)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('1', '05/30/2020 15:09:11',30,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:09:11' WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=29WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=299 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('2', '05/30/2020 15:09:14',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('3', '05/30/2020 15:09:14',10,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:09:14' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=28WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=297 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=27WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=295 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('4', '05/30/2020 15:09:17',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('5', '05/30/2020 15:09:17',8,0)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('6', '05/30/2020 15:09:17',6,0)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:09:17' WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:09:17' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=296 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=292 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=291 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=270 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=26WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=265 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=266 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=264 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=25WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=256 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=24WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=254 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=242 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 242 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=241 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 241 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=239 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 239 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=23WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=235 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=22WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=232 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=21WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=231 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=232 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:10:24' WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:10:24' WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=226 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=224 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=220 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 220 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=217 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 217 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=212 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 212 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('7', '05/30/2020 15:10:40',20,900)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('101', '05/30/2020 15:10:40',6,1000)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=20WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=211 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=213 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 213 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=207 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=205 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=205 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=191 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 191 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=196 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=188 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 188 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=192 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=184 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 15:11:11' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=180 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=178 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=179 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=177 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 177 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=175 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=172 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 172 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=165 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=11,folgaexecucao= 165 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=164 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 164 WHERE numeroOrdem = '3'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=162 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 162 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=157 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=156 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=12,folgaexecucao= 156 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=155 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=12WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=153 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=157 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=153 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=151 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=13,folgaexecucao= 142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=139 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=14,folgaexecucao= 139 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=139 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=137 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=139 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 139 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=131 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=15,folgaexecucao= 131 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=137 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=133 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=130 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 130 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:12:05' WHERE numeroOrdem = '7'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=128 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 128 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 15:12:07' WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=11WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=123 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=126 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 126 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=125, horaFimExecucao= '05/30/2020 15:12:10' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=10WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=120 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=119 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=119 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=16,folgaexecucao= 119 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=116 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=17,folgaexecucao= 116 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=118 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=117 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 117 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=114 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=116 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 116 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=101 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 101 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=90 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 90 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=775 WHERE numeroOrdem = '7'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('1', '05/30/2020 15:13:56',30,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:13:56' WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=29WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=299 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('2', '05/30/2020 15:13:59',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('3', '05/30/2020 15:13:59',10,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:13:59' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=28WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=297 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=27WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=294 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('4', '05/30/2020 15:14:02',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('5', '05/30/2020 15:14:02',8,0)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('6', '05/30/2020 15:14:02',6,0)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:14:02' WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:14:02' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=295 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=292 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=290 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=270 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=26WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=265 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=266 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=264 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=25WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=259 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=24WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=254 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=244 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 244 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=240 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 240 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=238 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 238 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=23WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=235 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=22WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=232 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=21WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=230 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=230 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:15:10' WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:15:10' WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=227 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=225 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=220 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 220 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 215 WHERE numeroOrdem = '2'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('7', '05/30/2020 15:15:24',20,900)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('101', '05/30/2020 15:15:24',6,1000)
+UPDATE Ordem SET pecaspendentes=20WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=211 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=213 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 213 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=210 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 210 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=207 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=204 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=205 WHERE numeroOrdem = '3'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 193 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=188 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 188 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=193 WHERE numeroOrdem = '4'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=191 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=183 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=180 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=178 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=179 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=177 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 177 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=175 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 175 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=173 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 173 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 166 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=164 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=11,folgaexecucao= 164 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=163 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 163 WHERE numeroOrdem = '3'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=161 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 161 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=157 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=156 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=12,folgaexecucao= 156 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=155 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=12WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=153 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 15:16:25' WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=155 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=153 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=151 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=147 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=13,folgaexecucao= 142 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=141 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=14,folgaexecucao= 141 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=143 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=141 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 142 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=140 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 140 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=15,folgaexecucao= 132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=11WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=131 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=10WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=129 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=132 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 132 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=127 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=129 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 129 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=129, horaFimExecucao= '05/30/2020 15:16:50' WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=131 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=127 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 127 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=128 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:16:55' WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=123 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 123 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=805 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=115 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=16,folgaexecucao= 115 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=119 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 119 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=115 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=113 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=115 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 115 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=795 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=106 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=17,folgaexecucao= 106 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=105 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 15:17:11' WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=18,folgaexecucao= 104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=102 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=100 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=99 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 99 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=98 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 98 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=99 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 99 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=777 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=88 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=19,folgaexecucao= 88 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=92 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 92 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=84 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=20,folgaexecucao= 84 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=86 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 86 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=78 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=78 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=21,folgaexecucao= 78 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=75 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=80 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 80 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=74 WHERE numeroOrdem = '1'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=79, horaFimExecucao= '05/30/2020 15:17:43' WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('1', '05/30/2020 15:19:48',30,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:19:48' WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=29WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=299 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('2', '05/30/2020 15:19:51',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('3', '05/30/2020 15:19:51',10,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:19:51' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=28WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=297 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=27WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=295 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('4', '05/30/2020 15:19:54',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('5', '05/30/2020 15:19:54',8,0)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('6', '05/30/2020 15:19:54',6,0)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:19:54' WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:19:54' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=295 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=291 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=289 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=270 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecaspendentes=26WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=265 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=265 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=263 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=25WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=258 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=24WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=254 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=238 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 238 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=235 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 235 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=23WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=233 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=232 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 232 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=22WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=226 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecaspendentes=21WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=224 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=225 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:21:07' WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:21:07' WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=218 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=216 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=213 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 213 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('7', '05/30/2020 15:21:22',20,900)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('101', '05/30/2020 15:21:22',6,1000)
+UPDATE Ordem SET pecaspendentes=20WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=207 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=206 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 206 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=204 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 204 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=202 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 202 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=203 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 203 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=199 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=197 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=198 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=185 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 185 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=183 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 183 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=182 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=181 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 181 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=184 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=182 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=174 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=171 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=172 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=170 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 170 WHERE numeroOrdem = '2'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('1', '05/30/2020 15:22:48',30,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:22:48' WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=29WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=298 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('2', '05/30/2020 15:22:51',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('3', '05/30/2020 15:22:51',10,300)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:22:51' WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=28WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=296 WHERE numeroOrdem = '1'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('4', '05/30/2020 15:22:54',7,300)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('5', '05/30/2020 15:22:54',8,0)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('6', '05/30/2020 15:22:54',6,0)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:22:54' WHERE numeroOrdem = '5'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:22:54' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=27WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=294 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=295 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=291 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=290 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=270 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=26WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=265 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=266 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=264 WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=25WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=259 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=24WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=256 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=244 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 244 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=240 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 240 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P3', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=238 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 238 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=23WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=235 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=22WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=232 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=21WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=229 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproducao=7, folgaexecucao=230 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:24:02' WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:24:02' WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=227 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=225 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 218 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 216 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=215 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 215 WHERE numeroOrdem = '2'
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('7', '05/30/2020 15:24:16',20,900)
+INSERT INTO Ordem (numeroOrdem, horaEntradaOrdem, pecaspendentes, folgaexecucao) VALUES ('101', '05/30/2020 15:24:16',6,1000)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=210 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 210 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=20WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=210 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 211 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=207 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=209 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 209 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=205 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=203 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P3', 15)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=192 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 192 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 190 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=187 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 187 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=193 WHERE numeroOrdem = '4'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '6'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=190 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '6'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 30)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=179 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=177 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=175 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=176 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 176 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=176 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=173 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 173 WHERE numeroOrdem = '2'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM3', '6' )
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=172 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=0, horaFimExecucao= '05/30/2020 15:25:00' WHERE numeroOrdem = '6'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=170 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 170 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=167 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 167 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=162 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 162 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=157 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=11,folgaexecucao= 157 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=158 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 158 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=155 WHERE numeroOrdem = '1'
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=153 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=12,folgaexecucao= 153 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=153 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=0 WHERE numeroOrdem = '5'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO ZonaDescarga (tipoDescarga, tipoPecaDescarregada) VALUES ('PM2', '9' )
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 0 WHERE numeroOrdem = '5'
+UPDATE Ordem SET pecaspendentes=12WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=148 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=152 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 30)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=149 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=147 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=142 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 142 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=138 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=134 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=13,folgaexecucao= 134 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=136 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=14,folgaexecucao= 132 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=11WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=131 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=128 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=15,folgaexecucao= 128 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=10WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=127 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=132 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=2,folgaexecucao= 132 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=9WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=123 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=125 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 125 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=127 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=123 WHERE numeroOrdem = '2'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 123 WHERE numeroOrdem = '2'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=123, horaFimExecucao= '05/30/2020 15:25:49' WHERE numeroOrdem = '2'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=120 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 120 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=123 WHERE numeroOrdem = '4'
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:25:52' WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P4', 10)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=119 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 119 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=19WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=803 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=108 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=16,folgaexecucao= 108 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=111 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=106 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=17,folgaexecucao= 106 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=108 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P7', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=18,folgaexecucao= 104 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=8WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=103 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=7WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=101 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=106 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=3,folgaexecucao= 106 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=18WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=787 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=104 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=4,folgaexecucao= 104 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=6WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=96 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=100 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=5,folgaexecucao= 100 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=93 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 93 WHERE numeroOrdem = '3'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P4', 10)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=91 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 91 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=84 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=19,folgaexecucao= 84 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=17WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=770 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=87 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=6,folgaexecucao= 87 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecasproducao=2, folgaexecucao=83 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=8,folgaexecucao= 83 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=77 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=20,folgaexecucao= 77 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=75 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=21,folgaexecucao= 75 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P7', 20)
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=74 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=79 WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecasproduzidas=7,folgaexecucao= 79 WHERE numeroOrdem = '4'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=78, horaFimExecucao= '05/30/2020 15:26:37' WHERE numeroOrdem = '4'
+UPDATE Ordem SET pecaspendentes=4WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=72 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB3', 'P7', 20)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=3WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=70 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=16WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=750 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=64 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=9,folgaexecucao= 64 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecaspendentes=15WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=748 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=57 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=22,folgaexecucao= 57 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=55 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=23,folgaexecucao= 55 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=0, folgaexecucao=56 WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproduzidas=10,folgaexecucao= 56 WHERE numeroOrdem = '3'
+UPDATE Ordem SET estadoOrdem= 2, folgaexecucao=56, horaFimExecucao= '05/30/2020 15:26:56' WHERE numeroOrdem = '3'
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=51 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=24,folgaexecucao= 51 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+UPDATE Ordem SET pecaspendentes=2WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=50 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA2', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=1WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=48 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA1', 'P2', 15)
+UPDATE Ordem SET pecaspendentes=0WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=46 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MA3', 'P2', 15)
+UPDATE Ordem SET estadoOrdem= 1, horaInicioExecucao= '05/30/2020 15:27:03' WHERE numeroOrdem = '101'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC2', 'P4', 10)
+UPDATE Ordem SET pecaspendentes=14WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=732 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecaspendentes=5WHERE numeroOrdem = '101'
+UPDATE Ordem SET pecasproducao=1, folgaexecucao=828 WHERE numeroOrdem = '101'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC1', 'P1', 10)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=725 WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproduzidas=1,folgaexecucao= 725 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MC3', 'P8', 10)
+UPDATE Ordem SET pecasproducao=5, folgaexecucao=31 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=25,folgaexecucao= 31 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproducao=4, folgaexecucao=30 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=26,folgaexecucao= 30 WHERE numeroOrdem = '1'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB2', 'P3', 20)
+UPDATE Ordem SET pecasproducao=3, folgaexecucao=27 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecasproduzidas=27,folgaexecucao= 27 WHERE numeroOrdem = '1'
+UPDATE Ordem SET pecaspendentes=13WHERE numeroOrdem = '7'
+UPDATE Ordem SET pecasproducao=6, folgaexecucao=715 WHERE numeroOrdem = '7'
+INSERT INTO Maquina (tipoMaquina, tipoPecaOperada, tempo) VALUES ('MB1', 'P1', 20)

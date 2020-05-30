@@ -185,7 +185,7 @@ public class Gui {
 		JLabel logo = new JLabel("");
 		logo.setIcon(new ImageIcon(Gui.class.getResource("/img/logo3.png")));
 
-		JLabel lblInf = new JLabel("Inf\u00F3rmatica Industrial 19/20");
+		JLabel lblInf = new JLabel("Informática Industrial 19/20");
 		lblInf.setFont(new Font("HP Simplified", Font.BOLD, 24));
 		Color colorText = Color.decode("#364f6b");
 		lblInf.setForeground(colorText);
@@ -654,7 +654,7 @@ public class Gui {
 			if (i < modelOrdemProcessamento.getRowCount()) {
 				modelOrdemProcessamento.setValueAt(ord.getNumeroOrdem(), i, 0);
 				modelOrdemProcessamento.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 1);
-				modelOrdemProcessamento.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transormacao"), i, 2);
+				modelOrdemProcessamento.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transformacao"), i, 2);
 				modelOrdemProcessamento.setValueAt(ord.getPecasProduzidas(), i, 3);
 				modelOrdemProcessamento.setValueAt(ord.getPecasEmProducao(), i, 4);
 				modelOrdemProcessamento.setValueAt(ord.getPecasPendentes(), i, 5);
@@ -665,7 +665,7 @@ public class Gui {
 			} else {
 				modelOrdemProcessamento.addRow(
 						new Object[] { ord.getNumeroOrdem(), "" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),
-								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transormacao"), ord.getPecasProduzidas(),
+								(ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transformacao"), ord.getPecasProduzidas(),
 								ord.getPecasEmProducao(), ord.getPecasPendentes() });
 				if(ord.getTransform() != null)
 					modelOrdemProcessamento.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 6);
@@ -688,7 +688,7 @@ public class Gui {
 			Ordens ord = aux.poll();
 			if (i < modelOrdemEspera.getRowCount()) {
 				modelOrdemEspera.setValueAt(ord.getNumeroOrdem(), i, 0);
-				modelOrdemEspera.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transormacao"), i, 1);
+				modelOrdemEspera.setValueAt((ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transformacao"), i, 1);
 				modelOrdemEspera.setValueAt("" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()), i, 2);
 				if(ord.getTransform() != null)
 					modelOrdemEspera.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 3);
@@ -696,7 +696,7 @@ public class Gui {
 					modelOrdemEspera.setValueAt(ord.getUnload().getType()+"->"+ord.getUnload().getDestinantion(), i, 3);
 			} else {
 				modelOrdemEspera.addRow(
-						new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transormacao"),
+						new Object[] { ord.getNumeroOrdem(), (ord.getAtrasoMaximo() == -1 ? "Descarga" : "Transformacao"),
 								"" + (ord.getPrioridade() == -1 ? 0 : ord.getPrioridade()),"" });
 				if(ord.getTransform() != null)
 					modelOrdemEspera.setValueAt(ord.getTransform().getFrom()+"->"+ord.getTransform().getTo(), i, 3);

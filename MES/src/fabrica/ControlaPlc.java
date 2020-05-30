@@ -297,8 +297,16 @@ public class ControlaPlc {
 				maquinaLivre = GereOrdensThread.getmCLivre();
 				y = 2;
 			}
-
-			if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
+			if(maquinaLivre[1] && pecasPendentes==1 && coluna == -1  && GereOrdensThread.isP1P9()) {
+				rotaMaquinas(rota, origem, destino + "2");
+				returnString = destino + "2";
+				x = 1;
+			}
+			else if(pecasPendentes==1 && coluna == -1  && GereOrdensThread.isP1P9()) {
+				rotaMaquinas(rota, origem, destino + "3");
+				returnString = destino + "3";
+				x = 2;
+			}else if (maquinaLivre[2] && (coluna == -1 || coluna == 3)) {
 				rotaMaquinas(rota, origem, destino + "3");
 				returnString = destino + "3";
 				x = 2;

@@ -190,11 +190,13 @@ public class OrdensThread extends Thread {
 				countMaq[0] = opc.getValue("SFS", "mB1Cont")[0];
 				countMaq[1] = opc.getValue("SFS", "mB2Cont")[0];
 				countMaq[2] = opc.getValue("SFS", "mB3Cont")[0];
+				auxTempo =  GereOrdensThread.getTempoMA();
 			} else if (receita.equals("B")) {
 				aux = GereOrdensThread.getmBLivre();
 				countMaq[0] = opc.getValue("SFS", "mC1Cont")[0];
 				countMaq[1] = opc.getValue("SFS", "mC2Cont")[0];
 				countMaq[2] = opc.getValue("SFS", "mC3Cont")[0];
+				auxTempo =  GereOrdensThread.getTempoMB();
 			} else if (receita.equals("C")) {
 				aux = GereOrdensThread.getmCLivre();
 			}
@@ -215,7 +217,9 @@ public class OrdensThread extends Thread {
 		if (rect.size() > 3 && !rect.get(0).equals(rect.get(3))) {
 			return manyOrders(rect);
 		}
-		
+		if(ordem.getPecasPendentes() ==1 && GereOrdensThread.isP1P9() && (auxTempo[1] <(Integer.valueOf(rect.get(1))-1000) || auxTempo[2] <(Integer.valueOf(rect.get(1))-1000) )) {
+			return true;
+		}
 		return (aux[0] || (aux[1]) || (aux[2]));
 		// so manda descarga quando < x tempo
 	}

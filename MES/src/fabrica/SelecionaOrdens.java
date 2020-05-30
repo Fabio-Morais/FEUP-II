@@ -133,6 +133,7 @@ public class SelecionaOrdens extends Thread {
 		List<String> lista2 = ordem.getReceita(11, 0);
 		if (isSpeedMode(ordem)) {
 			ordem.setSpeedMode(true);
+			GereOrdensThread.setP1P9(true);
 		}
 		/* Se lista tiver um D entao é uma descarga */
 		if (lista.get(0).equals("D")) {
